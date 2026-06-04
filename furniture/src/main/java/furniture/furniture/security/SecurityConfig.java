@@ -41,7 +41,8 @@ public class SecurityConfig {
                     "/api/subcategories/**",
                     "/api/brands/**",
                     "/v3/api-docs/**",
-                    "/swagger-ui/**"
+                    "/swagger-ui/**",
+                    "/uploads/**"
                 ).permitAll()
                 // Admin endpoints (require ADMIN role)
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
