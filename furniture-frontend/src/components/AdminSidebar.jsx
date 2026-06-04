@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Tag, FolderTree, Layers, Package, ShoppingBag, Users, BarChart2, FileText, LogOut, Sofa, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Tag, FolderTree, Layers, Package, ShoppingBag, Users, BarChart2, LogOut, Sofa, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const links = [
