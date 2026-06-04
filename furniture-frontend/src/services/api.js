@@ -66,6 +66,13 @@ export const updateSubCategory = (id, data) => api.put(`/api/admin/subcategories
 
 export const addProduct = (data) => api.post('/api/admin/products', data);
 export const updateProduct = (id, data) => api.put(`/api/admin/products/${id}`, data);
+export const uploadProductImage = (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return api.post('/api/admin/products/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+};
 
 export const updatePage = (name, data) => api.put(`/api/admin/pages/${name}`, data);
 

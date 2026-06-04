@@ -126,6 +126,35 @@ public class ProductController {
         return ResponseEntity.ok(Map.of("message", "Product updated successfully!"));
     }
 
+    @PostMapping("/api/admin/products/upload")
+    public ResponseEntity<?> uploadProductImage(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Error: File is empty!"));
+        }
+
+        try {
+            Path uploadDir = Paths.get("./uploads");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir);
+            }
+
+            String originalFileName = file.getOriginalFilename();
+            String fileExtension = "";
+            if (originalFileName != null && originalFileName.contains(".")) {
+                fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            }
+            String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+
+            Path targetPath = uploadDir.resolve(uniqueFileName);
+            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            String imagePath = "http://localhost:8080/uploads/" + uniqueFileName;
+            return ResponseEntity.ok(Map.of("imagePath", imagePath));
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body(Map.of("message", "Error uploading file: " + e.getMessage()));
+        }
+    }
+
     private ProductDto toDto(Product p) {
         return new ProductDto(
                 p.getId(),

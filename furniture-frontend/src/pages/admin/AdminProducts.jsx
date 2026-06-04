@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Plus, Pencil, X, Check, AlertCircle, Package } from 'lucide-react';
-import { getProducts, getBrands, getSubCategories, addProduct, updateProduct } from '../../services/api';
+import { Plus, Pencil, X, Check, AlertCircle, Package, Upload } from 'lucide-react';
+import { getProducts, getBrands, getSubCategories, addProduct, updateProduct, uploadProductImage } from '../../services/api';
 
 const empty = { name:'', description:'', price:'', quantity:'', imagePath:'', brandId:'', subCategoryId:'' };
 
@@ -12,7 +12,23 @@ export default function AdminProducts() {
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState(empty);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [msg, setMsg] = useState({ text:'', type:'' });
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const res = await uploadProductImage(file);
+      setForm(prev => ({ ...prev, imagePath: res.data.imagePath }));
+      notify('Image uploaded successfully!');
+    } catch (err) {
+      notify(err.response?.data?.message || 'Image upload failed', 'error');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const fetchAll = () => {
     Promise.all([getProducts(), getBrands(), getSubCategories()])
@@ -100,7 +116,18 @@ export default function AdminProducts() {
                 <div><label className="label">Price (USD) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={set('price')} className="input" placeholder="0.00"/></div>
                 <div><label className="label">Stock Qty *</label><input required type="number" min="0" value={form.quantity} onChange={set('quantity')} className="input" placeholder="0"/></div>
               </div>
-              <div><label className="label">Image Path</label><input value={form.imagePath} onChange={set('imagePath')} className="input" placeholder="/images/product.jpg"/></div>
+              <div>
+                <label className="label">Product Image</label>
+                <div className="flex gap-3">
+                  <input value={form.imagePath} onChange={set('imagePath')} className="input flex-1" placeholder="Image Path or URL"/>
+                  <div className="relative flex-shrink-0">
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="product-file-upload"/>
+                    <label htmlFor="product-file-upload" className="btn-secondary h-11 flex items-center justify-center gap-2 cursor-pointer font-medium text-xs px-4">
+                      {uploading ? <span className="animate-spin rounded-full h-4 w-4 border-2 border-primary-500 border-t-transparent"/> : <><Upload size={14}/> Upload</>}
+                    </label>
+                  </div>
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div><label className="label">Brand *</label>
                   <select required value={form.brandId} onChange={set('brandId')} className="input">
