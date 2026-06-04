@@ -60,53 +60,59 @@ public class DatabaseInitializer implements CommandLineRunner {
     }
 
     private void seedCatalog() {
+        if (categoryRepository.count() < 6) {
+            Category livingRoom = categoryRepository.findByName("Living Room").orElseGet(() -> categoryRepository.save(Category.builder().name("Living Room").build()));
+            Category bedroom = categoryRepository.findByName("Bedroom").orElseGet(() -> categoryRepository.save(Category.builder().name("Bedroom").build()));
+            Category diningRoom = categoryRepository.findByName("Dining Room").orElseGet(() -> categoryRepository.save(Category.builder().name("Dining Room").build()));
+            Category homeOffice = categoryRepository.findByName("Home Office").orElseGet(() -> categoryRepository.save(Category.builder().name("Home Office").build()));
+            Category storage = categoryRepository.findByName("Storage").orElseGet(() -> categoryRepository.save(Category.builder().name("Storage").build()));
+            Category outdoor = categoryRepository.findByName("Outdoor").orElseGet(() -> categoryRepository.save(Category.builder().name("Outdoor").build()));
+
+            // Living Room Subcategories
+            subCategoryRepository.saveAll(List.of(
+                    SubCategory.builder().name("Sofas").category(livingRoom).build(),
+                    SubCategory.builder().name("Coffee Tables").category(livingRoom).build(),
+                    SubCategory.builder().name("TV Stands").category(livingRoom).build()
+            ));
+
+            // Bedroom Subcategories
+            subCategoryRepository.saveAll(List.of(
+                    SubCategory.builder().name("Beds").category(bedroom).build(),
+                    SubCategory.builder().name("Wardrobes").category(bedroom).build(),
+                    SubCategory.builder().name("Nightstands").category(bedroom).build()
+            ));
+
+            // Dining Room Subcategories
+            subCategoryRepository.saveAll(List.of(
+                    SubCategory.builder().name("Dining Tables").category(diningRoom).build(),
+                    SubCategory.builder().name("Dining Chairs").category(diningRoom).build()
+            ));
+
+            // Home Office Subcategories
+            subCategoryRepository.saveAll(List.of(
+                    SubCategory.builder().name("Office Desks").category(homeOffice).build(),
+                    SubCategory.builder().name("Office Chairs").category(homeOffice).build(),
+                    SubCategory.builder().name("Bookshelves").category(homeOffice).build()
+            ));
+
+            // Storage Subcategories
+            subCategoryRepository.saveAll(List.of(
+                    SubCategory.builder().name("Cabinets").category(storage).build(),
+                    SubCategory.builder().name("Shoe Racks").category(storage).build()
+            ));
+
+            // Outdoor Subcategories
+            subCategoryRepository.saveAll(List.of(
+                    SubCategory.builder().name("Patio Sets").category(outdoor).build(),
+                    SubCategory.builder().name("Outdoor Sofas").category(outdoor).build()
+            ));
+        }
+
         if (brandRepository.count() == 0) {
             Brand ikea = Brand.builder().name("Ikea").description("Scandinavian modern furniture and accessories").build();
             Brand ashley = Brand.builder().name("Ashley").description("Classic American home furnishings").build();
             Brand wayfair = Brand.builder().name("Wayfair").description("Stylish and affordable home decor").build();
             brandRepository.saveAll(List.of(ikea, ashley, wayfair));
-
-            Category livingRoom = Category.builder().name("Living Room").build();
-            Category bedroom = Category.builder().name("Bedroom").build();
-            Category diningRoom = Category.builder().name("Dining Room").build();
-            categoryRepository.saveAll(List.of(livingRoom, bedroom, diningRoom));
-
-            SubCategory sofas = SubCategory.builder().name("Sofas").category(livingRoom).build();
-            SubCategory beds = SubCategory.builder().name("Beds").category(bedroom).build();
-            SubCategory tables = SubCategory.builder().name("Dining Tables").category(diningRoom).build();
-            subCategoryRepository.saveAll(List.of(sofas, beds, tables));
-
-            Product product1 = Product.builder()
-                    .name("Elegant Leather Sofa")
-                    .description("Premium top-grain leather sofa with high-density foam cushions for maximum comfort.")
-                    .price(new BigDecimal("899.99"))
-                    .quantity(20)
-                    .brand(ikea)
-                    .subCategory(sofas)
-                    .imagePath("/images/leather-sofa.jpg")
-                    .build();
-
-            Product product2 = Product.builder()
-                    .name("Modern King Bed Frame")
-                    .description("Sturdy wooden bed frame with upholstered headboard. Mattress not included.")
-                    .price(new BigDecimal("450.00"))
-                    .quantity(15)
-                    .brand(ashley)
-                    .subCategory(beds)
-                    .imagePath("/images/king-bed.jpg")
-                    .build();
-
-            Product product3 = Product.builder()
-                    .name("Solid Oak Dining Table")
-                    .description("Beautiful solid oak dining table, seats up to 6 people comfortably.")
-                    .price(new BigDecimal("620.00"))
-                    .quantity(10)
-                    .brand(wayfair)
-                    .subCategory(tables)
-                    .imagePath("/images/dining-table.jpg")
-                    .build();
-
-            productRepository.saveAll(List.of(product1, product2, product3));
         }
     }
 }
