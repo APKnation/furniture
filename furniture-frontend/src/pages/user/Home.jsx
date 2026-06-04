@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles, Shield, Truck, Star } from 'lucide-react';
+import { ArrowRight, Shield, Truck, Star } from 'lucide-react';
 import { getCategories, getProducts } from '../../services/api';
 import ProductCard from '../../components/ProductCard';
 import { useAuth } from '../../context/AuthContext';
@@ -52,23 +52,28 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-stretch gap-8">
             <div className="md:w-1/2">
               
-              <h1 className="font-display text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
                 Elevate Your
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> Living Space</span>
               </h1>
-              <p className="text-gray-400 text-lg leading-relaxed mb-8">
-                Discover handcrafted furniture that blends timeless design with modern comfort. From cozy sofas to elegant dining sets — find your perfect piece.
-              </p>
-              <div className="flex items-center gap-4 flex-wrap">
-                <Link to="/products" className="btn-primary text-base px-7 py-3.5">
-                  Shop Now <ArrowRight size={18}/>
-                </Link>
-                <Link to="/about" className="btn-secondary text-base px-7 py-3.5">
-                  Our Story
-                </Link>
+             <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-8">
+  Discover handcrafted furniture that blends modern comfort with timeless design. Explore sofas, dining sets, and storage solutions that fit every home and lifestyle.
+</p>
+              
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-10">
+                <div className="flex">
+                  <img src="/image2.png" alt="Featured 1" className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-full border-4 border-dark-800 object-cover shadow-md" />
+                  <img src="/image3.png" alt="Featured 2" className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-full border-4 border-dark-800 object-cover shadow-md" />
+                </div>
+                <div className="text-lg sm:text-xl">
+                  <p className="text-white font-bold text-xl sm:text-2xl">Featured Collections</p>
+                  <Link to="/products" className="text-primary-400 hover:text-primary-300 font-semibold text-base sm:text-lg mt-1 sm:mt-2 inline-flex items-center gap-1.5 transition-colors">
+                    Explore our latest arrivals <ArrowRight size={18} />
+                  </Link>
+                </div>
               </div>
             </div>
-            <div className="md:w-1/2 flex items-center">
+            <div className="w-full md:w-1/2 flex items-center min-h-[300px] md:min-h-0">
               <img src="/hero.png" alt="Hero" className="w-full h-full object-cover rounded-xl shadow-lg" />
             </div>
           </div>
@@ -108,9 +113,7 @@ export default function Home() {
             {categories.map((cat) => (
               <Link key={cat.id} to={`/products?categoryId=${cat.id}`}
                 className="group card p-6 text-center hover:border-primary-600/60 hover:-translate-y-1 transition-all duration-300">
-                <div className="w-14 h-14 bg-primary-900/40 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-900/70 transition-colors">
-                  <span className="text-2xl">🛋️</span>
-                </div>
+
                 <p className="font-semibold text-white group-hover:text-primary-400 transition-colors">{cat.name}</p>
               </Link>
             ))}

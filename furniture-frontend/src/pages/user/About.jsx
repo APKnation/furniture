@@ -15,7 +15,7 @@ export default function About() {
                 About <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">Us</span>
               </h1>
               <p className="text-gray-400 text-lg leading-relaxed mb-8">
-                APKNATION Online Furniture Shop is a proudly Tanzanian brand dedicated to bringing high‑quality, locally‑crafted furniture to homes across the nation. We blend traditional craftsmanship with modern design, ensuring every piece is both beautiful and built to last.
+                APKNation Online Furniture Shop is a proudly Tanzanian brand dedicated to bringing high‑quality, locally‑crafted furniture to homes across the nation. We blend traditional craftsmanship with modern design, ensuring every piece is both beautiful and built to last.
               </p>
               <Link to="/products" className="btn-primary text-base px-7 py-3.5">
                 Browse Collection <ArrowRight size={18} />

@@ -68,44 +68,50 @@ public class DatabaseInitializer implements CommandLineRunner {
             Category storage = categoryRepository.findByName("Storage").orElseGet(() -> categoryRepository.save(Category.builder().name("Storage").build()));
             Category outdoor = categoryRepository.findByName("Outdoor").orElseGet(() -> categoryRepository.save(Category.builder().name("Outdoor").build()));
 
-            // Living Room Subcategories
-            subCategoryRepository.saveAll(List.of(
-                    SubCategory.builder().name("Sofas").category(livingRoom).build(),
-                    SubCategory.builder().name("Coffee Tables").category(livingRoom).build(),
-                    SubCategory.builder().name("TV Stands").category(livingRoom).build()
-            ));
+            if (subCategoryRepository.findByCategoryId(livingRoom.getId()).isEmpty()) {
+                subCategoryRepository.saveAll(List.of(
+                        SubCategory.builder().name("Sofas").category(livingRoom).build(),
+                        SubCategory.builder().name("Coffee Tables").category(livingRoom).build(),
+                        SubCategory.builder().name("TV Stands").category(livingRoom).build()
+                ));
+            }
 
-            // Bedroom Subcategories
-            subCategoryRepository.saveAll(List.of(
-                    SubCategory.builder().name("Beds").category(bedroom).build(),
-                    SubCategory.builder().name("Wardrobes").category(bedroom).build(),
-                    SubCategory.builder().name("Nightstands").category(bedroom).build()
-            ));
+            if (subCategoryRepository.findByCategoryId(bedroom.getId()).isEmpty()) {
+                subCategoryRepository.saveAll(List.of(
+                        SubCategory.builder().name("Beds").category(bedroom).build(),
+                        SubCategory.builder().name("Wardrobes").category(bedroom).build(),
+                        SubCategory.builder().name("Nightstands").category(bedroom).build()
+                ));
+            }
 
-            // Dining Room Subcategories
-            subCategoryRepository.saveAll(List.of(
-                    SubCategory.builder().name("Dining Tables").category(diningRoom).build(),
-                    SubCategory.builder().name("Dining Chairs").category(diningRoom).build()
-            ));
+            if (subCategoryRepository.findByCategoryId(diningRoom.getId()).isEmpty()) {
+                subCategoryRepository.saveAll(List.of(
+                        SubCategory.builder().name("Dining Tables").category(diningRoom).build(),
+                        SubCategory.builder().name("Dining Chairs").category(diningRoom).build()
+                ));
+            }
 
-            // Home Office Subcategories
-            subCategoryRepository.saveAll(List.of(
-                    SubCategory.builder().name("Office Desks").category(homeOffice).build(),
-                    SubCategory.builder().name("Office Chairs").category(homeOffice).build(),
-                    SubCategory.builder().name("Bookshelves").category(homeOffice).build()
-            ));
+            if (subCategoryRepository.findByCategoryId(homeOffice.getId()).isEmpty()) {
+                subCategoryRepository.saveAll(List.of(
+                        SubCategory.builder().name("Office Desks").category(homeOffice).build(),
+                        SubCategory.builder().name("Office Chairs").category(homeOffice).build(),
+                        SubCategory.builder().name("Bookshelves").category(homeOffice).build()
+                ));
+            }
 
-            // Storage Subcategories
-            subCategoryRepository.saveAll(List.of(
-                    SubCategory.builder().name("Cabinets").category(storage).build(),
-                    SubCategory.builder().name("Shoe Racks").category(storage).build()
-            ));
+            if (subCategoryRepository.findByCategoryId(storage.getId()).isEmpty()) {
+                subCategoryRepository.saveAll(List.of(
+                        SubCategory.builder().name("Cabinets").category(storage).build(),
+                        SubCategory.builder().name("Shoe Racks").category(storage).build()
+                ));
+            }
 
-            // Outdoor Subcategories
-            subCategoryRepository.saveAll(List.of(
-                    SubCategory.builder().name("Patio Sets").category(outdoor).build(),
-                    SubCategory.builder().name("Outdoor Sofas").category(outdoor).build()
-            ));
+            if (subCategoryRepository.findByCategoryId(outdoor.getId()).isEmpty()) {
+                subCategoryRepository.saveAll(List.of(
+                        SubCategory.builder().name("Patio Sets").category(outdoor).build(),
+                        SubCategory.builder().name("Outdoor Sofas").category(outdoor).build()
+                ));
+            }
         }
 
         if (brandRepository.count() == 0) {

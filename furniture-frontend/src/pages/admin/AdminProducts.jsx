@@ -156,10 +156,16 @@ export default function AdminProducts() {
                     {brands.map(b=><option key={b.id} value={b.id}>{b.name}</option>)}
                   </select>
                 </div>
-                <div><label className="label">Sub-Category *</label>
+                <div><label className="label">Category / Sub-Category *</label>
                   <select required value={form.subCategoryId} onChange={set('subCategoryId')} className="input">
-                    <option value="">-- Sub-Category --</option>
-                    {subs.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}
+                    <option value="">-- Select Furniture Type --</option>
+                    {Array.from(new Set(subs.map(s => s.categoryName))).map(catName => (
+                      <optgroup key={catName} label={catName}>
+                        {subs.filter(s => s.categoryName === catName).map(s => (
+                          <option key={s.id} value={s.id}>{s.name}</option>
+                        ))}
+                      </optgroup>
+                    ))}
                   </select>
                 </div>
               </div>
