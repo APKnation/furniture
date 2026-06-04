@@ -53,7 +53,7 @@ export default function Orders() {
                 </div>
                 <div className="flex items-center gap-4">
                   <span className={`badge border ${statusColors[order.status] || 'bg-dark-600 text-gray-300'}`}>{order.status}</span>
-                  <p className="font-bold text-primary-400">${order.totalAmount?.toFixed(2)}</p>
+                  <p className="font-bold text-primary-400">{`TZS ${order.totalAmount?.toLocaleString('en-US')}`}</p>
                   {expanded === order.id ? <ChevronUp size={18} className="text-gray-400"/> : <ChevronDown size={18} className="text-gray-400"/>}
                 </div>
               </div>

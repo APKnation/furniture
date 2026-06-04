@@ -49,26 +49,30 @@ export default function Home() {
       <section className="relative overflow-hidden bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 border-b border-dark-600">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-900/30 via-transparent to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-primary-900/40 border border-primary-700/40 text-primary-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
-              <Sparkles size={14} /> New arrivals every week
+          <div className="flex flex-col md:flex-row items-stretch gap-8">
+            <div className="md:w-1/2">
+              
+              <h1 className="font-display text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                Elevate Your
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> Living Space</span>
+              </h1>
+              <p className="text-gray-400 text-lg leading-relaxed mb-8">
+                Discover handcrafted furniture that blends timeless design with modern comfort. From cozy sofas to elegant dining sets — find your perfect piece.
+              </p>
+              <div className="flex items-center gap-4 flex-wrap">
+                <Link to="/products" className="btn-primary text-base px-7 py-3.5">
+                  Shop Now <ArrowRight size={18}/>
+                </Link>
+                <Link to="/about" className="btn-secondary text-base px-7 py-3.5">
+                  Our Story
+                </Link>
+              </div>
             </div>
-            <h1 className="font-display text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-              Elevate Your
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> Living Space</span>
-            </h1>
-            <p className="text-gray-400 text-lg leading-relaxed mb-8">
-              Discover handcrafted furniture that blends timeless design with modern comfort. From cozy sofas to elegant dining sets — find your perfect piece.
-            </p>
-            <div className="flex items-center gap-4 flex-wrap">
-              <Link to="/products" className="btn-primary text-base px-7 py-3.5">
-                Shop Now <ArrowRight size={18}/>
-              </Link>
-              <Link to="/about" className="btn-secondary text-base px-7 py-3.5">
-                Our Story
-              </Link>
+            <div className="md:w-1/2 flex items-center">
+              <img src="/hero.png" alt="Hero" className="w-full h-full object-cover rounded-xl shadow-lg" />
             </div>
           </div>
+
         </div>
       </section>
 

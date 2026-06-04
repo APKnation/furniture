@@ -38,7 +38,7 @@ export default function Navbar() {
             <div className="w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-primary-600/40 transition-all">
               <Sofa size={18} className="text-white" />
             </div>
-            <span className="font-display font-bold text-xl text-white">CozyFurniture</span>
+            <span className="font-display font-bold text-xl text-white">APKNATION ONLINE FURNITURE SHOP</span>
           </Link>
 
           {/* Desktop Nav */}
