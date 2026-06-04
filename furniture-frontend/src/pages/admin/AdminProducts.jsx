@@ -1,0 +1,128 @@
+import { useState, useEffect } from 'react';
+import { Plus, Pencil, X, Check, AlertCircle, Package } from 'lucide-react';
+import { getProducts, getBrands, getSubCategories, addProduct, updateProduct } from '../../services/api';
+
+const empty = { name:'', description:'', price:'', quantity:'', imagePath:'', brandId:'', subCategoryId:'' };
+
+export default function AdminProducts() {
+  const [products, setProducts] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [subs, setSubs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(null);
+  const [form, setForm] = useState(empty);
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState({ text:'', type:'' });
+
+  const fetchAll = () => {
+    Promise.all([getProducts(), getBrands(), getSubCategories()])
+      .then(([p, b, s]) => { setProducts(p.data); setBrands(b.data); setSubs(s.data); })
+      .catch(() => {}).finally(() => setLoading(false));
+  };
+  useEffect(() => { fetchAll(); }, []);
+  const notify = (text, type='success') => { setMsg({text,type}); setTimeout(()=>setMsg({text:'',type:''}),3000); };
+  const set = (f) => (e) => setForm({...form,[f]:e.target.value});
+
+  const openAdd = () => { setForm(empty); setModal({ mode:'add' }); };
+  const openEdit = (p) => { setForm({ name:p.name, description:p.description||'', price:p.price, quantity:p.quantity, imagePath:p.imagePath||'', brandId:String(p.brandId), subCategoryId:String(p.subCategoryId) }); setModal({ mode:'edit', id:p.id }); };
+
+  const handleSave = async (e) => {
+    e.preventDefault(); setSaving(true);
+    const payload = { ...form, price: parseFloat(form.price), quantity: parseInt(form.quantity), brandId: parseInt(form.brandId), subCategoryId: parseInt(form.subCategoryId) };
+    try {
+      if (modal.mode==='add') await addProduct(payload);
+      else await updateProduct(modal.id, payload);
+      notify(modal.mode==='add'?'Product added!':'Product updated!');
+      setModal(null); fetchAll();
+    } catch(err){ notify(err.response?.data?.message||'Save failed','error'); }
+    finally { setSaving(false); }
+  };
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex items-center justify-between mb-6">
+        <div><h1 className="font-display text-2xl font-bold text-white">Products</h1><p className="text-gray-400 text-sm mt-0.5">{products.length} products</p></div>
+        <button onClick={openAdd} className="btn-primary btn-sm"><Plus size={16}/> Add Product</button>
+      </div>
+
+      {msg.text && <div className={`flex items-center gap-2 rounded-xl px-4 py-3 mb-5 text-sm ${msg.type==='success'?'bg-green-900/30 border border-green-800/50 text-green-300':'bg-red-900/30 border border-red-800/50 text-red-300'}`}>{msg.type==='success'?<Check size={14}/>:<AlertCircle size={14}/>}{msg.text}</div>}
+
+      <div className="card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[700px]">
+            <thead><tr className="border-b border-dark-600 bg-dark-700/50">
+              <th className="text-left px-4 py-3.5 text-gray-400 font-medium">#</th>
+              <th className="text-left px-4 py-3.5 text-gray-400 font-medium">Product</th>
+              <th className="text-left px-4 py-3.5 text-gray-400 font-medium">Brand</th>
+              <th className="text-left px-4 py-3.5 text-gray-400 font-medium">Category</th>
+              <th className="text-right px-4 py-3.5 text-gray-400 font-medium">Price</th>
+              <th className="text-right px-4 py-3.5 text-gray-400 font-medium">Stock</th>
+              <th className="text-right px-4 py-3.5 text-gray-400 font-medium">Actions</th>
+            </tr></thead>
+            <tbody>
+              {loading ? [...Array(4)].map((_,i)=><tr key={i}><td colSpan={7} className="px-4 py-4"><div className="h-4 bg-dark-700 rounded animate-pulse"/></td></tr>)
+              : products.map((p,i)=>(
+                <tr key={p.id} className="border-b border-dark-600/50 table-row-hover">
+                  <td className="px-4 py-3.5 text-gray-500">{i+1}</td>
+                  <td className="px-4 py-3.5">
+                    <div className="flex items-center gap-2">
+                      {p.imagePath ? <img src={p.imagePath} alt={p.name} className="w-9 h-9 rounded-lg object-cover flex-shrink-0"/> : <div className="w-9 h-9 bg-dark-700 rounded-lg flex items-center justify-center flex-shrink-0"><Package size={14} className="text-dark-400"/></div>}
+                      <span className="font-medium text-white line-clamp-1">{p.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3.5 text-gray-300">{p.brandName}</td>
+                  <td className="px-4 py-3.5"><span className="badge bg-dark-600 text-gray-300">{p.categoryName}</span></td>
+                  <td className="px-4 py-3.5 text-right text-primary-400 font-semibold">${p.price?.toFixed(2)}</td>
+                  <td className="px-4 py-3.5 text-right"><span className={`badge border ${p.quantity>5?'bg-green-900/40 text-green-300 border-green-800/40':p.quantity>0?'bg-amber-900/40 text-amber-300 border-amber-800/40':'bg-red-900/40 text-red-300 border-red-800/40'}`}>{p.quantity}</span></td>
+                  <td className="px-4 py-3.5 text-right">
+                    <button onClick={()=>openEdit(p)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-900/40 text-primary-400 hover:bg-primary-900/70 text-xs font-medium transition-all">
+                      <Pencil size={12}/> Edit
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {modal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="card w-full max-w-lg p-6 animate-slide-up my-4">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="font-semibold text-white text-lg">{modal.mode==='add'?'Add Product':'Edit Product'}</h2>
+              <button onClick={()=>setModal(null)} className="text-gray-500 hover:text-white"><X size={18}/></button>
+            </div>
+            <form onSubmit={handleSave} className="space-y-4">
+              <div><label className="label">Name *</label><input required value={form.name} onChange={set('name')} className="input" placeholder="Product name"/></div>
+              <div><label className="label">Description</label><textarea value={form.description} onChange={set('description')} className="input resize-none h-20" placeholder="Optional description"/></div>
+              <div className="grid grid-cols-2 gap-4">
+                <div><label className="label">Price (USD) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={set('price')} className="input" placeholder="0.00"/></div>
+                <div><label className="label">Stock Qty *</label><input required type="number" min="0" value={form.quantity} onChange={set('quantity')} className="input" placeholder="0"/></div>
+              </div>
+              <div><label className="label">Image Path</label><input value={form.imagePath} onChange={set('imagePath')} className="input" placeholder="/images/product.jpg"/></div>
+              <div className="grid grid-cols-2 gap-4">
+                <div><label className="label">Brand *</label>
+                  <select required value={form.brandId} onChange={set('brandId')} className="input">
+                    <option value="">-- Brand --</option>
+                    {brands.map(b=><option key={b.id} value={b.id}>{b.name}</option>)}
+                  </select>
+                </div>
+                <div><label className="label">Sub-Category *</label>
+                  <select required value={form.subCategoryId} onChange={set('subCategoryId')} className="input">
+                    <option value="">-- Sub-Category --</option>
+                    {subs.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="flex gap-3 pt-1">
+                <button type="button" onClick={()=>setModal(null)} className="btn-secondary flex-1 justify-center">Cancel</button>
+                <button type="submit" disabled={saving} className="btn-primary flex-1 justify-center">{saving?<span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"/>:'Save'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
