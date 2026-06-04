@@ -15,7 +15,7 @@ import java.util.List;
 public class DatabaseInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
-    private final PageRepository pageRepository;
+
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
@@ -24,34 +24,15 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // 1. Seed Pages
-        seedPages();
-
-        // 2. Seed Default Admin User
+        // Seed Admin User
         seedAdmin();
-
-        // 3. Seed Catalog
+        // Seed Catalog
         seedCatalog();
     }
 
-    private void seedPages() {
-        if (pageRepository.findByPageName("aboutus").isEmpty()) {
-            Page aboutUs = Page.builder()
-                    .pageName("aboutus")
-                    .title("About Us")
-                    .content("Welcome to CozyFurniture! We offer premium quality furniture designed for comfort, durability, and contemporary style. Our mission is to help you create your dream home.")
-                    .build();
-            pageRepository.save(aboutUs);
-        }
 
-        if (pageRepository.findByPageName("contactus").isEmpty()) {
-            Page contactUs = Page.builder()
-                    .pageName("contactus")
-                    .title("Contact Us")
-                    .content("Address: Tanzania, Dodoma, UDOM\nEmail: atanasikafuka@gmail.com\nPhone: +255 22 123 4567")
-                    .build();
-            pageRepository.save(contactUs);
-        }
+        if (pageRepository.findByPageName("aboutus").isEmpty()) {
+
     }
 
     private void seedAdmin() {

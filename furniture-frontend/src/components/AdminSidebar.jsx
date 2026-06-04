@@ -11,7 +11,7 @@ const links = [
   { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { to: '/admin/users', label: 'Users', icon: Users },
   { to: '/admin/reports', label: 'Reports', icon: BarChart2 },
-  { to: '/admin/pages', label: 'Pages', icon: FileText },
+
 ];
 
 export default function AdminSidebar() {

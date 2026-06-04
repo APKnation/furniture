@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-import { getPage } from '../../services/api';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import React from 'react';
 export default function Contact() {
   const [page, setPage] = useState(null);
   useEffect(() => { getPage('contactus').then(r => setPage(r.data)).catch(() => {}); }, []);
