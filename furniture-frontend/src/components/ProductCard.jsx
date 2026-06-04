@@ -45,7 +45,7 @@ export default function ProductCard({ product, onAddToCart }) {
           <h3 className="font-semibold text-gray-100 hover:text-primary-400 transition-colors line-clamp-1 mb-3">{product.name}</h3>
         </Link>
         <div className="flex items-center justify-between">
-          <p className="text-xl font-bold text-primary-400">${product.price?.toFixed(2)}</p>
+          <p className="text-xl font-bold text-primary-400">{`TZS ${product.price?.toLocaleString('en-US')}`}</p>
           {product.quantity > 0 && onAddToCart && (
             <button onClick={() => onAddToCart(product)}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-primary-600 hover:bg-primary-500 text-white text-xs font-semibold rounded-lg transition-all hover:shadow-lg hover:shadow-primary-600/30 active:scale-95">

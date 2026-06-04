@@ -97,7 +97,7 @@ export default function Checkout() {
           <div className="border-t border-dark-600 pt-4">
             <div className="flex justify-between font-bold text-white text-lg">
               <span>Total</span>
-              <span className="text-primary-400">${cart.totalAmount?.toFixed(2)}</span>
+              <span className="text-primary-400">{`TZS ${cart.totalAmount?.toLocaleString('en-US')}`}</span>
             </div>
           </div>
         </div>

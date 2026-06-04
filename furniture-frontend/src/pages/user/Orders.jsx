@@ -72,7 +72,7 @@ export default function Orders() {
                       {order.items?.map(item => (
                         <div key={item.id} className="flex items-center justify-between bg-dark-700 rounded-xl px-4 py-2.5">
                           <span className="text-sm text-gray-300">{item.productName} <span className="text-gray-500">×{item.quantity}</span></span>
-                          <span className="text-sm text-primary-400 font-medium">${item.subTotal?.toFixed(2)}</span>
+                          <span className="text-sm text-primary-400 font-medium">{`TZS ${item.subTotal?.toLocaleString('en-US')}`}</span>
                         </div>
                       ))}
                     </div>

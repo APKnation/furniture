@@ -93,7 +93,7 @@ export default function AdminReports() {
           </div>
           <div>
             <p className="text-gray-400 text-sm">Total Revenue</p>
-            <p className="text-2xl font-bold text-green-400">${data.totalSales?.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-green-400">{`TZS ${data.totalSales?.toLocaleString('en-US')}`}</p>
           </div>
         </div>
 
@@ -113,7 +113,7 @@ export default function AdminReports() {
           </div>
           <div>
             <p className="text-gray-400 text-sm">Avg. Order Value</p>
-            <p className="text-2xl font-bold text-purple-400">${averageOrderValue?.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-purple-400">{`TZS ${averageOrderValue?.toLocaleString('en-US')}`}</p>
           </div>
         </div>
       </div>
@@ -152,7 +152,7 @@ export default function AdminReports() {
                     } border text-xs`}>{o.status}</span>
                   </td>
                   <td className="px-5 py-4 text-gray-400 text-xs">{o.paymentMethod}</td>
-                  <td className="px-5 py-4 text-right text-primary-400 font-bold">${o.totalAmount?.toFixed(2)}</td>
+                  <td className="px-5 py-4 text-right text-primary-400 font-bold">{`TZS ${o.totalAmount?.toLocaleString('en-US')}`}</td>
                 </tr>
               ))}
             </tbody>
