@@ -117,16 +117,37 @@ export default function AdminProducts() {
                 <div><label className="label">Stock Qty *</label><input required type="number" min="0" value={form.quantity} onChange={set('quantity')} className="input" placeholder="0"/></div>
               </div>
               <div>
-                <label className="label">Product Image</label>
-                <div className="flex gap-3">
-                  <input value={form.imagePath} onChange={set('imagePath')} className="input flex-1" placeholder="Image Path or URL"/>
-                  <div className="relative flex-shrink-0">
-                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="product-file-upload"/>
-                    <label htmlFor="product-file-upload" className="btn-secondary h-11 flex items-center justify-center gap-2 cursor-pointer font-medium text-xs px-4">
-                      {uploading ? <span className="animate-spin rounded-full h-4 w-4 border-2 border-primary-500 border-t-transparent"/> : <><Upload size={14}/> Upload</>}
+                <label className="label">Product Image *</label>
+                {form.imagePath ? (
+                  <div className="relative rounded-xl overflow-hidden border border-dark-600 bg-dark-800 p-2 flex items-center gap-4">
+                    <img src={form.imagePath} alt="Preview" className="w-16 h-16 rounded-lg object-cover bg-dark-700"/>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-white truncate">{form.imagePath.split('/').pop()}</p>
+                      <p className="text-xs text-gray-500">Uploaded successfully</p>
+                    </div>
+                    <button type="button" onClick={() => setForm(prev => ({ ...prev, imagePath: '' }))} className="p-2 rounded-lg bg-red-950/40 text-red-400 hover:bg-red-950/70 transition-colors">
+                      <X size={16}/>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="product-file-upload" required={modal.mode === 'add'}/>
+                    <label htmlFor="product-file-upload" className="flex flex-col items-center justify-center border-2 border-dashed border-dark-600 hover:border-primary-500 bg-dark-800/40 hover:bg-dark-800/80 rounded-xl p-6 cursor-pointer transition-all">
+                      {uploading ? (
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent"/>
+                          <span className="text-xs text-gray-400">Uploading image...</span>
+                        </div>
+                      ) : (
+                        <>
+                          <Upload className="text-gray-500 mb-2 hover:text-primary-400" size={24}/>
+                          <span className="text-sm text-gray-300 font-medium">Click to upload image</span>
+                          <span className="text-xs text-gray-500 mt-1">PNG, JPG, JPEG up to 5MB</span>
+                        </>
+                      )}
                     </label>
                   </div>
-                </div>
+                )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div><label className="label">Brand *</label>

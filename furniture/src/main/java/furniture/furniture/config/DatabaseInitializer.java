@@ -48,7 +48,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             Page contactUs = Page.builder()
                     .pageName("contactus")
                     .title("Contact Us")
-                    .content("Get in touch with CozyFurniture!\nEmail: support@cozyfurniture.com\nPhone: +1-800-555-0199\nAddress: 123 Luxury Way, Comfort City")
+                    .content("Address: Tanzania, Dodoma, UDOM\nEmail: atanasikafuka@gmail.com\nPhone: +255 22 123 4567")
                     .build();
             pageRepository.save(contactUs);
         }
