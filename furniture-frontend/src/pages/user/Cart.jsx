@@ -62,7 +62,7 @@ export default function Cart() {
                     <Plus size={14}/>
                   </button>
                 </div>
-                <p className="w-24 text-right font-bold text-white">${item.subTotal?.toFixed(2)}</p>
+                <p className="w-24 text-right font-bold text-white">{`TZS ${item.subTotal?.toLocaleString('en-US')}`}</p>
                 <button onClick={() => handleRemove(item.id)} className="text-red-500 hover:text-red-400 transition-colors p-1">
                   <Trash2 size={16}/>
                 </button>
@@ -78,14 +78,14 @@ export default function Cart() {
               {cart.items.map(item => (
                 <div key={item.id} className="flex justify-between text-sm text-gray-400">
                   <span className="truncate pr-2">{item.productName} ×{item.quantity}</span>
-                  <span className="text-white font-medium flex-shrink-0">${item.subTotal?.toFixed(2)}</span>
+                  <span className="text-white font-medium flex-shrink-0">{`TZS ${item.subTotal?.toLocaleString('en-US')}`}</span>
                 </div>
               ))}
             </div>
             <div className="border-t border-dark-600 pt-4 mb-6">
               <div className="flex justify-between font-bold text-white text-lg">
                 <span>Total</span>
-                <span className="text-primary-400">${cart.totalAmount?.toFixed(2)}</span>
+                <span className="text-primary-400">{`TZS ${cart.totalAmount?.toLocaleString('en-US')}`}</span>
               </div>
             </div>
             <button onClick={() => navigate('/checkout')} className="btn-primary w-full justify-center">

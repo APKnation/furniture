@@ -90,7 +90,7 @@ export default function Checkout() {
             {cart.items?.map(item => (
               <div key={item.id} className="flex justify-between text-sm">
                 <span className="text-gray-400 truncate pr-2">{item.productName} ×{item.quantity}</span>
-                <span className="text-white font-medium flex-shrink-0">${item.subTotal?.toFixed(2)}</span>
+                <span className="text-white font-medium flex-shrink-0">{`TZS ${item.subTotal?.toLocaleString('en-US')}`}</span>
               </div>
             ))}
           </div>
