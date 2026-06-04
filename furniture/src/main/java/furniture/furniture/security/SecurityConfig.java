@@ -35,7 +35,7 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers(
                     "/api/auth/**",
-                    "/api/pages/**",
+                    // "/api/pages/**", // removed pages endpoint
                     "/api/products/**",
                     "/api/categories/**",
                     "/api/subcategories/**",
@@ -54,6 +54,7 @@ public class SecurityConfig {
             )
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
 
         return http.build();
     }

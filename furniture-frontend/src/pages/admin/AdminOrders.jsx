@@ -71,7 +71,7 @@ export default function AdminOrders() {
                 <span className={`badge border ${statusColors[order.status]||'bg-dark-600 text-gray-300'}`}>{order.status}</span>
               </div>
               <div className="flex items-center gap-4">
-                <p className="font-bold text-primary-400">${order.totalAmount?.toFixed(2)}</p>
+                <p className="font-bold text-primary-400">{`TZS ${order.totalAmount?.toLocaleString('en-US')}`}</p>
                 {expanded===order.id?<ChevronUp size={16} className="text-gray-400"/>:<ChevronDown size={16} className="text-gray-400"/>}
               </div>
             </div>
@@ -95,7 +95,7 @@ export default function AdminOrders() {
                     {order.items?.map(item=>(
                       <div key={item.id} className="flex justify-between items-center bg-dark-700 rounded-lg px-3 py-2 text-sm">
                         <span className="text-gray-300">{item.productName} <span className="text-gray-500">×{item.quantity}</span></span>
-                        <span className="text-primary-400 font-medium">${item.subTotal?.toFixed(2)}</span>
+                        <span className="text-primary-400 font-medium">{`TZS ${item.subTotal?.toLocaleString('en-US')}`}</span>
                       </div>
                     ))}
                   </div>

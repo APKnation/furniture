@@ -88,7 +88,7 @@ export default function AdminProducts() {
                   </td>
                   <td className="px-4 py-3.5 text-gray-300">{p.brandName}</td>
                   <td className="px-4 py-3.5"><span className="badge bg-dark-600 text-gray-300">{p.categoryName}</span></td>
-                  <td className="px-4 py-3.5 text-right text-primary-400 font-semibold">${p.price?.toFixed(2)}</td>
+                            <td className="px-4 py-3.5 text-right text-primary-400 font-semibold">{`TZS ${p.price?.toLocaleString('en-US')}`}</td>
                   <td className="px-4 py-3.5 text-right"><span className={`badge border ${p.quantity>5?'bg-green-900/40 text-green-300 border-green-800/40':p.quantity>0?'bg-amber-900/40 text-amber-300 border-amber-800/40':'bg-red-900/40 text-red-300 border-red-800/40'}`}>{p.quantity}</span></td>
                   <td className="px-4 py-3.5 text-right">
                     <button onClick={()=>openEdit(p)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-900/40 text-primary-400 hover:bg-primary-900/70 text-xs font-medium transition-all">
@@ -113,7 +113,7 @@ export default function AdminProducts() {
               <div><label className="label">Name *</label><input required value={form.name} onChange={set('name')} className="input" placeholder="Product name"/></div>
               <div><label className="label">Description</label><textarea value={form.description} onChange={set('description')} className="input resize-none h-20" placeholder="Optional description"/></div>
               <div className="grid grid-cols-2 gap-4">
-                <div><label className="label">Price (USD) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={set('price')} className="input" placeholder="0.00"/></div>
+                <div><label className="label">Price (TZS) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={set('price')} className="input" placeholder="0.00"/></div>
                 <div><label className="label">Stock Qty *</label><input required type="number" min="0" value={form.quantity} onChange={set('quantity')} className="input" placeholder="0"/></div>
               </div>
               <div>

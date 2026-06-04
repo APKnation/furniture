@@ -49,7 +49,7 @@ export default function Cart() {
                 )}
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-white truncate">{item.productName}</h3>
-                  <p className="text-primary-400 font-bold">${item.productPrice?.toFixed(2)}</p>
+                  <p className="text-primary-400 font-bold">{`TZS ${item.productPrice?.toLocaleString('en-US')}`}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button onClick={() => handleUpdate(item.id, item.quantity - 1)} disabled={item.quantity <= 1}

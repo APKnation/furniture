@@ -1,7 +1,17 @@
 package furniture.furniture.config;
 
-import furniture.furniture.model.*;
-import furniture.furniture.repository.*;
+import furniture.furniture.model.Brand;
+import furniture.furniture.model.Category;
+import furniture.furniture.model.SubCategory;
+import furniture.furniture.model.Product;
+import furniture.furniture.model.Role;
+import furniture.furniture.model.User;
+
+import furniture.furniture.repository.BrandRepository;
+import furniture.furniture.repository.CategoryRepository;
+import furniture.furniture.repository.SubCategoryRepository;
+import furniture.furniture.repository.ProductRepository;
+import furniture.furniture.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,9 +41,7 @@ public class DatabaseInitializer implements CommandLineRunner {
     }
 
 
-        if (pageRepository.findByPageName("aboutus").isEmpty()) {
 
-    }
 
     private void seedAdmin() {
         if (userRepository.findByEmail("admin@furniture.com").isEmpty()) {

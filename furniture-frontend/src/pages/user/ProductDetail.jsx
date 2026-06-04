@@ -79,7 +79,7 @@ export default function ProductDetail() {
             <p className="text-gray-400 text-sm">{product.subCategoryName}</p>
           </div>
 
-          <p className="text-4xl font-bold text-primary-400">${product.price?.toFixed(2)}</p>
+          <p className="text-4xl font-bold text-primary-400">{`TZS ${product.price?.toLocaleString('en-US')}`}</p>
 
           {product.description && (
             <p className="text-gray-300 leading-relaxed">{product.description}</p>
