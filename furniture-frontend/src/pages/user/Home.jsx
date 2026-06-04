@@ -1,0 +1,136 @@
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, Sparkles, Shield, Truck, Star } from 'lucide-react';
+import { getCategories, getProducts } from '../../services/api';
+import ProductCard from '../../components/ProductCard';
+import { useAuth } from '../../context/AuthContext';
+import { addToCart } from '../../services/api';
+
+const features = [
+  { icon: Truck, label: 'Free Shipping', desc: 'On orders over $500' },
+  { icon: Shield, label: 'Quality Guarantee', desc: '2 year warranty included' },
+  { icon: Star, label: 'Premium Brands', desc: 'Only top furniture brands' },
+];
+
+export default function Home() {
+  const { isAuthenticated, isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [featured, setFeatured] = useState([]);
+  const [toast, setToast] = useState('');
+
+  useEffect(() => {
+    getCategories().then(r => setCategories(r.data)).catch(() => {});
+    getProducts().then(r => setFeatured(r.data.slice(0, 6))).catch(() => {});
+  }, []);
+
+  const handleAddToCart = async (product) => {
+    if (!isAuthenticated) { navigate('/login'); return; }
+    try {
+      await addToCart({ productId: product.id, quantity: 1 });
+      setToast(`${product.name} added to cart!`);
+      setTimeout(() => setToast(''), 3000);
+    } catch (err) {
+      setToast(err.response?.data?.message || 'Failed to add to cart');
+      setTimeout(() => setToast(''), 3000);
+    }
+  };
+
+  return (
+    <div className="animate-fade-in">
+      {/* Toast */}
+      {toast && (
+        <div className="fixed top-20 right-4 z-50 bg-dark-700 border border-primary-700/50 text-white px-5 py-3 rounded-xl shadow-2xl animate-slide-up text-sm font-medium">
+          {toast}
+        </div>
+      )}
+
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 border-b border-dark-600">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-900/30 via-transparent to-transparent" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 bg-primary-900/40 border border-primary-700/40 text-primary-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+              <Sparkles size={14} /> New arrivals every week
+            </div>
+            <h1 className="font-display text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+              Elevate Your
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> Living Space</span>
+            </h1>
+            <p className="text-gray-400 text-lg leading-relaxed mb-8">
+              Discover handcrafted furniture that blends timeless design with modern comfort. From cozy sofas to elegant dining sets — find your perfect piece.
+            </p>
+            <div className="flex items-center gap-4 flex-wrap">
+              <Link to="/products" className="btn-primary text-base px-7 py-3.5">
+                Shop Now <ArrowRight size={18}/>
+              </Link>
+              <Link to="/about" className="btn-secondary text-base px-7 py-3.5">
+                Our Story
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="bg-dark-800 border-b border-dark-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {features.map(({ icon: Icon, label, desc }) => (
+              <div key={label} className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-primary-900/50 border border-primary-800/50 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Icon size={20} className="text-primary-400" />
+                </div>
+                <div>
+                  <p className="font-semibold text-white">{label}</p>
+                  <p className="text-sm text-gray-400">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Categories */}
+      {categories.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="font-display text-3xl font-bold text-white">Browse by Room</h2>
+              <p className="text-gray-400 mt-1">Find furniture designed for every space</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {categories.map((cat) => (
+              <Link key={cat.id} to={`/products?categoryId=${cat.id}`}
+                className="group card p-6 text-center hover:border-primary-600/60 hover:-translate-y-1 transition-all duration-300">
+                <div className="w-14 h-14 bg-primary-900/40 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-900/70 transition-colors">
+                  <span className="text-2xl">🛋️</span>
+                </div>
+                <p className="font-semibold text-white group-hover:text-primary-400 transition-colors">{cat.name}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Featured Products */}
+      {featured.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="font-display text-3xl font-bold text-white">Featured Products</h2>
+              <p className="text-gray-400 mt-1">Our most popular pieces</p>
+            </div>
+            <Link to="/products" className="btn-secondary btn-sm">View All <ArrowRight size={15}/></Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featured.map(p => (
+              <ProductCard key={p.id} product={p} onAddToCart={!isAdmin ? handleAddToCart : null} />
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
