@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/auth/**",
                     // "/api/pages/**", // removed pages endpoint
+                    "/api/products",
                     "/api/products/**",
                     "/api/categories/**",
                     "/api/subcategories/**",
