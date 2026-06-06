@@ -3,12 +3,11 @@ package furniture.furniture.controller;
 import furniture.furniture.dto.ChangePasswordRequest;
 import furniture.furniture.dto.UpdateProfileRequest;
 import furniture.furniture.model.User;
-import furniture.furniture.repository.UserRepository;
+import furniture.furniture.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -19,8 +18,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal User currentUser) {
@@ -45,11 +43,7 @@ public class UserController {
             return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
         }
 
-        User user = userRepository.findById(currentUser.getId()).orElseThrow();
-        user.setName(request.name());
-        user.setMobileNumber(request.mobileNumber());
-
-        userRepository.save(user);
+        userService.updateProfile(currentUser, request);
         return ResponseEntity.ok(Map.of("message", "Profile updated successfully!"));
     }
 
@@ -62,14 +56,11 @@ public class UserController {
             return ResponseEntity.status(401).body(Map.of("message", "Unauthorized"));
         }
 
-        User user = userRepository.findById(currentUser.getId()).orElseThrow();
-        if (!passwordEncoder.matches(request.oldPassword(), user.getPassword())) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Error: Incorrect old password!"));
+        try {
+            userService.changePassword(currentUser, request);
+            return ResponseEntity.ok(Map.of("message", "Password changed successfully!"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
-
-        user.setPassword(passwordEncoder.encode(request.newPassword()));
-        userRepository.save(user);
-
-        return ResponseEntity.ok(Map.of("message", "Password changed successfully!"));
     }
 }
