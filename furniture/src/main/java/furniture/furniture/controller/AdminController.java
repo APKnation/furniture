@@ -86,7 +86,12 @@ public class AdminController {
                 .map(this::toOrderDto)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new ReportDto(orderDtos, orderDtos.size(), totalSales));
+        BigDecimal averageOrderValue = BigDecimal.ZERO;
+        if (orderDtos.size() > 0) {
+            averageOrderValue = totalSales.divide(BigDecimal.valueOf(orderDtos.size()), 2, java.math.RoundingMode.HALF_UP);
+        }
+
+        return ResponseEntity.ok(new ReportDto(orderDtos, orderDtos.size(), totalSales, averageOrderValue));
     }
 
     private OrderDto toOrderDto(Order o) {

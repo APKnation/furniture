@@ -49,6 +49,9 @@ export const getPage = (name) => api.get(`/api/pages/${name}`);
 // Admin
 export const getDashboardStats = () => api.get('/api/admin/dashboard');
 export const getAdminUsers = () => api.get('/api/admin/users');
+export const addAdminUser = (data) => api.post('/api/admin/users', data);
+export const updateAdminUser = (id, data) => api.put(`/api/admin/users/${id}`, data);
+export const deleteAdminUser = (id) => api.delete(`/api/admin/users/${id}`);
 export const getSalesReport = (startDate, endDate) => api.get('/api/admin/reports', { params: { startDate, endDate } });
 
 export const getAdminOrders = () => api.get('/api/admin/orders');
@@ -66,6 +69,7 @@ export const updateSubCategory = (id, data) => api.put(`/api/admin/subcategories
 
 export const addProduct = (data) => api.post('/api/admin/products', data);
 export const updateProduct = (id, data) => api.put(`/api/admin/products/${id}`, data);
+export const deleteProduct = (id) => api.delete(`/api/admin/products/${id}`);
 export const uploadProductImage = (file) => {
   const formData = new FormData();
   formData.append('file', file);

@@ -5,6 +5,7 @@ import java.util.List;
 
 public record ReportDto(
     List<OrderDto> orders,
-    long orderCount,
-    BigDecimal totalSales
+    long totalOrders,
+    BigDecimal totalSales,
+    BigDecimal averageOrderValue
 ) {}

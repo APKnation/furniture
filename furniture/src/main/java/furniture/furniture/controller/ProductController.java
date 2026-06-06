@@ -126,6 +126,19 @@ public class ProductController {
         return ResponseEntity.ok(Map.of("message", "Product updated successfully!"));
     }
 
+    @DeleteMapping("/api/admin/products/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        if (!productRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        try {
+            productRepository.deleteById(id);
+            return ResponseEntity.ok(Map.of("message", "Product deleted successfully!"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Cannot delete product. It may be linked to existing orders."));
+        }
+    }
+
     @PostMapping("/api/admin/products/upload")
     public ResponseEntity<?> uploadProductImage(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {

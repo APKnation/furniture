@@ -7,7 +7,7 @@ export default function AdminReports() {
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
   const [dateRange, setDateRange] = useState({ start: thirtyDaysAgo, end: today });
-  const [data, setData] = useState({ orders: [], totalOrders: 0, totalSales: 0 });
+  const [data, setData] = useState({ orders: [], totalOrders: 0, totalSales: 0, averageOrderValue: 0 });
   const [loading, setLoading] = useState(false);
 
   const fetchReport = async () => {
@@ -16,7 +16,7 @@ export default function AdminReports() {
       const res = await getSalesReport(dateRange.start, dateRange.end);
       setData(res.data);
     } catch {
-      setData({ orders: [], totalOrders: 0, totalSales: 0 });
+      setData({ orders: [], totalOrders: 0, totalSales: 0, averageOrderValue: 0 });
     } finally {
       setLoading(false);
     }
@@ -48,7 +48,7 @@ export default function AdminReports() {
     document.body.removeChild(link);
   };
 
-  const averageOrderValue = data.totalOrders ? data.totalSales / data.totalOrders : 0;
+
 
   return (
     <div className="animate-fade-in">
@@ -113,7 +113,7 @@ export default function AdminReports() {
           </div>
           <div>
             <p className="text-gray-400 text-sm">Avg. Order Value</p>
-            <p className="text-2xl font-bold text-purple-400">{`TZS ${averageOrderValue?.toLocaleString('en-US')}`}</p>
+            <p className="text-2xl font-bold text-purple-400">{`TZS ${data.averageOrderValue?.toLocaleString('en-US')}`}</p>
           </div>
         </div>
       </div>
