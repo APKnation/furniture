@@ -1,15 +1,51 @@
 import { useState, useEffect } from 'react';
-import { Search, User, Mail, Phone, MapPin, Calendar } from 'lucide-react';
-import { getAdminUsers } from '../../services/api';
+import { Search, User, Mail, Phone, Calendar, Plus, Pencil, Trash2, X, Check, AlertCircle } from 'lucide-react';
+import { getAdminUsers, addAdminUser, updateAdminUser, deleteAdminUser } from '../../services/api';
+
+const empty = { name:'', email:'', mobileNumber:'' };
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const [modal, setModal] = useState(null);
+  const [form, setForm] = useState(empty);
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState({ text:'', type:'' });
+
+  const fetchUsers = () => {
     getAdminUsers().then(r => setUsers(r.data)).catch(() => {}).finally(() => setLoading(false));
-  }, []);
+  };
+  useEffect(() => { fetchUsers(); }, []);
+
+  const notify = (text, type='success') => { setMsg({text,type}); setTimeout(()=>setMsg({text:'',type:''}),3000); };
+  const set = (f) => (e) => setForm({...form,[f]:e.target.value});
+
+  const openAdd = () => { setForm(empty); setModal({ mode:'add' }); };
+  const openEdit = (u) => { setForm({ name:u.name, email:u.email, mobileNumber:u.mobileNumber||'' }); setModal({ mode:'edit', id:u.id }); };
+
+  const handleSave = async (e) => {
+    e.preventDefault(); setSaving(true);
+    try {
+      if (modal.mode==='add') await addAdminUser(form);
+      else await updateAdminUser(modal.id, form);
+      notify(modal.mode==='add'?'User added!':'User updated!');
+      setModal(null); fetchUsers();
+    } catch(err){ notify(err.response?.data?.message||'Save failed','error'); }
+    finally { setSaving(false); }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    try {
+      await deleteAdminUser(id);
+      notify('User deleted successfully!');
+      fetchUsers();
+    } catch(err) {
+      notify(err.response?.data?.message || 'Failed to delete user', 'error');
+    }
+  };
 
   const filteredUsers = users.filter(u =>
     u.name?.toLowerCase().includes(search.toLowerCase()) ||
@@ -24,7 +60,10 @@ export default function AdminUsers() {
           <h1 className="font-display text-2xl font-bold text-white">Registered Users</h1>
           <p className="text-gray-400 text-sm mt-0.5">{filteredUsers.length} total user(s)</p>
         </div>
+        <button onClick={openAdd} className="btn-primary btn-sm"><Plus size={16}/> Add User</button>
       </div>
+
+      {msg.text && <div className={`flex items-center gap-2 rounded-xl px-4 py-3 mb-5 text-sm ${msg.type==='success'?'bg-green-900/30 border border-green-800/50 text-green-300':'bg-red-900/30 border border-red-800/50 text-red-300'}`}>{msg.type==='success'?<Check size={14}/>:<AlertCircle size={14}/>}{msg.text}</div>}
 
       {/* Search Input */}
       <div className="relative mb-6">
@@ -40,8 +79,8 @@ export default function AdminUsers() {
               <tr className="border-b border-dark-600 bg-dark-700/50">
                 <th className="text-left px-5 py-3.5 text-gray-400 font-medium">Customer</th>
                 <th className="text-left px-5 py-3.5 text-gray-400 font-medium">Contact</th>
-                <th className="text-left px-5 py-3.5 text-gray-400 font-medium">Address</th>
                 <th className="text-right px-5 py-3.5 text-gray-400 font-medium">Registered Date</th>
+                <th className="text-right px-5 py-3.5 text-gray-400 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -72,21 +111,19 @@ export default function AdminUsers() {
                       </div>
                     )}
                   </td>
-                  <td className="px-5 py-4 text-gray-400 text-xs max-w-xs truncate" title={u.address}>
-                    {u.address ? (
-                      <div className="flex items-start gap-1">
-                        <MapPin size={12} className="text-gray-500 mt-0.5 flex-shrink-0"/>
-                        <span>{u.address}</span>
-                      </div>
-                    ) : (
-                      <span className="text-gray-600 italic">Not set</span>
-                    )}
-                  </td>
                   <td className="px-5 py-4 text-right text-gray-400 text-xs">
                     <div className="inline-flex items-center gap-1.5">
                       <Calendar size={12} className="text-gray-500"/>
                       <span>{new Date(u.regDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                     </div>
+                  </td>
+                  <td className="px-5 py-4 text-right space-x-2">
+                    <button onClick={() => openEdit(u)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-900/40 text-primary-400 hover:bg-primary-900/70 text-xs font-medium transition-all">
+                      <Pencil size={12}/> Edit
+                    </button>
+                    <button onClick={() => handleDelete(u.id)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-900/40 text-red-400 hover:bg-red-900/70 text-xs font-medium transition-all">
+                      <Trash2 size={12}/> Delete
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -97,6 +134,27 @@ export default function AdminUsers() {
           <div className="text-center py-16 text-gray-500">No users found matching your search.</div>
         )}
       </div>
+
+      {modal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="card w-full max-w-md p-6 animate-slide-up">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="font-semibold text-white text-lg">{modal.mode==='add'?'Add User':'Edit User'}</h2>
+              <button onClick={()=>setModal(null)} className="text-gray-500 hover:text-white"><X size={18}/></button>
+            </div>
+            {modal.mode === 'add' && <div className="mb-4 text-xs text-amber-400 bg-amber-950/30 p-2 border border-amber-900/50 rounded-lg">New users will be created with the default password: <b>password123</b></div>}
+            <form onSubmit={handleSave} className="space-y-4">
+              <div><label className="label">Full Name *</label><input required value={form.name} onChange={set('name')} className="input" placeholder="John Doe"/></div>
+              <div><label className="label">Email *</label><input required type="email" value={form.email} onChange={set('email')} className="input" placeholder="john@example.com"/></div>
+              <div><label className="label">Mobile Number</label><input value={form.mobileNumber} onChange={set('mobileNumber')} className="input" placeholder="+1234567890"/></div>
+              <div className="flex gap-3 pt-2">
+                <button type="button" onClick={()=>setModal(null)} className="btn-secondary flex-1 justify-center">Cancel</button>
+                <button type="submit" disabled={saving} className="btn-primary flex-1 justify-center">{saving?<span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"/>:'Save User'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

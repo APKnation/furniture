@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Plus, Pencil, X, Check, AlertCircle, Package, Upload } from 'lucide-react';
-import { getProducts, getBrands, getSubCategories, addProduct, updateProduct, uploadProductImage } from '../../services/api';
+import { Plus, Pencil, Trash2, X, Check, AlertCircle, Package, Upload } from 'lucide-react';
+import { getProducts, getBrands, getSubCategories, addProduct, updateProduct, uploadProductImage, deleteProduct } from '../../services/api';
 
 const empty = { name:'', description:'', price:'', quantity:'', imagePath:'', brandId:'', subCategoryId:'' };
 
@@ -54,6 +54,17 @@ export default function AdminProducts() {
     finally { setSaving(false); }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    try {
+      await deleteProduct(id);
+      notify('Product deleted successfully!');
+      fetchAll();
+    } catch(err) {
+      notify(err.response?.data?.message || 'Failed to delete product', 'error');
+    }
+  };
+
   return (
     <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-6">
@@ -90,9 +101,12 @@ export default function AdminProducts() {
                   <td className="px-4 py-3.5"><span className="badge bg-dark-600 text-gray-300">{p.categoryName}</span></td>
                             <td className="px-4 py-3.5 text-right text-primary-400 font-semibold">{`TZS ${p.price?.toLocaleString('en-US')}`}</td>
                   <td className="px-4 py-3.5 text-right"><span className={`badge border ${p.quantity>5?'bg-green-900/40 text-green-300 border-green-800/40':p.quantity>0?'bg-amber-900/40 text-amber-300 border-amber-800/40':'bg-red-900/40 text-red-300 border-red-800/40'}`}>{p.quantity}</span></td>
-                  <td className="px-4 py-3.5 text-right">
+                  <td className="px-4 py-3.5 text-right space-x-2">
                     <button onClick={()=>openEdit(p)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-900/40 text-primary-400 hover:bg-primary-900/70 text-xs font-medium transition-all">
                       <Pencil size={12}/> Edit
+                    </button>
+                    <button onClick={()=>handleDelete(p.id)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-900/40 text-red-400 hover:bg-red-900/70 text-xs font-medium transition-all">
+                      <Trash2 size={12}/> Delete
                     </button>
                   </td>
                 </tr>

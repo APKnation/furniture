@@ -28,6 +28,7 @@ public class AdminController {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @GetMapping("/dashboard")
     public ResponseEntity<DashboardStatsDto> getDashboardStats() {
@@ -66,6 +67,54 @@ public class AdminController {
         )).collect(Collectors.toList());
 
         return ResponseEntity.ok(userDtos);
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<?> addUser(@jakarta.validation.Valid @RequestBody furniture.furniture.dto.AdminUserRequest request) {
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            return ResponseEntity.badRequest().body(java.util.Map.of("message", "Error: Email is already in use!"));
+        }
+        User user = User.builder()
+                .name(request.name())
+                .email(request.email())
+                .password(passwordEncoder.encode("password123"))
+                .mobileNumber(request.mobileNumber())
+                .role(Role.USER)
+                .build();
+        userRepository.save(user);
+        return ResponseEntity.ok(java.util.Map.of("message", "User created successfully!"));
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @jakarta.validation.Valid @RequestBody furniture.furniture.dto.AdminUserRequest request) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        // Check if email is taken by another user
+        java.util.Optional<User> existing = userRepository.findByEmail(request.email());
+        if (existing.isPresent() && !existing.get().getId().equals(id)) {
+            return ResponseEntity.badRequest().body(java.util.Map.of("message", "Error: Email is already in use!"));
+        }
+
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setMobileNumber(request.mobileNumber());
+        userRepository.save(user);
+        return ResponseEntity.ok(java.util.Map.of("message", "User updated successfully!"));
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        if (!userRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        try {
+            userRepository.deleteById(id);
+            return ResponseEntity.ok(java.util.Map.of("message", "User deleted successfully!"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(java.util.Map.of("message", "Cannot delete user. They may be linked to existing orders."));
+        }
     }
 
     @GetMapping("/reports")
