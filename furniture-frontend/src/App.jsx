@@ -21,9 +21,7 @@ import RecoverPassword from './pages/auth/RecoverPassword';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminBrands from './pages/admin/AdminBrands';
 import AdminCategories from './pages/admin/AdminCategories';
-import AdminSubCategories from './pages/admin/AdminSubCategories';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminUsers from './pages/admin/AdminUsers';
@@ -68,9 +66,7 @@ function AppRoutes() {
       {/* Admin */}
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
         <Route index element={<AdminDashboard />} />
-        <Route path="brands" element={<AdminBrands />} />
         <Route path="categories" element={<AdminCategories />} />
-        <Route path="subcategories" element={<AdminSubCategories />} />
         <Route path="products" element={<AdminProducts />} />
         <Route path="orders" element={<AdminOrders />} />
         <Route path="users" element={<AdminUsers />} />

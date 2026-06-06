@@ -10,10 +10,7 @@ public record ProductDto(
     BigDecimal price,
     Integer quantity,
     String imagePath,
-    Long brandId,
-    String brandName,
-    Long subCategoryId,
-    String subCategoryName,
+
     Long categoryId,
     String categoryName,
     LocalDateTime creationDate

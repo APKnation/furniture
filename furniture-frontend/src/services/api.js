@@ -23,10 +23,7 @@ export const updateProfile = (data) => api.put('/api/users/profile', data);
 export const changePassword = (data) => api.put('/api/users/change-password', data);
 
 // Catalog
-export const getBrands = () => api.get('/api/brands');
 export const getCategories = () => api.get('/api/categories');
-export const getSubCategories = () => api.get('/api/subcategories');
-export const getSubCategoriesByCategory = (id) => api.get(`/api/subcategories/category/${id}`);
 export const getProducts = (params) => api.get('/api/products', { params });
 export const getProductById = (id) => api.get(`/api/products/${id}`);
 
@@ -58,14 +55,8 @@ export const getAdminOrders = () => api.get('/api/admin/orders');
 export const searchOrderByNumber = (orderNumber) => api.get('/api/admin/orders/search', { params: { orderNumber } });
 export const updateOrderStatus = (id, status) => api.put(`/api/admin/orders/${id}/status`, { status });
 
-export const addBrand = (data) => api.post('/api/admin/brands', data);
-export const updateBrand = (id, data) => api.put(`/api/admin/brands/${id}`, data);
-
 export const addCategory = (data) => api.post('/api/admin/categories', data);
 export const updateCategory = (id, data) => api.put(`/api/admin/categories/${id}`, data);
-
-export const addSubCategory = (data) => api.post('/api/admin/subcategories', data);
-export const updateSubCategory = (id, data) => api.put(`/api/admin/subcategories/${id}`, data);
 
 export const addProduct = (data) => api.post('/api/admin/products', data);
 export const updateProduct = (id, data) => api.put(`/api/admin/products/${id}`, data);

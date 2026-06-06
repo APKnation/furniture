@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, X, Check, AlertCircle, Package, Upload } from 'lucide-react';
-import { getProducts, getBrands, getSubCategories, addProduct, updateProduct, uploadProductImage, deleteProduct } from '../../services/api';
+import { getProducts, getCategories, addProduct, updateProduct, uploadProductImage, deleteProduct } from '../../services/api';
 
-const empty = { name:'', description:'', price:'', quantity:'', imagePath:'', brandId:'', subCategoryId:'' };
+const empty = { name:'', description:'', price:'', quantity:'', imagePath:'', categoryId:'' };
 
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [subs, setSubs] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState(empty);
@@ -31,8 +30,8 @@ export default function AdminProducts() {
   };
 
   const fetchAll = () => {
-    Promise.all([getProducts(), getBrands(), getSubCategories()])
-      .then(([p, b, s]) => { setProducts(p.data); setBrands(b.data); setSubs(s.data); })
+    Promise.all([getProducts(), getCategories()])
+      .then(([p, c]) => { setProducts(p.data); setCategories(c.data); })
       .catch(() => {}).finally(() => setLoading(false));
   };
   useEffect(() => { fetchAll(); }, []);
@@ -40,11 +39,11 @@ export default function AdminProducts() {
   const set = (f) => (e) => setForm({...form,[f]:e.target.value});
 
   const openAdd = () => { setForm(empty); setModal({ mode:'add' }); };
-  const openEdit = (p) => { setForm({ name:p.name, description:p.description||'', price:p.price, quantity:p.quantity, imagePath:p.imagePath||'', brandId:String(p.brandId), subCategoryId:String(p.subCategoryId) }); setModal({ mode:'edit', id:p.id }); };
+  const openEdit = (p) => { setForm({ name:p.name, description:p.description||'', price:p.price, quantity:p.quantity, imagePath:p.imagePath||'', categoryId:String(p.categoryId) }); setModal({ mode:'edit', id:p.id }); };
 
   const handleSave = async (e) => {
     e.preventDefault(); setSaving(true);
-    const payload = { ...form, price: parseFloat(form.price), quantity: parseInt(form.quantity), brandId: parseInt(form.brandId), subCategoryId: parseInt(form.subCategoryId) };
+    const payload = { ...form, price: parseFloat(form.price), quantity: parseInt(form.quantity), categoryId: parseInt(form.categoryId) };
     try {
       if (modal.mode==='add') await addProduct(payload);
       else await updateProduct(modal.id, payload);
@@ -80,7 +79,6 @@ export default function AdminProducts() {
             <thead><tr className="border-b border-dark-600 bg-dark-700/50">
               <th className="text-left px-4 py-3.5 text-gray-400 font-medium">#</th>
               <th className="text-left px-4 py-3.5 text-gray-400 font-medium">Product</th>
-              <th className="text-left px-4 py-3.5 text-gray-400 font-medium">Brand</th>
               <th className="text-left px-4 py-3.5 text-gray-400 font-medium">Category</th>
               <th className="text-right px-4 py-3.5 text-gray-400 font-medium">Price</th>
               <th className="text-right px-4 py-3.5 text-gray-400 font-medium">Stock</th>
@@ -97,7 +95,6 @@ export default function AdminProducts() {
                       <span className="font-medium text-white line-clamp-1">{p.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3.5 text-gray-300">{p.brandName}</td>
                   <td className="px-4 py-3.5"><span className="badge bg-dark-600 text-gray-300">{p.categoryName}</span></td>
                             <td className="px-4 py-3.5 text-right text-primary-400 font-semibold">{`TZS ${p.price?.toLocaleString('en-US')}`}</td>
                   <td className="px-4 py-3.5 text-right"><span className={`badge border ${p.quantity>5?'bg-green-900/40 text-green-300 border-green-800/40':p.quantity>0?'bg-amber-900/40 text-amber-300 border-amber-800/40':'bg-red-900/40 text-red-300 border-red-800/40'}`}>{p.quantity}</span></td>
@@ -164,24 +161,12 @@ export default function AdminProducts() {
                 )}
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div><label className="label">Brand *</label>
-                  <select required value={form.brandId} onChange={set('brandId')} className="input">
-                    <option value="">-- Brand --</option>
-                    {brands.map(b=><option key={b.id} value={b.id}>{b.name}</option>)}
-                  </select>
-                </div>
-                <div><label className="label">Category / Sub-Category *</label>
-                  <select required value={form.subCategoryId} onChange={set('subCategoryId')} className="input">
-                    <option value="">-- Select Furniture Type --</option>
-                    {Array.from(new Set(subs.map(s => s.categoryName))).map(catName => (
-                      <optgroup key={catName} label={catName}>
-                        {subs.filter(s => s.categoryName === catName).map(s => (
-                          <option key={s.id} value={s.id}>{s.name}</option>
-                        ))}
-                      </optgroup>
-                    ))}
-                  </select>
-                </div>
+                <div><label className="label">Category *</label>
+                <select required value={form.categoryId} onChange={set('categoryId')} className="input">
+                  <option value="">-- Select Category --</option>
+                  {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
               </div>
               <div className="flex gap-3 pt-1">
                 <button type="button" onClick={()=>setModal(null)} className="btn-secondary flex-1 justify-center">Cancel</button>

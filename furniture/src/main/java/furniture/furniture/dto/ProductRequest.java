@@ -11,6 +11,5 @@ public record ProductRequest(
     @NotNull @PositiveOrZero BigDecimal price,
     @NotNull @PositiveOrZero Integer quantity,
     String imagePath,
-    @NotNull Long brandId,
-    @NotNull Long subCategoryId
+    @NotNull Long categoryId
 ) {}

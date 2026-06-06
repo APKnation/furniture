@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
-import { getProducts, getBrands, getCategories, getSubCategories, addToCart } from '../../services/api';
+import { getProducts, getCategories, addToCart } from '../../services/api';
 import ProductCard from '../../components/ProductCard';
 import { useAuth } from '../../context/AuthContext';
 
@@ -11,33 +11,25 @@ export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [products, setProducts] = useState([]);
-  const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState('');
 
   const [search, setSearch] = useState(searchParams.get('search') || '');
-  const [brandId, setBrandId] = useState(searchParams.get('brandId') || '');
   const [categoryId, setCategoryId] = useState(searchParams.get('categoryId') || '');
-  const [subCategoryId, setSubCategoryId] = useState(searchParams.get('subCategoryId') || '');
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    getBrands().then(r => setBrands(r.data)).catch(() => {});
     getCategories().then(r => setCategories(r.data)).catch(() => {});
-    getSubCategories().then(r => setSubCategories(r.data)).catch(() => {});
   }, []);
 
   useEffect(() => {
     setLoading(true);
     const params = {};
     if (search) params.search = search;
-    if (brandId) params.brandId = brandId;
     if (categoryId) params.categoryId = categoryId;
-    if (subCategoryId) params.subCategoryId = subCategoryId;
     getProducts(params).then(r => setProducts(r.data)).catch(() => setProducts([])).finally(() => setLoading(false));
-  }, [search, brandId, categoryId, subCategoryId]);
+  }, [search, categoryId]);
 
   const handleAddToCart = async (product) => {
     if (!isAuthenticated) { navigate('/login'); return; }
@@ -51,10 +43,10 @@ export default function Products() {
     }
   };
 
-  const clearFilters = () => { setSearch(''); setBrandId(''); setCategoryId(''); setSubCategoryId(''); };
-  const hasFilters = search || brandId || categoryId || subCategoryId;
+  const clearFilters = () => { setSearch(''); setCategoryId(''); };
+  const hasFilters = search || categoryId;
 
-  const filteredSubs = categoryId ? subCategories.filter(s => String(s.categoryId) === String(categoryId)) : subCategories;
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
@@ -82,26 +74,12 @@ export default function Products() {
       {/* Filters */}
       {showFilters && (
         <div className="card p-5 mb-6 animate-slide-up">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="label">Category</label>
-              <select value={categoryId} onChange={e => { setCategoryId(e.target.value); setSubCategoryId(''); }} className="input">
+              <select value={categoryId} onChange={e => setCategoryId(e.target.value)} className="input">
                 <option value="">All Categories</option>
                 {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="label">Sub-Category</label>
-              <select value={subCategoryId} onChange={e => setSubCategoryId(e.target.value)} className="input">
-                <option value="">All Sub-Categories</option>
-                {filteredSubs.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="label">Brand</label>
-              <select value={brandId} onChange={e => setBrandId(e.target.value)} className="input">
-                <option value="">All Brands</option>
-                {brands.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
               </select>
             </div>
           </div>

@@ -27,7 +27,7 @@ public class AdminController {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-    private final BrandRepository brandRepository;
+
     private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @GetMapping("/dashboard")
@@ -39,7 +39,7 @@ public class AdminController {
         long totalOrders = orderRepository.count();
 
         long totalProducts = productRepository.count();
-        long totalBrands = brandRepository.count();
+    long totalBrands = 0;
         long totalRegisteredUsers = userRepository.findByRole(Role.USER).size();
 
         DashboardStatsDto stats = new DashboardStatsDto(

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ShoppingBag, Package, Tag, Users, TrendingUp, CheckCircle, Truck, XCircle } from 'lucide-react';
+import { ShoppingBag, Package, Users, TrendingUp, CheckCircle, Truck, XCircle } from 'lucide-react';
 import { getDashboardStats } from '../../services/api';
 
 export default function AdminDashboard() {
@@ -17,7 +17,6 @@ export default function AdminDashboard() {
     { label: 'Canceled', value: stats.totalCanceledOrders, icon: XCircle, color: 'from-red-700 to-red-900', textColor: 'text-red-300' },
     { label: 'Total Orders', value: stats.totalOrders, icon: TrendingUp, color: 'from-purple-700 to-purple-900', textColor: 'text-purple-300' },
     { label: 'Products', value: stats.totalProducts, icon: Package, color: 'from-primary-700 to-primary-900', textColor: 'text-primary-300' },
-    { label: 'Brands', value: stats.totalBrands, icon: Tag, color: 'from-teal-700 to-teal-900', textColor: 'text-teal-300' },
     { label: 'Customers', value: stats.totalRegisteredUsers, icon: Users, color: 'from-pink-700 to-pink-900', textColor: 'text-pink-300' },
   ] : [];
 

@@ -2,12 +2,10 @@ package furniture.furniture.controller;
 
 import furniture.furniture.dto.ProductDto;
 import furniture.furniture.dto.ProductRequest;
-import furniture.furniture.model.Brand;
+import furniture.furniture.model.Category;
 import furniture.furniture.model.Product;
-import furniture.furniture.model.SubCategory;
-import furniture.furniture.repository.BrandRepository;
+import furniture.furniture.repository.CategoryRepository;
 import furniture.furniture.repository.ProductRepository;
-import furniture.furniture.repository.SubCategoryRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +28,10 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductRepository productRepository;
-    private final BrandRepository brandRepository;
-    private final SubCategoryRepository subCategoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @GetMapping("/api/products")
     public List<ProductDto> getProducts(
-            @RequestParam(required = false) Long brandId,
-            @RequestParam(required = false) Long subCategoryId,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String search
     ) {
@@ -44,10 +39,6 @@ public class ProductController {
 
         if (search != null && !search.trim().isEmpty()) {
             products = productRepository.searchProducts(search.trim());
-        } else if (brandId != null) {
-            products = productRepository.findByBrandId(brandId);
-        } else if (subCategoryId != null) {
-            products = productRepository.findBySubCategoryId(subCategoryId);
         } else if (categoryId != null) {
             products = productRepository.findByCategoryId(categoryId);
         } else {
@@ -70,14 +61,9 @@ public class ProductController {
 
     @PostMapping("/api/admin/products")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest request) {
-        Brand brand = brandRepository.findById(request.brandId()).orElse(null);
-        if (brand == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Error: Brand not found!"));
-        }
-
-        SubCategory subCategory = subCategoryRepository.findById(request.subCategoryId()).orElse(null);
-        if (subCategory == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Error: Sub-category not found!"));
+        Category category = categoryRepository.findById(request.categoryId()).orElse(null);
+        if (category == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Error: Category not found!"));
         }
 
         Product product = Product.builder()
@@ -86,8 +72,7 @@ public class ProductController {
                 .price(request.price())
                 .quantity(request.quantity())
                 .imagePath(request.imagePath())
-                .brand(brand)
-                .subCategory(subCategory)
+                .category(category)
                 .build();
 
         productRepository.save(product);
@@ -104,14 +89,9 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
 
-        Brand brand = brandRepository.findById(request.brandId()).orElse(null);
-        if (brand == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Error: Brand not found!"));
-        }
-
-        SubCategory subCategory = subCategoryRepository.findById(request.subCategoryId()).orElse(null);
-        if (subCategory == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Error: Sub-category not found!"));
+        Category category = categoryRepository.findById(request.categoryId()).orElse(null);
+        if (category == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Error: Category not found!"));
         }
 
         product.setName(request.name());
@@ -119,8 +99,7 @@ public class ProductController {
         product.setPrice(request.price());
         product.setQuantity(request.quantity());
         product.setImagePath(request.imagePath());
-        product.setBrand(brand);
-        product.setSubCategory(subCategory);
+        product.setCategory(category);
 
         productRepository.save(product);
         return ResponseEntity.ok(Map.of("message", "Product updated successfully!"));
@@ -176,12 +155,8 @@ public class ProductController {
                 p.getPrice(),
                 p.getQuantity(),
                 p.getImagePath(),
-                p.getBrand().getId(),
-                p.getBrand().getName(),
-                p.getSubCategory().getId(),
-                p.getSubCategory().getName(),
-                p.getSubCategory().getCategory().getId(),
-                p.getSubCategory().getCategory().getName(),
+                p.getCategory().getId(),
+                p.getCategory().getName(),
                 p.getCreationDate()
         );
     }

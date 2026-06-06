@@ -1,17 +1,14 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Tag, FolderTree, Layers, Package, ShoppingBag, Users, BarChart2, LogOut, Sofa, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, FolderTree, Package, ShoppingBag, Users, BarChart2, LogOut, Sofa, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const links = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/admin/brands', label: 'Brands', icon: Tag },
   { to: '/admin/categories', label: 'Categories', icon: FolderTree },
-  { to: '/admin/subcategories', label: 'Sub-Categories', icon: Layers },
   { to: '/admin/products', label: 'Products', icon: Package },
   { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { to: '/admin/users', label: 'Users', icon: Users },
   { to: '/admin/reports', label: 'Reports', icon: BarChart2 },
-
 ];
 
 export default function AdminSidebar() {

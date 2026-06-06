@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ShoppingCart, ArrowLeft, Package, Tag, FolderTree, AlertCircle, CheckCircle } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, Package, FolderTree, AlertCircle, CheckCircle } from 'lucide-react';
 import { getProductById, addToCart } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -72,11 +72,9 @@ export default function ProductDetail() {
         <div className="space-y-5">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="badge bg-primary-900/50 text-primary-400 border border-primary-800/50">{product.brandName}</span>
               <span className="badge bg-dark-600 text-gray-400">{product.categoryName}</span>
             </div>
             <h1 className="font-display text-3xl font-bold text-white mb-1">{product.name}</h1>
-            <p className="text-gray-400 text-sm">{product.subCategoryName}</p>
           </div>
 
           <p className="text-4xl font-bold text-primary-400">{`TZS ${product.price?.toLocaleString('en-US')}`}</p>
@@ -112,9 +110,7 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {/* Info grid */}
-          <div className="card p-4 grid grid-cols-2 gap-3 text-sm">
-            <div className="flex items-center gap-2 text-gray-400"><Tag size={14} className="text-primary-500"/> Brand: <span className="text-white font-medium">{product.brandName}</span></div>
+          <div className="card p-4 text-sm">
             <div className="flex items-center gap-2 text-gray-400"><FolderTree size={14} className="text-primary-500"/> Category: <span className="text-white font-medium">{product.categoryName}</span></div>
           </div>
         </div>

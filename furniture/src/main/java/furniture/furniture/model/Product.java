@@ -32,12 +32,8 @@ public class Product {
     private String imagePath;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "brand_id", nullable = false)
-    private Brand brand;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "subcategory_id", nullable = false)
-    private SubCategory subCategory;
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     private LocalDateTime creationDate;
 
