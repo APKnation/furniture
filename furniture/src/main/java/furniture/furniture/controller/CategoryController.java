@@ -2,7 +2,7 @@ package furniture.furniture.controller;
 
 import furniture.furniture.dto.CategoryRequest;
 import furniture.furniture.model.Category;
-import furniture.furniture.repository.CategoryRepository;
+import furniture.furniture.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,23 +16,21 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     @GetMapping("/api/categories")
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+        return categoryService.getAllCategories();
     }
 
     @PostMapping("/api/admin/categories")
     public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryRequest request) {
-        if (categoryRepository.findByName(request.name()).isPresent()) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Error: Category name already exists!"));
+        try {
+            categoryService.addCategory(request);
+            return ResponseEntity.ok(Map.of("message", "Category added successfully!"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
-        Category category = Category.builder()
-                .name(request.name())
-                .build();
-        categoryRepository.save(category);
-        return ResponseEntity.ok(Map.of("message", "Category added successfully!"));
     }
 
     @PutMapping("/api/admin/categories/{id}")
@@ -40,19 +38,16 @@ public class CategoryController {
             @PathVariable Long id,
             @Valid @RequestBody CategoryRequest request
     ) {
-        Category category = categoryRepository.findById(id)
-                .orElse(null);
-        if (category == null) {
-            return ResponseEntity.notFound().build();
+        try {
+            categoryService.updateCategory(id, request);
+            return ResponseEntity.ok(Map.of("message", "Category updated successfully!"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("Category not found")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
-
-        var existing = categoryRepository.findByName(request.name()).orElse(null);
-        if (existing != null && !existing.getId().equals(id)) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Error: Category name already exists!"));
-        }
-
-        category.setName(request.name());
-        categoryRepository.save(category);
-        return ResponseEntity.ok(Map.of("message", "Category updated successfully!"));
     }
 }
