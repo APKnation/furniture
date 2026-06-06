@@ -1,25 +1,24 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sofa, User, Mail, Lock, Phone, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
+import { Sofa, User, Mail, Lock, Phone, Eye, EyeOff } from 'lucide-react';
 import { register } from '../../services/api';
+import { showError, showSuccess } from '../../utils/swal';
 
 export default function Register() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ name:'', email:'', password:'', mobileNumber:'' });
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); setLoading(true);
+    setLoading(true);
     try {
       await register(form);
-      setSuccess('Account created! Redirecting to login...');
-      setTimeout(() => navigate('/login'), 1500);
+      await showSuccess('Account created!', 'You can now sign in.');
+      navigate('/login');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      showError('Registration failed', err.response?.data?.message || 'Please try again.');
     } finally { setLoading(false); }
   };
 
@@ -37,9 +36,6 @@ export default function Register() {
         </div>
 
         <div className="card p-8">
-          {error && <div className="flex items-center gap-2 bg-red-900/30 border border-red-800/50 rounded-xl px-4 py-3 mb-5 text-red-300 text-sm"><AlertCircle size={15}/>{error}</div>}
-          {success && <div className="flex items-center gap-2 bg-green-900/30 border border-green-800/50 rounded-xl px-4 py-3 mb-5 text-green-300 text-sm"><CheckCircle size={15}/>{success}</div>}
-
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

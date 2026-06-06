@@ -1,24 +1,25 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sofa, Mail, ShieldQuestion, Lock, AlertCircle, CheckCircle } from 'lucide-react';
+import { Sofa, Mail, Lock } from 'lucide-react';
 import { recoverPassword } from '../../services/api';
+import { showError, showSuccess } from '../../utils/swal';
 
 export default function RecoverPassword() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email:'', newPassword:'' });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const set = (f) => (e) => setForm({ ...form, [f]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); setError(''); setLoading(true);
+    e.preventDefault();
+    setLoading(true);
     try {
       await recoverPassword(form);
-      setSuccess('Password reset! Redirecting to login...');
-      setTimeout(() => navigate('/login'), 1800);
-    } catch (err) { setError(err.response?.data?.message || 'Recovery failed.'); }
-    finally { setLoading(false); }
+      await showSuccess('Password reset!', 'You can now login with your new password.');
+      navigate('/login');
+    } catch (err) {
+      showError('Recovery failed', err.response?.data?.message || 'Something went wrong.');
+    } finally { setLoading(false); }
   };
 
   return (
@@ -32,8 +33,6 @@ export default function RecoverPassword() {
           <p className="text-gray-400 mt-1">Answer your security question to reset</p>
         </div>
         <div className="card p-8">
-          {error && <div className="flex items-center gap-2 bg-red-900/30 border border-red-800/50 rounded-xl px-4 py-3 mb-5 text-red-300 text-sm"><AlertCircle size={15}/>{error}</div>}
-          {success && <div className="flex items-center gap-2 bg-green-900/30 border border-green-800/50 rounded-xl px-4 py-3 mb-5 text-green-300 text-sm"><CheckCircle size={15}/>{success}</div>}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="label">Email Address</label>

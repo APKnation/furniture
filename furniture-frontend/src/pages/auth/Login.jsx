@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sofa, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Sofa, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { login } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { showError, showSuccess } from '../../utils/swal';
 
 export default function Login() {
   const { loginUser } = useAuth();
@@ -10,17 +11,17 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); setLoading(true);
+    setLoading(true);
     try {
       const res = await login(form);
       loginUser(res.data.token, res.data);
+      showSuccess('Welcome back!', 'Successfully signed in.');
       navigate(res.data.role === 'ADMIN' ? '/admin' : '/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid email or password.');
+      showError('Login Failed', err.response?.data?.message || 'Invalid email or password.');
     } finally { setLoading(false); }
   };
 
@@ -37,11 +38,6 @@ export default function Login() {
         </div>
 
         <div className="card p-8">
-          {error && (
-            <div className="flex items-center gap-2 bg-red-900/30 border border-red-800/50 rounded-xl px-4 py-3 mb-5 text-red-300 text-sm">
-              <AlertCircle size={15}/> {error}
-            </div>
-          )}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="label">Email Address</label>

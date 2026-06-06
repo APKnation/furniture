@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Eye, ChevronDown, ChevronUp, Check, AlertCircle } from 'lucide-react';
 import { getAdminOrders, searchOrderByNumber, updateOrderStatus } from '../../services/api';
+import { showError, showSuccess } from '../../utils/swal';
 
 const statusColors = {
   NEW: 'bg-blue-900/50 text-blue-300 border-blue-800/50',
@@ -16,11 +17,9 @@ export default function AdminOrders() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(null);
   const [search, setSearch] = useState('');
-  const [msg, setMsg] = useState({ text:'', type:'' });
 
   const fetchOrders = () => getAdminOrders().then(r=>setOrders(r.data)).catch(()=>{}).finally(()=>setLoading(false));
   useEffect(()=>{ fetchOrders(); },[]);
-  const notify = (text, type='success') => { setMsg({text,type}); setTimeout(()=>setMsg({text:'',type:''}),3000); };
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -35,9 +34,9 @@ export default function AdminOrders() {
   const handleStatusChange = async (id, status) => {
     try {
       await updateOrderStatus(id, status);
-      notify(`Order status updated to ${status}`);
+      showSuccess('Updated', `Order status changed to ${status}`);
       fetchOrders();
-    } catch(err){ notify(err.response?.data?.message||'Update failed','error'); }
+    } catch(err){ showError('Update failed', err.response?.data?.message||'Failed to update status'); }
   };
 
   return (
@@ -45,8 +44,6 @@ export default function AdminOrders() {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <div><h1 className="font-display text-2xl font-bold text-white">Orders</h1><p className="text-gray-400 text-sm mt-0.5">{orders.length} orders</p></div>
       </div>
-
-      {msg.text && <div className={`flex items-center gap-2 rounded-xl px-4 py-3 mb-5 text-sm ${msg.type==='success'?'bg-green-900/30 border border-green-800/50 text-green-300':'bg-red-900/30 border border-red-800/50 text-red-300'}`}>{msg.type==='success'?<Check size={14}/>:<AlertCircle size={14}/>}{msg.text}</div>}
 
       {/* Search */}
       <form onSubmit={handleSearch} className="flex gap-3 mb-6">

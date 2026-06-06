@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from 'lucide-react';
 import { getCart, updateCartItem, removeCartItem, clearCart } from '../../services/api';
+import { showError, showSuccess, confirmDelete } from '../../utils/swal';
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -12,10 +13,16 @@ export default function Cart() {
   useEffect(() => { fetchCart(); }, []);
 
   const handleUpdate = async (id, qty) => {
-    try { await updateCartItem(id, qty); fetchCart(); } catch (err) { alert(err.response?.data?.message || 'Update failed'); }
+    try { await updateCartItem(id, qty); fetchCart(); } catch (err) { showError('Update failed', err.response?.data?.message || 'Cannot update quantity'); }
   };
   const handleRemove = async (id) => { await removeCartItem(id); fetchCart(); };
-  const handleClear = async () => { if (window.confirm('Clear entire cart?')) { await clearCart(); fetchCart(); } };
+  const handleClear = async () => {
+    if (await confirmDelete('entire cart')) {
+      await clearCart();
+      showSuccess('Cleared', 'Your cart has been cleared.');
+      fetchCart();
+    }
+  };
 
   if (loading) return <div className="flex items-center justify-center py-32"><div className="animate-spin rounded-full h-10 w-10 border-2 border-primary-500 border-t-transparent"/></div>;
 

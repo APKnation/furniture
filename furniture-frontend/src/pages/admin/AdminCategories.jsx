@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Plus, Pencil, X, Check, AlertCircle } from 'lucide-react';
 import { getCategories, addCategory, updateCategory } from '../../services/api';
+import { showError, showSuccess } from '../../utils/swal';
+
 
 export default function AdminCategories() {
   const [items, setItems] = useState([]);
@@ -8,20 +10,18 @@ export default function AdminCategories() {
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState({ name:'' });
   const [saving, setSaving] = useState(false);
-  const [msg, setMsg] = useState({ text:'', type:'' });
 
   const fetch = () => getCategories().then(r => setItems(r.data)).catch(() => {}).finally(() => setLoading(false));
   useEffect(() => { fetch(); }, []);
-  const notify = (text, type='success') => { setMsg({ text, type }); setTimeout(() => setMsg({ text:'', type:'' }), 3000); };
 
   const handleSave = async (e) => {
     e.preventDefault(); setSaving(true);
     try {
       if (modal.mode==='add') await addCategory(form);
       else await updateCategory(modal.id, form);
-      notify(modal.mode==='add'?'Category added!':'Category updated!');
+      showSuccess('Success', modal.mode==='add'?'Category added!':'Category updated!');
       setModal(null); fetch();
-    } catch (err) { notify(err.response?.data?.message || 'Save failed','error'); }
+    } catch (err) { showError('Save failed', err.response?.data?.message || 'Failed to save category'); }
     finally { setSaving(false); }
   };
 
@@ -31,8 +31,6 @@ export default function AdminCategories() {
         <div><h1 className="font-display text-2xl font-bold text-white">Categories</h1><p className="text-gray-400 text-sm mt-0.5">{items.length} categories</p></div>
         <button onClick={() => { setForm({ name:'' }); setModal({ mode:'add' }); }} className="btn-primary btn-sm"><Plus size={16}/> Add Category</button>
       </div>
-
-      {msg.text && <div className={`flex items-center gap-2 rounded-xl px-4 py-3 mb-5 text-sm ${msg.type==='success'?'bg-green-900/30 border border-green-800/50 text-green-300':'bg-red-900/30 border border-red-800/50 text-red-300'}`}>{msg.type==='success'?<Check size={14}/>:<AlertCircle size={14}/>}{msg.text}</div>}
 
       <div className="card overflow-hidden">
         <table className="w-full text-sm">

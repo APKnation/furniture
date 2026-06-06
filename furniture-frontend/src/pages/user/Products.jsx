@@ -4,6 +4,7 @@ import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { getProducts, getCategories, addToCart } from '../../services/api';
 import ProductCard from '../../components/ProductCard';
 import { useAuth } from '../../context/AuthContext';
+import { showError, showSuccess } from '../../utils/swal';
 
 export default function Products() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -13,7 +14,6 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState('');
 
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [categoryId, setCategoryId] = useState(searchParams.get('categoryId') || '');
@@ -35,11 +35,9 @@ export default function Products() {
     if (!isAuthenticated) { navigate('/login'); return; }
     try {
       await addToCart({ productId: product.id, quantity: 1 });
-      setToast(`${product.name} added to cart!`);
-      setTimeout(() => setToast(''), 3000);
+      showSuccess('Added to Cart', `${product.name} has been added.`);
     } catch (err) {
-      setToast(err.response?.data?.message || 'Failed to add');
-      setTimeout(() => setToast(''), 3000);
+      showError('Failed to add', err.response?.data?.message || 'Could not add to cart');
     }
   };
 
@@ -50,8 +48,6 @@ export default function Products() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
-      {toast && <div className="fixed top-20 right-4 z-50 bg-dark-700 border border-primary-700/50 text-white px-5 py-3 rounded-xl shadow-2xl animate-slide-up text-sm font-medium">{toast}</div>}
-
       {/* Header */}
       <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
         <div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, X, Check, AlertCircle, Package, Upload } from 'lucide-react';
 import { getProducts, getCategories, addProduct, updateProduct, uploadProductImage, deleteProduct } from '../../services/api';
+import { showError, showSuccess, confirmDelete } from '../../utils/swal';
 
 const empty = { name:'', description:'', price:'', quantity:'', imagePath:'', categoryId:'' };
 
@@ -12,7 +13,6 @@ export default function AdminProducts() {
   const [form, setForm] = useState(empty);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [msg, setMsg] = useState({ text:'', type:'' });
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -21,9 +21,9 @@ export default function AdminProducts() {
     try {
       const res = await uploadProductImage(file);
       setForm(prev => ({ ...prev, imagePath: res.data.imagePath }));
-      notify('Image uploaded successfully!');
+      showSuccess('Success', 'Image uploaded successfully!');
     } catch (err) {
-      notify(err.response?.data?.message || 'Image upload failed', 'error');
+      showError('Upload failed', err.response?.data?.message || 'Image upload failed');
     } finally {
       setUploading(false);
     }
@@ -35,7 +35,6 @@ export default function AdminProducts() {
       .catch(() => {}).finally(() => setLoading(false));
   };
   useEffect(() => { fetchAll(); }, []);
-  const notify = (text, type='success') => { setMsg({text,type}); setTimeout(()=>setMsg({text:'',type:''}),3000); };
   const set = (f) => (e) => setForm({...form,[f]:e.target.value});
 
   const openAdd = () => { setForm(empty); setModal({ mode:'add' }); };
@@ -47,20 +46,20 @@ export default function AdminProducts() {
     try {
       if (modal.mode==='add') await addProduct(payload);
       else await updateProduct(modal.id, payload);
-      notify(modal.mode==='add'?'Product added!':'Product updated!');
+      showSuccess('Success', modal.mode==='add'?'Product added!':'Product updated!');
       setModal(null); fetchAll();
-    } catch(err){ notify(err.response?.data?.message||'Save failed','error'); }
+    } catch(err){ showError('Save failed', err.response?.data?.message||'Failed to save product'); }
     finally { setSaving(false); }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    if (!(await confirmDelete('product'))) return;
     try {
       await deleteProduct(id);
-      notify('Product deleted successfully!');
+      showSuccess('Success', 'Product deleted successfully!');
       fetchAll();
     } catch(err) {
-      notify(err.response?.data?.message || 'Failed to delete product', 'error');
+      showError('Error', err.response?.data?.message || 'Failed to delete product');
     }
   };
 
@@ -70,8 +69,6 @@ export default function AdminProducts() {
         <div><h1 className="font-display text-2xl font-bold text-white">Products</h1><p className="text-gray-400 text-sm mt-0.5">{products.length} products</p></div>
         <button onClick={openAdd} className="btn-primary btn-sm"><Plus size={16}/> Add Product</button>
       </div>
-
-      {msg.text && <div className={`flex items-center gap-2 rounded-xl px-4 py-3 mb-5 text-sm ${msg.type==='success'?'bg-green-900/30 border border-green-800/50 text-green-300':'bg-red-900/30 border border-red-800/50 text-red-300'}`}>{msg.type==='success'?<Check size={14}/>:<AlertCircle size={14}/>}{msg.text}</div>}
 
       <div className="card overflow-hidden">
         <div className="overflow-x-auto">

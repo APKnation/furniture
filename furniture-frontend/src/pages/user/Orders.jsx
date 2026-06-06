@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ShoppingBag, ChevronDown, ChevronUp, X, Package } from 'lucide-react';
 import { getMyOrders, cancelOrder } from '../../services/api';
+import { showError, showSuccess, confirmAction } from '../../utils/swal';
 
 const statusColors = {
   NEW: 'bg-blue-900/50 text-blue-300 border-blue-800/50',
@@ -18,8 +19,14 @@ export default function Orders() {
   useEffect(() => { fetchOrders(); }, []);
 
   const handleCancel = async (id) => {
-    if (!window.confirm('Cancel this order?')) return;
-    try { await cancelOrder(id); fetchOrders(); } catch (err) { alert(err.response?.data?.message || 'Cannot cancel'); }
+    if (!(await confirmAction('Cancel Order?', 'Are you sure you want to cancel this order?', 'Yes, cancel it', true))) return;
+    try {
+      await cancelOrder(id);
+      showSuccess('Canceled', 'Order has been canceled.');
+      fetchOrders();
+    } catch (err) {
+      showError('Error', err.response?.data?.message || 'Cannot cancel order');
+    }
   };
 
   if (loading) return <div className="flex items-center justify-center py-32"><div className="animate-spin rounded-full h-10 w-10 border-2 border-primary-500 border-t-transparent"/></div>;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, User, Mail, Phone, Calendar, Plus, Pencil, Trash2, X, Check, AlertCircle } from 'lucide-react';
 import { getAdminUsers, addAdminUser, updateAdminUser, deleteAdminUser } from '../../services/api';
+import { showError, showSuccess, confirmDelete } from '../../utils/swal';
 
 const empty = { name:'', email:'', mobileNumber:'' };
 
@@ -12,14 +13,12 @@ export default function AdminUsers() {
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState(empty);
   const [saving, setSaving] = useState(false);
-  const [msg, setMsg] = useState({ text:'', type:'' });
 
   const fetchUsers = () => {
     getAdminUsers().then(r => setUsers(r.data)).catch(() => {}).finally(() => setLoading(false));
   };
   useEffect(() => { fetchUsers(); }, []);
 
-  const notify = (text, type='success') => { setMsg({text,type}); setTimeout(()=>setMsg({text:'',type:''}),3000); };
   const set = (f) => (e) => setForm({...form,[f]:e.target.value});
 
   const openAdd = () => { setForm(empty); setModal({ mode:'add' }); };
@@ -30,20 +29,20 @@ export default function AdminUsers() {
     try {
       if (modal.mode==='add') await addAdminUser(form);
       else await updateAdminUser(modal.id, form);
-      notify(modal.mode==='add'?'User added!':'User updated!');
+      showSuccess('Success', modal.mode==='add'?'User added!':'User updated!');
       setModal(null); fetchUsers();
-    } catch(err){ notify(err.response?.data?.message||'Save failed','error'); }
+    } catch(err){ showError('Save failed', err.response?.data?.message||'Failed to save user'); }
     finally { setSaving(false); }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    if (!(await confirmDelete('user'))) return;
     try {
       await deleteAdminUser(id);
-      notify('User deleted successfully!');
+      showSuccess('Success', 'User deleted successfully!');
       fetchUsers();
     } catch(err) {
-      notify(err.response?.data?.message || 'Failed to delete user', 'error');
+      showError('Error', err.response?.data?.message || 'Failed to delete user');
     }
   };
 
@@ -62,8 +61,6 @@ export default function AdminUsers() {
         </div>
         <button onClick={openAdd} className="btn-primary btn-sm"><Plus size={16}/> Add User</button>
       </div>
-
-      {msg.text && <div className={`flex items-center gap-2 rounded-xl px-4 py-3 mb-5 text-sm ${msg.type==='success'?'bg-green-900/30 border border-green-800/50 text-green-300':'bg-red-900/30 border border-red-800/50 text-red-300'}`}>{msg.type==='success'?<Check size={14}/>:<AlertCircle size={14}/>}{msg.text}</div>}
 
       {/* Search Input */}
       <div className="relative mb-6">
