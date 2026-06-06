@@ -39,9 +39,6 @@ public class AuthController {
                 .password(passwordEncoder.encode(request.password()))
                 .mobileNumber(request.mobileNumber())
                 .role(Role.USER)
-                .securityQuestion(request.securityQuestion())
-                .securityAnswer(request.securityAnswer())
-                .address(request.address())
                 .build();
 
         userRepository.save(user);
@@ -75,10 +72,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("message", "Error: User with this email does not exist!"));
         }
 
-        if (user.getSecurityQuestion() == null || !user.getSecurityQuestion().equalsIgnoreCase(request.securityQuestion()) ||
-                user.getSecurityAnswer() == null || !user.getSecurityAnswer().equalsIgnoreCase(request.securityAnswer())) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Error: Invalid security question or answer!"));
-        }
+
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);

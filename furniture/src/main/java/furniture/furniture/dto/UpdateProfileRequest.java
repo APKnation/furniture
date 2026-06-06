@@ -4,8 +4,5 @@ import jakarta.validation.constraints.NotBlank;
 
 public record UpdateProfileRequest(
     @NotBlank String name,
-    String mobileNumber,
-    String address,
-    String securityQuestion,
-    String securityAnswer
+    String mobileNumber
 ) {}

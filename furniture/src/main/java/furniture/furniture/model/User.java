@@ -37,10 +37,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
-    private String securityQuestion;
-    private String securityAnswer;
-    private String address;
-
     private LocalDateTime regDate;
 
     @PrePersist

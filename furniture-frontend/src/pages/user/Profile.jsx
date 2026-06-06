@@ -6,7 +6,7 @@ import { updateProfile, changePassword } from '../../services/api';
 export default function Profile() {
   const { user, setUser } = useAuth();
   const [tab, setTab] = useState('profile');
-  const [profile, setProfile] = useState({ name: user?.name||'', mobileNumber: user?.mobileNumber||'', address: user?.address||'', securityQuestion: user?.securityQuestion||'', securityAnswer: user?.securityAnswer||'' });
+  const [profile, setProfile] = useState({ name: user?.name||'', mobileNumber: user?.mobileNumber||'' });
   const [pwForm, setPwForm] = useState({ oldPassword:'', newPassword:'' });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState({ text:'', type:'' });
@@ -77,29 +77,7 @@ export default function Profile() {
               <input value={profile.mobileNumber} onChange={setP('mobileNumber')} className="input pl-10" placeholder="Phone number"/>
             </div>
           </div>
-          <div>
-            <label className="label">Address</label>
-            <div className="relative"><MapPin size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
-              <textarea value={profile.address} onChange={setP('address')} className="input pl-10 resize-none h-20" placeholder="Your address"/>
-            </div>
-          </div>
-          <div>
-            <label className="label">Security Question</label>
-            <select value={profile.securityQuestion} onChange={setP('securityQuestion')} className="input">
-              <option value="">-- Select --</option>
-              <option>What is your mother's maiden name?</option>
-              <option>What was the name of your first pet?</option>
-              <option>What city were you born in?</option>
-              <option>What is your favorite color?</option>
-              <option>What was the name of your first school?</option>
-            </select>
-          </div>
-          <div>
-            <label className="label">Security Answer</label>
-            <div className="relative"><ShieldQuestion size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
-              <input value={profile.securityAnswer} onChange={setP('securityAnswer')} className="input pl-10" placeholder="Your answer"/>
-            </div>
-          </div>
+
           <button type="submit" disabled={loading} className="btn-primary w-full justify-center">
             {loading ? <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"/> : <><Save size={16}/> Save Changes</>}
           </button>

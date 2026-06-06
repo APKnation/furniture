@@ -5,7 +5,7 @@ import { recoverPassword } from '../../services/api';
 
 export default function RecoverPassword() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email:'', securityQuestion:'', securityAnswer:'', newPassword:'' });
+  const [form, setForm] = useState({ email:'', newPassword:'' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -41,23 +41,7 @@ export default function RecoverPassword() {
                 <input type="email" required value={form.email} onChange={set('email')} className="input pl-10" placeholder="you@example.com"/>
               </div>
             </div>
-            <div>
-              <label className="label">Security Question</label>
-              <select required value={form.securityQuestion} onChange={set('securityQuestion')} className="input">
-                <option value="">-- Select your question --</option>
-                <option>What is your mother's maiden name?</option>
-                <option>What was the name of your first pet?</option>
-                <option>What city were you born in?</option>
-                <option>What is your favorite color?</option>
-                <option>What was the name of your first school?</option>
-              </select>
-            </div>
-            <div>
-              <label className="label">Security Answer</label>
-              <div className="relative"><ShieldQuestion size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
-                <input type="text" required value={form.securityAnswer} onChange={set('securityAnswer')} className="input pl-10" placeholder="Your answer"/>
-              </div>
-            </div>
+
             <div>
               <label className="label">New Password</label>
               <div className="relative"><Lock size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>

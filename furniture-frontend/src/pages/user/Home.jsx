@@ -52,10 +52,16 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-stretch gap-8">
             <div className="md:w-1/2">
               
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-                Elevate Your
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"> Living Space</span>
-              </h1>
+    <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+  Elevate Your{" "}
+  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
+    Living Space
+  </span>{" "}
+  with{" "}
+  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
+    Online Furniture Shop
+  </span>
+</h1>
              <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-8">
   Discover handcrafted furniture that blends modern comfort with timeless design. Explore sofas, dining sets, and storage solutions that fit every home and lifestyle.
 </p>

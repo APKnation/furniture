@@ -32,9 +32,6 @@ public class UserController {
                 "name", currentUser.getName(),
                 "email", currentUser.getEmail(),
                 "mobileNumber", currentUser.getMobileNumber() == null ? "" : currentUser.getMobileNumber(),
-                "address", currentUser.getAddress() == null ? "" : currentUser.getAddress(),
-                "securityQuestion", currentUser.getSecurityQuestion() == null ? "" : currentUser.getSecurityQuestion(),
-                "securityAnswer", currentUser.getSecurityAnswer() == null ? "" : currentUser.getSecurityAnswer(),
                 "role", currentUser.getRole().name()
         ));
     }
@@ -51,9 +48,6 @@ public class UserController {
         User user = userRepository.findById(currentUser.getId()).orElseThrow();
         user.setName(request.name());
         user.setMobileNumber(request.mobileNumber());
-        user.setAddress(request.address());
-        user.setSecurityQuestion(request.securityQuestion());
-        user.setSecurityAnswer(request.securityAnswer());
 
         userRepository.save(user);
         return ResponseEntity.ok(Map.of("message", "Profile updated successfully!"));

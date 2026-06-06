@@ -5,7 +5,5 @@ import jakarta.validation.constraints.NotBlank;
 
 public record RecoverPasswordRequest(
     @NotBlank @Email String email,
-    @NotBlank String securityQuestion,
-    @NotBlank String securityAnswer,
     @NotBlank String newPassword
 ) {}
