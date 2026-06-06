@@ -160,13 +160,12 @@ export default function AdminProducts() {
                   </div>
                 )}
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div><label className="label">Category *</label>
+              <div>
+                <label className="label">Category *</label>
                 <select required value={form.categoryId} onChange={set('categoryId')} className="input">
                   <option value="">-- Select Category --</option>
                   {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
-              </div>
               </div>
               <div className="flex gap-3 pt-1">
                 <button type="button" onClick={()=>setModal(null)} className="btn-secondary flex-1 justify-center">Cancel</button>
