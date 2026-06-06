@@ -56,7 +56,7 @@ public class OrderController {
         List<OrderItem> orderItems = new ArrayList<>();
 
         // Create Order
-        String orderNum = "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        String orderNum = "ORD-" + UUID.randomUUID().toString().substring(0,3).toUpperCase();
         Order order = Order.builder()
                 .orderNumber(orderNum)
                 .user(currentUser)
