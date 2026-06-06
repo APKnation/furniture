@@ -38,12 +38,12 @@ public class DatabaseInitializer implements CommandLineRunner {
 
 
     private void seedAdmin() {
-        if (userRepository.findByEmail("admin@furniture.com").isEmpty()) {
+        if (userRepository.findByEmail("atanasikafuka@gmail.com").isEmpty()) {
             User admin = User.builder()
-                    .name("Admin Superuser")
-                    .email("admin@furniture.com")
-                    .password(passwordEncoder.encode("admin123"))
-                    .mobileNumber("1234567890")
+                    .name("Admin")
+                    .email("atanasikafuka@gmail.com")
+                    .password(passwordEncoder.encode("1234"))
+                    .mobileNumber("0757306134")
                     .role(Role.ADMIN)
                     .build();
             userRepository.save(admin);

@@ -3,6 +3,7 @@ package furniture.furniture.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,23 +33,8 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints
-                .requestMatchers(
-                    "/api/auth/**",
-                    // "/api/pages/**", // removed pages endpoint
-                    "/api/products",
-                    "/api/products/**",
-                    "/api/categories/**",
-                    "/api/subcategories/**",
-                    "/api/brands/**",
-                    "/v3/api-docs/**",
-                    "/swagger-ui/**",
-                    "/uploads/**"
-                ).permitAll()
-                // Admin endpoints (require ADMIN role)
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                // All other endpoints require authentication
-                .anyRequest().authenticated()
+                // TEMPORARY: Disable all security for debugging
+                .anyRequest().permitAll()
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
