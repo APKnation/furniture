@@ -62,7 +62,6 @@ public class AdminController {
                 "name", u.getName(),
                 "email", u.getEmail(),
                 "mobileNumber", u.getMobileNumber() == null ? "" : u.getMobileNumber(),
-                "address", u.getAddress() == null ? "" : u.getAddress(),
                 "regDate", u.getRegDate()
         )).collect(Collectors.toList());
 

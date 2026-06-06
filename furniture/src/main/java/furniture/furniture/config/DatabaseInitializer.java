@@ -51,9 +51,6 @@ public class DatabaseInitializer implements CommandLineRunner {
                     .password(passwordEncoder.encode("admin123"))
                     .mobileNumber("1234567890")
                     .role(Role.ADMIN)
-                    .securityQuestion("What is your favorite color?")
-                    .securityAnswer("blue")
-                    .address("HQ Administrator Suite 1")
                     .build();
             userRepository.save(admin);
         }
