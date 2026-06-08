@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { showSuccess } from '../../utils/swal';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -11,12 +12,13 @@ export default function Contact() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // In a real app, you'd send this to an API.
     console.log('Contact form submitted:', form);
-    setSubmitted(true);
     setForm({ name: '', email: '', message: '' });
+    await showSuccess('Message Sent!', 'Thank you for reaching out to us.');
+    setSubmitted(true);
   };
 
   return (

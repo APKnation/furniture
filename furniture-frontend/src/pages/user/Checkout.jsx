@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { MapPin, CreditCard, CheckCircle, ArrowLeft, ShoppingBag } from 'lucide-react';
+import { MapPin, CreditCard, ArrowLeft, ShoppingBag } from 'lucide-react';
 import { getCart, checkout } from '../../services/api';
+import { showError, showSuccess } from '../../utils/swal';
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -9,8 +10,6 @@ export default function Checkout() {
   const [form, setForm] = useState({ shippingAddress: '', paymentMethod: 'cash_on_delivery' });
   const [loading, setLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(true);
-  const [success, setSuccess] = useState('');
-  const [error, setError] = useState('');
 
   useEffect(() => {
     getCart().then(r => { setCart(r.data); if (!r.data.items?.length) navigate('/cart'); })
@@ -20,13 +19,13 @@ export default function Checkout() {
   const set = (f) => (e) => setForm({ ...form, [f]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); setError(''); setLoading(true);
+    e.preventDefault(); setLoading(true);
     try {
       const res = await checkout(form);
-      setSuccess(`Order ${res.data.orderNumber} placed successfully! Redirecting...`);
-      setTimeout(() => navigate('/orders'), 2000);
+      await showSuccess('Order Placed!', `Order ${res.data.orderNumber} placed successfully.`);
+      navigate('/orders');
     } catch (err) {
-      setError(err.response?.data?.message || 'Checkout failed. Please try again.');
+      showError('Checkout Failed', err.response?.data?.message || 'Checkout failed. Please try again.');
     } finally { setLoading(false); }
   };
 
@@ -41,15 +40,6 @@ export default function Checkout() {
           <p className="text-gray-400">Complete your order</p>
         </div>
       </div>
-
-      {success && (
-        <div className="flex items-center gap-3 bg-green-900/30 border border-green-800/50 rounded-xl px-5 py-4 mb-6 text-green-300">
-          <CheckCircle size={20}/> {success}
-        </div>
-      )}
-      {error && (
-        <div className="bg-red-900/30 border border-red-800/50 rounded-xl px-5 py-4 mb-6 text-red-300 text-sm">{error}</div>
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Form */}
@@ -78,7 +68,7 @@ export default function Checkout() {
             </div>
           </div>
 
-          <button type="submit" disabled={loading || !!success} className="btn-primary w-full justify-center text-base py-3.5">
+          <button type="submit" disabled={loading} className="btn-primary w-full justify-center text-base py-3.5">
             {loading ? <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"/> : <><ShoppingBag size={18}/> Place Order</>}
           </button>
         </form>

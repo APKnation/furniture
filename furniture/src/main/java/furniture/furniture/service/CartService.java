@@ -97,6 +97,16 @@ public class CartService {
         cartItemRepository.deleteByUser(currentUser);
     }
 
+    public void mergeCart(User currentUser, List<CartRequest> items) {
+        for (CartRequest request : items) {
+            try {
+                addToCart(currentUser, request);
+            } catch (IllegalArgumentException e) {
+                // Skip items that fail (out of stock, not found, etc.)
+            }
+        }
+    }
+
     private CartItemDto toDto(CartItem item) {
         BigDecimal price = item.getProduct().getPrice();
         BigDecimal subTotal = price.multiply(BigDecimal.valueOf(item.getQuantity()));

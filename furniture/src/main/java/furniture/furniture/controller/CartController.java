@@ -87,4 +87,15 @@ public class CartController {
         cartService.clearCart(currentUser);
         return ResponseEntity.ok(Map.of("message", "Cart cleared successfully!"));
     }
+    @PostMapping("/merge")
+    public ResponseEntity<?> mergeCart(
+            @AuthenticationPrincipal User currentUser,
+            @Valid @RequestBody java.util.List<CartRequest> items
+    ) {
+        if (currentUser == null) {
+            return ResponseEntity.status(401).build();
+        }
+        cartService.mergeCart(currentUser, items);
+        return ResponseEntity.ok(Map.of("message", "Cart merged successfully!"));
+    }
 }

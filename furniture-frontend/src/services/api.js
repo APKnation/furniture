@@ -33,6 +33,7 @@ export const addToCart = (data) => api.post('/api/cart/items', data);
 export const updateCartItem = (id, quantity) => api.put(`/api/cart/items/${id}`, null, { params: { quantity } });
 export const removeCartItem = (id) => api.delete(`/api/cart/items/${id}`);
 export const clearCart = () => api.delete('/api/cart');
+export const mergeCart = (items) => api.post('/api/cart/merge', items);
 
 // Orders
 export const getMyOrders = () => api.get('/api/orders');

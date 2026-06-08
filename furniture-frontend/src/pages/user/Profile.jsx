@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { User, MapPin, Phone, Lock, ShieldQuestion, Save, CheckCircle, AlertCircle } from 'lucide-react';
+import { User, MapPin, Phone, Lock, ShieldQuestion, Save } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { updateProfile, changePassword } from '../../services/api';
+import { showError, showSuccess } from '../../utils/swal';
 
 export default function Profile() {
   const { user, setUser } = useAuth();
@@ -9,17 +10,14 @@ export default function Profile() {
   const [profile, setProfile] = useState({ name: user?.name||'', mobileNumber: user?.mobileNumber||'' });
   const [pwForm, setPwForm] = useState({ oldPassword:'', newPassword:'' });
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState({ text:'', type:'' });
-
-  const notify = (text, type='success') => { setMsg({ text, type }); setTimeout(() => setMsg({ text:'', type:'' }), 3000); };
 
   const handleProfileSave = async (e) => {
     e.preventDefault(); setLoading(true);
     try {
       await updateProfile(profile);
       setUser(prev => ({ ...prev, ...profile }));
-      notify('Profile updated successfully!');
-    } catch (err) { notify(err.response?.data?.message || 'Update failed', 'error'); }
+      showSuccess('Success', 'Profile updated successfully!');
+    } catch (err) { showError('Update failed', err.response?.data?.message || 'Update failed'); }
     finally { setLoading(false); }
   };
 
@@ -28,8 +26,8 @@ export default function Profile() {
     try {
       await changePassword(pwForm);
       setPwForm({ oldPassword:'', newPassword:'' });
-      notify('Password changed successfully!');
-    } catch (err) { notify(err.response?.data?.message || 'Password change failed', 'error'); }
+      showSuccess('Success', 'Password changed successfully!');
+    } catch (err) { showError('Change failed', err.response?.data?.message || 'Password change failed'); }
     finally { setLoading(false); }
   };
 
@@ -56,12 +54,6 @@ export default function Profile() {
           </button>
         ))}
       </div>
-
-      {msg.text && (
-        <div className={`flex items-center gap-2 rounded-xl px-4 py-3 mb-5 text-sm ${msg.type === 'success' ? 'bg-green-900/30 border border-green-800/50 text-green-300' : 'bg-red-900/30 border border-red-800/50 text-red-300'}`}>
-          {msg.type === 'success' ? <CheckCircle size={15}/> : <AlertCircle size={15}/>} {msg.text}
-        </div>
-      )}
 
       {tab === 'profile' && (
         <form onSubmit={handleProfileSave} className="card p-6 space-y-5">
