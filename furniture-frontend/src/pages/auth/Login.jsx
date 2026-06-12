@@ -52,7 +52,7 @@ export default function Login() {
               <div className="relative">
                 <Mail size={16} className="absolute left-3.5 top-3.5 text-gray-500" />
                 <input type="email" required value={form.email} onChange={e => setForm({...form, email: e.target.value})}
-                  className="input pl-10" placeholder="you@example.com" />
+                  className="input pl-10" />
               </div>
             </div>
             <div>
@@ -61,7 +61,7 @@ export default function Login() {
                 <Lock size={16} className="absolute left-3.5 top-3.5 text-gray-500" />
                 <input type={showPw ? 'text' : 'password'} required value={form.password}
                   onChange={e => setForm({...form, password: e.target.value})}
-                  className="input pl-10 pr-10" placeholder="••••••••" />
+                  className="input pl-10 pr-10" />
                 <button type="button" onClick={() => setShowPw(!showPw)}
                   className="absolute right-3.5 top-3.5 text-gray-500 hover:text-gray-300">
                   {showPw ? <EyeOff size={16}/> : <Eye size={16}/>}

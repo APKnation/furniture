@@ -43,20 +43,20 @@ export default function Register() {
               <div>
                 <label className="label">Full Name *</label>
                 <div className="relative"><User size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
-                  <input type="text" required value={form.name} onChange={set('name')} className="input pl-10" placeholder="John Doe"/>
+                  <input type="text" required value={form.name} onChange={set('name')} className="input pl-10" />
                 </div>
               </div>
               <div>
                 <label className="label">Email *</label>
                 <div className="relative"><Mail size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
-                  <input type="email" required value={form.email} onChange={set('email')} className="input pl-10" placeholder="you@example.com"/>
+                  <input type="email" required value={form.email} onChange={set('email')} className="input pl-10" />
                 </div>
               </div>
             </div>
             <div>
               <label className="label">Password *</label>
               <div className="relative"><Lock size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
-                <input type={showPw ? 'text' : 'password'} required value={form.password} onChange={set('password')} className="input pl-10 pr-10" placeholder="Min 6 characters"/>
+                <input type={showPw ? 'text' : 'password'} required value={form.password} onChange={set('password')} className="input pl-10 pr-10" />
                 <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3.5 top-3.5 text-gray-500 hover:text-gray-300">
                   {showPw ? <EyeOff size={16}/> : <Eye size={16}/>}
                 </button>
@@ -65,7 +65,7 @@ export default function Register() {
             <div>
               <label className="label">Mobile Number</label>
               <div className="relative"><Phone size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
-                <input type="text" value={form.mobileNumber} onChange={set('mobileNumber')} className="input pl-10" placeholder="+1 234 567 8900"/>
+                <input type="text" value={form.mobileNumber} onChange={set('mobileNumber')} className="input pl-10" />
               </div>
             </div>
             <button type="submit" disabled={loading} className="btn-primary w-full justify-center mt-2">
