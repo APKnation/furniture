@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Sofa, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { login } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 import { showError, showSuccess } from '../../utils/swal';
 
 export default function Login() {
   const { loginUser } = useAuth();
+  const { syncCartAfterLogin } = useCart();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectUrl = searchParams.get('redirect') || '/';
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -18,8 +23,11 @@ export default function Login() {
     try {
       const res = await login(form);
       loginUser(res.data.token, res.data);
+      if (res.data.role !== 'ADMIN') {
+        await syncCartAfterLogin();
+      }
       showSuccess('Welcome back!', 'Successfully signed in.');
-      navigate(res.data.role === 'ADMIN' ? '/admin' : '/');
+      navigate(res.data.role === 'ADMIN' ? '/admin' : redirectUrl);
     } catch (err) {
       showError('Login Failed', err.response?.data?.message || 'Invalid email or password.');
     } finally { setLoading(false); }
@@ -69,7 +77,7 @@ export default function Login() {
           </form>
           <p className="text-center text-gray-400 text-sm mt-6">
             Don't have an account?{' '}
-            <Link to="/register" className="text-primary-400 hover:text-primary-300 font-medium transition-colors">Create one</Link>
+            <Link to={`/register?redirect=${encodeURIComponent(redirectUrl)}`} className="text-primary-400 hover:text-primary-300 font-medium transition-colors">Create one</Link>
           </p>
         </div>
       </div>

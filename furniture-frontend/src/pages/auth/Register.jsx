@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Sofa, User, Mail, Lock, Phone, Eye, EyeOff } from 'lucide-react';
 import { register } from '../../services/api';
 import { showError, showSuccess } from '../../utils/swal';
 
 export default function Register() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectUrl = searchParams.get('redirect') || '/';
   const [form, setForm] = useState({ name:'', email:'', password:'', mobileNumber:'' });
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -16,7 +18,7 @@ export default function Register() {
     try {
       await register(form);
       await showSuccess('Account created!', 'You can now sign in.');
-      navigate('/login');
+      navigate(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
     } catch (err) {
       showError('Registration failed', err.response?.data?.message || 'Please try again.');
     } finally { setLoading(false); }
@@ -72,7 +74,7 @@ export default function Register() {
           </form>
           <p className="text-center text-gray-400 text-sm mt-6">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary-400 hover:text-primary-300 font-medium">Sign in</Link>
+            <Link to={`/login?redirect=${encodeURIComponent(redirectUrl)}`} className="text-primary-400 hover:text-primary-300 font-medium">Sign in</Link>
           </p>
         </div>
       </div>
