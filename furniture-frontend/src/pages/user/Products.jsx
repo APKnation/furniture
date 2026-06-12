@@ -50,14 +50,19 @@ export default function Products() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-        <div>
-          <h1 className="font-display text-3xl font-bold text-white">All Products</h1>
-          <p className="text-gray-400 mt-1">{products.length} items found</p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div className="max-w-2xl">
+          <h1 className="font-display text-4xl font-bold text-white mb-3">All Products</h1>
+          <p className="text-gray-400 text-lg leading-relaxed">
+            Explore our curated selection of premium furniture designed to elevate your living spaces with modern comfort and timeless style.
+          </p>
         </div>
-        <button onClick={() => setShowFilters(!showFilters)} className="btn-secondary btn-sm">
-          <SlidersHorizontal size={15}/> Filters {hasFilters && <span className="badge bg-primary-600 text-white ml-1">•</span>}
-        </button>
+        <div className="flex items-center gap-4 flex-shrink-0">
+          <p className="text-gray-500 text-sm font-medium">{products.length} items found</p>
+          <button onClick={() => setShowFilters(!showFilters)} className="btn-secondary py-2.5 px-4 flex items-center gap-2">
+            <SlidersHorizontal size={16}/> Filters {hasFilters && <span className="w-2 h-2 rounded-full bg-primary-500 ml-1"></span>}
+          </button>
+        </div>
       </div>
 
       {/* Search */}

@@ -58,6 +58,7 @@ export const updateOrderStatus = (id, status) => api.put(`/api/admin/orders/${id
 
 export const addCategory = (data) => api.post('/api/admin/categories', data);
 export const updateCategory = (id, data) => api.put(`/api/admin/categories/${id}`, data);
+export const deleteCategory = (id) => api.delete(`/api/admin/categories/${id}`);
 
 export const addProduct = (data) => api.post('/api/admin/products', data);
 export const updateProduct = (id, data) => api.put(`/api/admin/products/${id}`, data);

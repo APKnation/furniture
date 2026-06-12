@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, FolderTree, Package, ShoppingBag, Users, BarChart2, LogOut, Sofa, ChevronRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { confirmAction, showSuccess } from '../utils/swal';
 
 const links = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -14,7 +15,16 @@ const links = [
 export default function AdminSidebar() {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const handleLogout = () => { navigate('/'); setTimeout(logout, 0); };
+  
+  const handleLogout = async () => {
+    if (await confirmAction('Logout', 'Are you sure you want to log out?', 'Yes, logout', true)) {
+      navigate('/');
+      setTimeout(() => {
+        logout();
+        showSuccess('Logged Out', 'You have been successfully logged out.');
+      }, 0);
+    }
+  };
 
   return (
     <aside className="w-64 min-h-screen bg-dark-800 border-r border-dark-600 flex flex-col">

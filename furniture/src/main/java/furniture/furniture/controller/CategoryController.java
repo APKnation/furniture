@@ -50,4 +50,17 @@ public class CategoryController {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
+
+    @DeleteMapping("/api/admin/categories/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        try {
+            categoryService.deleteCategory(id);
+            return ResponseEntity.ok(Map.of("message", "Category deleted successfully!"));
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("Category not found")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().body(Map.of("message", "Cannot delete category. It may contain products."));
+        }
+    }
 }

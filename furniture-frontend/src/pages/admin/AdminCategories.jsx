@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Plus, Pencil, X, Check, AlertCircle } from 'lucide-react';
-import { getCategories, addCategory, updateCategory } from '../../services/api';
-import { showError, showSuccess } from '../../utils/swal';
+import { Plus, Pencil, X, Trash2 } from 'lucide-react';
+import { getCategories, addCategory, updateCategory, deleteCategory } from '../../services/api';
+import { showError, showSuccess, confirmAction } from '../../utils/swal';
 
 
 export default function AdminCategories() {
@@ -25,6 +25,18 @@ export default function AdminCategories() {
     finally { setSaving(false); }
   };
 
+  const handleDelete = async (id) => {
+    if (await confirmAction('Delete Category?', 'Are you sure you want to delete this category?', 'Yes, delete it', true)) {
+      try {
+        await deleteCategory(id);
+        showSuccess('Deleted', 'Category has been deleted.');
+        fetch();
+      } catch (err) {
+        showError('Delete failed', err.response?.data?.message || 'Cannot delete this category.');
+      }
+    }
+  };
+
   return (
     <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-6">
@@ -46,8 +58,11 @@ export default function AdminCategories() {
                 <td className="px-5 py-4 text-gray-500">{i+1}</td>
                 <td className="px-5 py-4 font-medium text-white">{item.name}</td>
                 <td className="px-5 py-4 text-right">
-                  <button onClick={() => { setForm({ name: item.name }); setModal({ mode:'edit', id: item.id }); }} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-900/40 text-primary-400 hover:bg-primary-900/70 text-xs font-medium transition-all">
+                  <button onClick={() => { setForm({ name: item.name }); setModal({ mode:'edit', id: item.id }); }} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-900/40 text-primary-400 hover:bg-primary-900/70 text-xs font-medium transition-all mr-2">
                     <Pencil size={12}/> Edit
+                  </button>
+                  <button onClick={() => handleDelete(item.id)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-900/20 text-red-400 hover:bg-red-900/40 text-xs font-medium transition-all">
+                    <Trash2 size={12}/> Delete
                   </button>
                 </td>
               </tr>

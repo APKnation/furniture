@@ -164,8 +164,8 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="bg-dark-800/50 border-y border-dark-600 backdrop-blur-md relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-20 pointer-events-none" />
+      <section className="bg-emerald-900/20 border-y border-emerald-800/30 backdrop-blur-md relative overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#10b98112_1px,transparent_1px),linear-gradient(to_bottom,#10b98112_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map(({ icon: Icon, label, desc }) => (

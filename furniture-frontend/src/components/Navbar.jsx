@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingCart, User, LogOut, Menu, X, Sofa, Search, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { confirmAction, showSuccess } from '../utils/swal';
 
 export default function Navbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
@@ -12,7 +13,15 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
-  const handleLogout = () => { navigate('/'); setTimeout(logout, 0); };
+  const handleLogout = async () => {
+    if (await confirmAction('Logout', 'Are you sure you want to log out?', 'Yes, logout', true)) {
+      navigate('/');
+      setTimeout(() => {
+        logout();
+        showSuccess('Logged Out', 'You have been successfully logged out.');
+      }, 0);
+    }
+  };
 
   const navLinks = [
     { to: '/', label: 'Home' },

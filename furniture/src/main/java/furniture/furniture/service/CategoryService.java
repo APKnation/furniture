@@ -40,4 +40,11 @@ public class CategoryService {
         category.setName(request.name());
         categoryRepository.save(category);
     }
+
+    public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new RuntimeException("Category not found");
+        }
+        categoryRepository.deleteById(id);
+    }
 }
