@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Shield, Truck, Star } from 'lucide-react';
+import { ArrowRight, Shield, Truck, Star, Award, Leaf, Users, Heart } from 'lucide-react';
 import { getCategories, getProducts } from '../../services/api';
 import ProductCard from '../../components/ProductCard';
 import { useAuth } from '../../context/AuthContext';
@@ -10,6 +10,33 @@ const features = [
   { icon: Truck, label: 'Free Shipping', desc: 'On orders over Tsh 5000' },
   { icon: Shield, label: 'Quality Guarantee', desc: '2 year warranty included' },
   { icon: Star, label: 'Premium Brands', desc: 'Only top furniture brands' },
+];
+
+const values = [
+  {
+    icon: Award,
+    title: 'Quality Craftsmanship',
+    desc: 'Every piece is meticulously handcrafted by skilled local artisans using time-honored techniques passed down through generations.',
+    color: 'from-amber-500/20 to-amber-600/10 border-amber-500/30 text-amber-400',
+  },
+  {
+    icon: Leaf,
+    title: 'Sustainable Materials',
+    desc: 'We responsibly source eco-friendly woods and finishes, reducing our environmental footprint while delivering premium quality.',
+    color: 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/30 text-emerald-400',
+  },
+  {
+    icon: Users,
+    title: 'Community Impact',
+    desc: 'We invest in local economies, create jobs across Tanzania, and support artisan communities to thrive and grow.',
+    color: 'from-blue-500/20 to-blue-600/10 border-blue-500/30 text-blue-400',
+  },
+  {
+    icon: Heart,
+    title: 'Customer First',
+    desc: 'From browsing to delivery, we are committed to making your furniture shopping experience smooth, personal, and enjoyable.',
+    color: 'from-rose-500/20 to-rose-600/10 border-rose-500/30 text-rose-400',
+  },
 ];
 
 
@@ -156,7 +183,29 @@ export default function Home() {
         </div>
       </section>
 
-
+      {/* Values */}
+      <section className="bg-dark-800/50 border-y border-dark-600 py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-14">
+            <h2 className="font-display text-4xl font-bold text-white mb-4">What We Stand For</h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">Our values guide every decision we make — from how we source materials to how we serve our customers.</p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {values.map(({ icon: Icon, title, desc, color }) => (
+              <div key={title}
+                className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${color} border p-7 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl`}>
+                <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
+                <div className="w-12 h-12 bg-dark-800/60 rounded-xl flex items-center justify-center mb-5 shadow-inner">
+                  <Icon size={22} className={color.split(' ').find(c => c.startsWith('text-'))} />
+                </div>
+                <h3 className="font-bold text-white text-lg mb-2">{title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
     </div>
   );

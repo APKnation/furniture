@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Award, Leaf, Users, Heart, Star, CheckCircle, Truck, Shield } from 'lucide-react';
+import { ArrowRight, Star, CheckCircle, Truck, Shield } from 'lucide-react';
 
 const stats = [
   { value: '500+', label: 'Products Available' },
@@ -8,39 +8,7 @@ const stats = [
   { value: '100%', label: 'Local Craftsmanship' },
 ];
 
-const values = [
-  {
-    icon: Award,
-    title: 'Quality Craftsmanship',
-    desc: 'Every piece is meticulously handcrafted by skilled local artisans using time-honored techniques passed down through generations.',
-    color: 'from-amber-500/20 to-amber-600/10 border-amber-500/30 text-amber-400',
-  },
-  {
-    icon: Leaf,
-    title: 'Sustainable Materials',
-    desc: 'We responsibly source eco-friendly woods and finishes, reducing our environmental footprint while delivering premium quality.',
-    color: 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/30 text-emerald-400',
-  },
-  {
-    icon: Users,
-    title: 'Community Impact',
-    desc: 'We invest in local economies, create jobs across Tanzania, and support artisan communities to thrive and grow.',
-    color: 'from-blue-500/20 to-blue-600/10 border-blue-500/30 text-blue-400',
-  },
-  {
-    icon: Heart,
-    title: 'Customer First',
-    desc: 'From browsing to delivery, we are committed to making your furniture shopping experience smooth, personal, and enjoyable.',
-    color: 'from-rose-500/20 to-rose-600/10 border-rose-500/30 text-rose-400',
-  },
-];
 
-const team = [
-  { name: 'Emmanuel Mwangi', role: 'Founder & CEO', avatar: '👨🏿‍💼' },
-  { name: 'Amina Hassan', role: 'Head of Design', avatar: '👩🏿‍🎨' },
-  { name: 'David Kimaro', role: 'Lead Craftsman', avatar: '👨🏿‍🔧' },
-  { name: 'Grace Ndosi', role: 'Customer Experience', avatar: '👩🏿‍💻' },
-];
 
 const guarantees = [
   { icon: Star, label: '2-Year Warranty', desc: 'On all furniture items' },
@@ -162,49 +130,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* Values */}
-      <section className="bg-dark-800/50 border-y border-dark-600 py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-14">
-            <h2 className="font-display text-4xl font-bold text-white mb-4">What We Stand For</h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">Our values guide every decision we make — from how we source materials to how we serve our customers.</p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map(({ icon: Icon, title, desc, color }) => (
-              <div key={title}
-                className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${color} border p-7 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl`}>
-                <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
-                <div className="w-12 h-12 bg-dark-800/60 rounded-xl flex items-center justify-center mb-5 shadow-inner">
-                  <Icon size={22} className={color.split(' ').find(c => c.startsWith('text-'))} />
-                </div>
-                <h3 className="font-bold text-white text-lg mb-2">{title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Team */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="text-center mb-14">
-          <h2 className="font-display text-4xl font-bold text-white mb-4">Meet the Team</h2>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto">The passionate people behind APKnation who work hard every day to bring your vision to life.</p>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {team.map(({ name, role, avatar }) => (
-            <div key={name}
-              className="group bg-dark-800 border border-dark-600 rounded-2xl p-7 text-center hover:border-primary-600/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary-900/20 transition-all duration-300">
-              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-primary-900/50 to-dark-700 rounded-full flex items-center justify-center text-4xl mb-4 group-hover:scale-110 transition-transform duration-300 border border-primary-800/30">
-                {avatar}
-              </div>
-              <h3 className="font-bold text-white mb-1">{name}</h3>
-              <p className="text-primary-400 text-sm font-medium">{role}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Guarantees */}
       <section className="bg-dark-800/60 border-y border-dark-600 py-16">
@@ -225,26 +151,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative overflow-hidden py-24">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-900/20 via-dark-900 to-primary-900/20 pointer-events-none" />
-        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-display text-4xl font-bold text-white mb-5">
-            Ready to Furnish Your Home?
-          </h2>
-          <p className="text-gray-400 text-lg mb-10">
-            Explore our curated collection of premium furniture crafted for the modern Tanzanian home.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/products" className="btn-primary flex items-center gap-2 px-8 py-4 text-base">
-              Shop Now <ArrowRight size={18} />
-            </Link>
-            <Link to="/contact" className="btn-secondary flex items-center gap-2 px-8 py-4 text-base">
-              Contact Us
-            </Link>
-          </div>
-        </div>
-      </section>
+
 
     </div>
   );
