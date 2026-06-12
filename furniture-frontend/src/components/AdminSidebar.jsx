@@ -14,7 +14,7 @@ const links = [
 export default function AdminSidebar() {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const handleLogout = () => { logout(); navigate('/'); };
+  const handleLogout = () => { navigate('/'); setTimeout(logout, 0); };
 
   return (
     <aside className="w-64 min-h-screen bg-dark-800 border-r border-dark-600 flex flex-col">
