@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Shield, Truck, Star, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowRight, Shield, Truck, Star } from 'lucide-react';
 import { getCategories, getProducts } from '../../services/api';
 import ProductCard from '../../components/ProductCard';
 import { useAuth } from '../../context/AuthContext';
@@ -12,24 +12,7 @@ const features = [
   { icon: Star, label: 'Premium Brands', desc: 'Only top furniture brands' },
 ];
 
-const faqs = [
-  {
-    q: 'How long does delivery take?',
-    a: 'Standard delivery takes 3–7 business days within Tanzania. Express delivery (1–2 days) is available in Dodoma and Dar es Salaam.',
-  },
-  {
-    q: 'Do you offer furniture assembly?',
-    a: 'Yes! We offer professional assembly services for all furniture purchased from our store. Contact us to schedule an assembly appointment.',
-  },
-  {
-    q: 'What is your return policy?',
-    a: 'We offer a 14-day return policy on all items in original condition. Damaged or defective items are replaced at no extra cost within 30 days.',
-  },
-  {
-    q: 'Can I track my order?',
-    a: 'Yes. Once your order is shipped you will receive a tracking number via email and SMS to follow your delivery in real-time.',
-  },
-];
+
 
 export default function Home() {
   const { isAdmin } = useAuth();
@@ -39,7 +22,7 @@ export default function Home() {
   const [allProducts, setAllProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [toast, setToast] = useState('');
-  const [openFaq, setOpenFaq] = useState(null);
+
 
   useEffect(() => {
     getCategories().then(r => setCategories(r.data)).catch(() => {});
@@ -173,32 +156,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="text-center mb-12">
-          <h2 className="font-display text-4xl font-bold text-white mb-3">Frequently Asked Questions</h2>
-          <p className="text-gray-400 text-lg">Quick answers to the most common questions.</p>
-        </div>
-        <div className="space-y-3">
-          {faqs.map((faq, i) => (
-            <div key={i} className="bg-dark-800 border border-dark-600 rounded-2xl overflow-hidden">
-              <button
-                onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className="w-full flex items-center justify-between px-6 py-4 text-left text-white font-medium hover:text-primary-400 transition-colors">
-                <span>{faq.q}</span>
-                {openFaq === i
-                  ? <ChevronUp size={18} className="text-primary-400 flex-shrink-0" />
-                  : <ChevronDown size={18} className="text-gray-500 flex-shrink-0" />}
-              </button>
-              {openFaq === i && (
-                <div className="px-6 pb-5 text-gray-400 text-sm leading-relaxed border-t border-dark-600 pt-4 animate-fade-in">
-                  {faq.a}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
+
 
     </div>
   );

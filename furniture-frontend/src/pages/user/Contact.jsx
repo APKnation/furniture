@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, MessageSquare, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, MessageSquare, CheckCircle } from 'lucide-react';
 
 const FacebookIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
@@ -47,30 +47,13 @@ const contactInfo = [
   },
 ];
 
-const faqs = [
-  {
-    q: 'How long does delivery take?',
-    a: 'Standard delivery takes 3–7 business days within Tanzania. Express delivery (1–2 days) is available in Dodoma and Dar es Salaam.',
-  },
-  {
-    q: 'Do you offer furniture assembly?',
-    a: 'Yes! We offer professional assembly services for all furniture purchased from our store. Contact us to schedule an assembly appointment.',
-  },
-  {
-    q: 'What is your return policy?',
-    a: 'We offer a 14-day return policy on all items in original condition. Damaged or defective items are replaced at no extra cost within 30 days.',
-  },
-  {
-    q: 'Can I track my order?',
-    a: 'Yes. Once your order is shipped you will receive a tracking number via email and SMS to follow your delivery in real-time.',
-  },
-];
+
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [openFaq, setOpenFaq] = useState(null);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
