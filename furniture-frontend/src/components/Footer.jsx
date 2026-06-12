@@ -41,12 +41,7 @@ export default function Footer() {
   return (
     <footer className="bg-dark-900 border-t border-dark-600 mt-16">
 
-      {/* Top strip CTA */}
-      <div className="bg-gradient-to-r from-primary-900/40 via-dark-800 to-primary-900/40 border-b border-dark-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-         
-        </div>
-      </div>
+
 
       {/* Main footer grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
