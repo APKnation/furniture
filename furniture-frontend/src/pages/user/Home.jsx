@@ -17,12 +17,13 @@ export default function Home() {
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-  const [featured, setFeatured] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [toast, setToast] = useState('');
 
   useEffect(() => {
     getCategories().then(r => setCategories(r.data)).catch(() => {});
-    getProducts().then(r => setFeatured(r.data.slice(0, 6))).catch(() => {});
+    getProducts().then(r => setAllProducts(r.data)).catch(() => {});
   }, []);
 
   const handleAddToCart = async (product) => {
@@ -35,6 +36,11 @@ export default function Home() {
       setTimeout(() => setToast(''), 3000);
     }
   };
+
+  const displayedProducts = selectedCategory
+    ? allProducts.filter(p => p.category?.id == selectedCategory || p.categoryId == selectedCategory)
+    : allProducts;
+  const featured = displayedProducts.slice(0, 6);
 
   return (
     <div className="animate-fade-in">
@@ -51,20 +57,19 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
           <div className="flex flex-col md:flex-row items-stretch gap-8">
             <div className="md:w-1/2">
-              
-    <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-  Elevate Your{" "}
-  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
-    Living Space
-  </span>{" "}
-  with{" "}
-  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
-    Online Furniture Shop
-  </span>
-</h1>
-             <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-8">
-  Discover handcrafted furniture that blends modern comfort with timeless design. Explore sofas, dining sets, and storage solutions that fit every home and lifestyle.
-</p>
+              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                Elevate Your{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
+                  Living Space
+                </span>{" "}
+                with{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
+                  Online Furniture Shop
+                </span>
+              </h1>
+              <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-8">
+                Discover handcrafted furniture that blends modern comfort with timeless design. Explore sofas, dining sets, and storage solutions that fit every home and lifestyle.
+              </p>
               
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-10">
                 <div className="flex">
@@ -83,33 +88,46 @@ export default function Home() {
               <img src="/hero.png" alt="Hero" className="w-full h-full object-cover rounded-xl shadow-lg" />
             </div>
           </div>
-
         </div>
       </section>
 
-
       {/* Featured Products */}
-      {featured.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
-          {/* Subtle background glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary-900/10 blur-[120px] rounded-full pointer-events-none" />
-          
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 relative z-10 gap-4">
-            <div>
-              <h2 className="font-display text-4xl font-bold text-white mb-2">Featured Products</h2>
-              <p className="text-gray-400 text-lg">Handpicked pieces for your home</p>
-            </div>
-            <Link to="/products" className="group flex items-center gap-2 text-primary-400 font-semibold hover:text-primary-300 transition-colors">
-              View All <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-            </Link>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+        {/* Subtle background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary-900/10 blur-[120px] rounded-full pointer-events-none" />
+        
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 relative z-10 gap-4">
+          <div>
+            <h2 className="font-display text-4xl font-bold text-white mb-2">Our Products</h2>
+            <p className="text-gray-400 text-lg">Handpicked pieces for your home</p>
           </div>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <select 
+              className="input w-full sm:w-48 bg-dark-800 border-dark-600 text-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+              value={selectedCategory} 
+              onChange={e => setSelectedCategory(e.target.value)}
+            >
+              <option value="">All Categories</option>
+              {categories.map(c => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+         
+          </div>
+        </div>
+        
+        {featured.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
             {featured.map(p => (
               <ProductCard key={p.id} product={p} onAddToCart={!isAdmin ? handleAddToCart : null} />
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <div className="text-center py-10 relative z-10">
+            <p className="text-gray-400">No products found in this category.</p>
+          </div>
+        )}
+      </section>
 
       {/* Features */}
       <section className="bg-dark-800/50 border-y border-dark-600 backdrop-blur-md relative overflow-hidden">
@@ -130,28 +148,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Categories */}
-      {categories.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative">
-          <div className="flex flex-col items-center text-center mb-16">
-            <h2 className="font-display text-4xl font-bold text-white mb-4">Browse by Category</h2>
-            <p className="text-gray-400 text-lg max-w-2xl">Find the perfect furniture tailored to every room and aesthetic. Explore our collections.</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {categories.map((cat, i) => (
-              <Link key={cat.id} to={`/products?categoryId=${cat.id}`}
-                className="group relative overflow-hidden rounded-2xl bg-dark-800 border border-dark-600 p-8 text-center hover:border-primary-500/50 hover:shadow-2xl hover:shadow-primary-900/20 hover:-translate-y-2 transition-all duration-300">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-primary-500/10 to-transparent rounded-full blur-2xl group-hover:bg-primary-500/20 transition-colors duration-500" style={{ transitionDelay: `${(i % 4) * 50}ms` }} />
-                <div className="w-16 h-16 mx-auto bg-dark-700 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 border border-dark-600 shadow-inner">
-                  <span className="text-2xl group-hover:rotate-12 transition-transform duration-300">🛋️</span>
-                </div>
-                <h3 className="font-bold text-white text-lg group-hover:text-primary-400 transition-colors">{cat.name}</h3>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
 
     </div>
   );
