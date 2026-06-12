@@ -20,7 +20,7 @@ export default function ProductDetail() {
     getProductById(id).then(r => setProduct(r.data)).catch(() => navigate('/products')).finally(() => setLoading(false));
   }, [id]);
 
-  const handleAddToCart = async () => खुले
+  const handleAddToCart = async () => {
     setAdding(true);
     try {
       await addToCart(product, quantity);
