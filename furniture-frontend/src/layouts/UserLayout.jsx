@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function UserLayout() {
   return (
@@ -8,11 +9,7 @@ export default function UserLayout() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <footer className="bg-dark-800 border-t border-dark-600 py-8 mt-16">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-gray-500 text-sm">© 2026 APKnation. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
