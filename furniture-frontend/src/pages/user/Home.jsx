@@ -102,17 +102,19 @@ export default function Home() {
             <p className="text-gray-400 text-lg">Handpicked pieces for your home</p>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <select 
-              className="input w-full sm:w-48 bg-dark-800 border-dark-600 text-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-              value={selectedCategory} 
-              onChange={e => setSelectedCategory(e.target.value)}
-            >
-              <option value="">All Categories</option>
-              {categories.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-         
+            <div className="flex items-center gap-3">
+              <label className="text-gray-400 font-medium whitespace-nowrap">Select Category:</label>
+              <select 
+                className="input w-full sm:w-48 bg-dark-800 border-dark-600 text-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                value={selectedCategory} 
+                onChange={e => setSelectedCategory(e.target.value)}
+              >
+                <option value="">All Categories</option>
+                {categories.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
         
