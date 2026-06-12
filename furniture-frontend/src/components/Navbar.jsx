@@ -1,22 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingCart, User, LogOut, Menu, X, Sofa, Search, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getCart } from '../services/api';
+import { useCart } from '../context/CartContext';
 
 export default function Navbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
+  const { cartCount } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
   const [profileOpen, setProfileOpen] = useState(false);
-
-  useEffect(() => {
-    if (isAuthenticated && !isAdmin) {
-      getCart().then(res => setCartCount(res.data.items?.length || 0)).catch(() => {});
-    }
-  }, [isAuthenticated, isAdmin, location]);
 
   const handleLogout = () => { navigate('/'); setTimeout(logout, 0); };
 
