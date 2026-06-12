@@ -10,7 +10,7 @@ export default function UserLayout() {
       </main>
       <footer className="bg-dark-800 border-t border-dark-600 py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-gray-500 text-sm">© 2026 CozyFurniture. All rights reserved.</p>
+          <p className="text-gray-500 text-sm">© 2026 APKnation. All rights reserved.</p>
         </div>
       </footer>
     </div>

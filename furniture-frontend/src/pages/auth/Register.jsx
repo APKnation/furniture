@@ -34,7 +34,7 @@ export default function Register() {
             <Sofa size={28} className="text-white" />
           </div>
           <h1 className="font-display text-3xl font-bold text-white">Create account</h1>
-          <p className="text-gray-400 mt-1">Join CozyFurniture today</p>
+          <p className="text-gray-400 mt-1">Join APKnation today</p>
         </div>
 
         <div className="card p-8">

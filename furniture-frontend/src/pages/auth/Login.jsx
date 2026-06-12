@@ -42,7 +42,7 @@ export default function Login() {
             <Sofa size={28} className="text-white" />
           </div>
           <h1 className="font-display text-3xl font-bold text-white">Welcome back</h1>
-          <p className="text-gray-400 mt-1">Sign in to your CozyFurniture account</p>
+          <p className="text-gray-400 mt-1">Sign in to your APKnation account</p>
         </div>
 
         <div className="card p-8">

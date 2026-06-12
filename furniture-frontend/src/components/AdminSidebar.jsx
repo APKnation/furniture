@@ -25,7 +25,7 @@ export default function AdminSidebar() {
             <Sofa size={18} className="text-white" />
           </div>
           <div>
-            <p className="font-display font-bold text-white text-base leading-tight">CozyFurniture</p>
+            <p className="font-display font-bold text-white text-base leading-tight">APKnation</p>
             <p className="text-xs text-primary-400 font-medium">Admin Panel</p>
           </div>
         </div>
