@@ -4,7 +4,7 @@ import { ArrowRight, Shield, Truck, Star } from 'lucide-react';
 import { getCategories, getProducts } from '../../services/api';
 import ProductCard from '../../components/ProductCard';
 import { useAuth } from '../../context/AuthContext';
-import { addToCart } from '../../services/api';
+import { useCart } from '../../context/CartContext';
 
 const features = [
   { icon: Truck, label: 'Free Shipping', desc: 'On orders over $500' },
@@ -14,6 +14,7 @@ const features = [
 
 export default function Home() {
   const { isAuthenticated, isAdmin } = useAuth();
+  const { addToCart } = useCart();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [featured, setFeatured] = useState([]);
@@ -25,9 +26,8 @@ export default function Home() {
   }, []);
 
   const handleAddToCart = async (product) => {
-    if (!isAuthenticated) { navigate('/login'); return; }
     try {
-      await addToCart({ productId: product.id, quantity: 1 });
+      await addToCart(product, 1);
       setToast(`${product.name} added to cart!`);
       setTimeout(() => setToast(''), 3000);
     } catch (err) {
