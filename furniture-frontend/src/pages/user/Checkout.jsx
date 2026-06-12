@@ -1,20 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { MapPin, CreditCard, ArrowLeft, ShoppingBag } from 'lucide-react';
-import { getCart, checkout } from '../../services/api';
+import { checkout } from '../../services/api';
+import { useCart } from '../../context/CartContext';
 import { showError, showSuccess } from '../../utils/swal';
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const [cart, setCart] = useState({ items: [], totalAmount: 0 });
+  const { cartItems, totalAmount, fetchCart, loading: cartLoading } = useCart();
   const [form, setForm] = useState({ shippingAddress: '', paymentMethod: 'cash_on_delivery' });
   const [loading, setLoading] = useState(false);
-  const [cartLoading, setCartLoading] = useState(true);
 
   useEffect(() => {
-    getCart().then(r => { setCart(r.data); if (!r.data.items?.length) navigate('/cart'); })
-      .catch(() => navigate('/cart')).finally(() => setCartLoading(false));
-  }, []);
+    if (!cartLoading && cartItems.length === 0) {
+      navigate('/cart');
+    }
+  }, [cartItems, cartLoading, navigate]);
 
   const set = (f) => (e) => setForm({ ...form, [f]: e.target.value });
 
@@ -22,6 +23,7 @@ export default function Checkout() {
     e.preventDefault(); setLoading(true);
     try {
       const res = await checkout(form);
+      await fetchCart(); // Re-sync cart context from backend (now empty)
       await showSuccess('Order Placed!', `Order ${res.data.orderNumber} placed successfully.`);
       navigate('/orders');
     } catch (err) {
@@ -30,6 +32,8 @@ export default function Checkout() {
   };
 
   if (cartLoading) return <div className="flex items-center justify-center py-32"><div className="animate-spin rounded-full h-10 w-10 border-2 border-primary-500 border-t-transparent"/></div>;
+
+  if (cartItems.length === 0) return null; // Wait for redirect
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
@@ -77,17 +81,19 @@ export default function Checkout() {
         <div className="card p-6 h-fit sticky top-24">
           <h2 className="font-semibold text-white mb-4">Order Summary</h2>
           <div className="space-y-3 mb-4">
-            {cart.items?.map(item => (
-              <div key={item.id} className="flex justify-between text-sm">
+            {cartItems.map(item => {
+              const sub = item.subTotal || (item.productPrice * item.quantity);
+              return (
+              <div key={item.id || item.productId} className="flex justify-between text-sm">
                 <span className="text-gray-400 truncate pr-2">{item.productName} ×{item.quantity}</span>
-                <span className="text-white font-medium flex-shrink-0">{`TZS ${item.subTotal?.toLocaleString('en-US')}`}</span>
+                <span className="text-white font-medium flex-shrink-0">{`TZS ${sub?.toLocaleString('en-US')}`}</span>
               </div>
-            ))}
+            )})}
           </div>
           <div className="border-t border-dark-600 pt-4">
             <div className="flex justify-between font-bold text-white text-lg">
               <span>Total</span>
-              <span className="text-primary-400">{`TZS ${cart.totalAmount?.toLocaleString('en-US')}`}</span>
+              <span className="text-primary-400">{`TZS ${totalAmount?.toLocaleString('en-US')}`}</span>
             </div>
           </div>
         </div>
