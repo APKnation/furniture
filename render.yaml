@@ -1,0 +1,5 @@
+services:
+  - type: web
+    name: furniture-backend
+    env: docker
+    dockerfilePath: furniture/Dockerfile
