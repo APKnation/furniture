@@ -18,7 +18,7 @@ export default function Navbar() {
     }
   }, [isAuthenticated, isAdmin, location]);
 
-  const handleLogout = () => { logout(); navigate('/login'); };
+  const handleLogout = () => { logout(); navigate('/'); };
 
   const navLinks = [
     { to: '/', label: 'Home' },
