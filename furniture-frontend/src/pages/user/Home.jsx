@@ -7,7 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 
 const features = [
-  { icon: Truck, label: 'Free Shipping', desc: 'On orders over $500' },
+  { icon: Truck, label: 'Free Shipping', desc: 'On orders over Tsh 5000' },
   { icon: Shield, label: 'Quality Guarantee', desc: '2 year warranty included' },
   { icon: Star, label: 'Premium Brands', desc: 'Only top furniture brands' },
 ];
@@ -90,15 +90,20 @@ export default function Home() {
 
       {/* Featured Products */}
       {featured.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-          <div className="flex items-center justify-between mb-8">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+          {/* Subtle background glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary-900/10 blur-[120px] rounded-full pointer-events-none" />
+          
+          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 relative z-10 gap-4">
             <div>
-              <h2 className="font-display text-3xl font-bold text-white">Featured Products</h2>
-              <p className="text-gray-400 mt-1">Our most popular pieces</p>
+              <h2 className="font-display text-4xl font-bold text-white mb-2">Featured Products</h2>
+              <p className="text-gray-400 text-lg">Handpicked pieces for your home</p>
             </div>
-
+            <Link to="/products" className="group flex items-center gap-2 text-primary-400 font-semibold hover:text-primary-300 transition-colors">
+              View All <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
             {featured.map(p => (
               <ProductCard key={p.id} product={p} onAddToCart={!isAdmin ? handleAddToCart : null} />
             ))}
@@ -107,17 +112,18 @@ export default function Home() {
       )}
 
       {/* Features */}
-      <section className="bg-dark-800 border-b border-dark-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="bg-dark-800/50 border-y border-dark-600 backdrop-blur-md relative overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-20 pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map(({ icon: Icon, label, desc }) => (
-              <div key={label} className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-primary-900/50 border border-primary-800/50 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Icon size={20} className="text-primary-400" />
+              <div key={label} className="group flex items-start gap-5 p-6 rounded-2xl hover:bg-dark-700/50 transition-all duration-300 border border-transparent hover:border-dark-600">
+                <div className="w-14 h-14 bg-primary-900/30 group-hover:bg-primary-900/50 border border-primary-800/50 rounded-2xl flex items-center justify-center flex-shrink-0 transition-colors shadow-lg shadow-primary-900/20">
+                  <Icon size={24} className="text-primary-400 group-hover:scale-110 transition-transform duration-300" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">{label}</p>
-                  <p className="text-sm text-gray-400">{desc}</p>
+                  <h3 className="font-bold text-white text-lg mb-1">{label}</h3>
+                  <p className="text-gray-400 leading-relaxed">{desc}</p>
                 </div>
               </div>
             ))}
@@ -127,19 +133,20 @@ export default function Home() {
 
       {/* Categories */}
       {categories.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="font-display text-3xl font-bold text-white">Browse by Room</h2>
-              <p className="text-gray-400 mt-1">Find furniture designed for every space</p>
-            </div>
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative">
+          <div className="flex flex-col items-center text-center mb-16">
+            <h2 className="font-display text-4xl font-bold text-white mb-4">Browse by Category</h2>
+            <p className="text-gray-400 text-lg max-w-2xl">Find the perfect furniture tailored to every room and aesthetic. Explore our collections.</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {categories.map((cat) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {categories.map((cat, i) => (
               <Link key={cat.id} to={`/products?categoryId=${cat.id}`}
-                className="group card p-6 text-center hover:border-primary-600/60 hover:-translate-y-1 transition-all duration-300">
-
-                <p className="font-semibold text-white group-hover:text-primary-400 transition-colors">{cat.name}</p>
+                className="group relative overflow-hidden rounded-2xl bg-dark-800 border border-dark-600 p-8 text-center hover:border-primary-500/50 hover:shadow-2xl hover:shadow-primary-900/20 hover:-translate-y-2 transition-all duration-300">
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-primary-500/10 to-transparent rounded-full blur-2xl group-hover:bg-primary-500/20 transition-colors duration-500" style={{ transitionDelay: `${(i % 4) * 50}ms` }} />
+                <div className="w-16 h-16 mx-auto bg-dark-700 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 border border-dark-600 shadow-inner">
+                  <span className="text-2xl group-hover:rotate-12 transition-transform duration-300">🛋️</span>
+                </div>
+                <h3 className="font-bold text-white text-lg group-hover:text-primary-400 transition-colors">{cat.name}</h3>
               </Link>
             ))}
           </div>
