@@ -87,6 +87,25 @@ export default function Home() {
         </div>
       </section>
 
+
+      {/* Featured Products */}
+      {featured.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="font-display text-3xl font-bold text-white">Featured Products</h2>
+              <p className="text-gray-400 mt-1">Our most popular pieces</p>
+            </div>
+
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featured.map(p => (
+              <ProductCard key={p.id} product={p} onAddToCart={!isAdmin ? handleAddToCart : null} />
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Features */}
       <section className="bg-dark-800 border-b border-dark-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -127,23 +146,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* Featured Products */}
-      {featured.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="font-display text-3xl font-bold text-white">Featured Products</h2>
-              <p className="text-gray-400 mt-1">Our most popular pieces</p>
-            </div>
-            <Link to="/products" className="btn-secondary btn-sm">View All <ArrowRight size={15}/></Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featured.map(p => (
-              <ProductCard key={p.id} product={p} onAddToCart={!isAdmin ? handleAddToCart : null} />
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   );
 }
