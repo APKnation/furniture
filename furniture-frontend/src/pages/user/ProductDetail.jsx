@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ShoppingCart, ArrowLeft, Package, FolderTree, AlertCircle, CheckCircle } from 'lucide-react';
-import { getProductById, addToCart } from '../../services/api';
+import { getProductById } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 
 export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -18,11 +20,10 @@ export default function ProductDetail() {
     getProductById(id).then(r => setProduct(r.data)).catch(() => navigate('/products')).finally(() => setLoading(false));
   }, [id]);
 
-  const handleAddToCart = async () => {
-    if (!isAuthenticated) { navigate('/login'); return; }
+  const handleAddToCart = async () => खुले
     setAdding(true);
     try {
-      await addToCart({ productId: product.id, quantity });
+      await addToCart(product, quantity);
       setMsg({ text: 'Added to cart successfully!', type: 'success' });
     } catch (err) {
       setMsg({ text: err.response?.data?.message || 'Failed to add to cart', type: 'error' });
