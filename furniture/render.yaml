@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: furniture-backend
+    env: java
+    buildCommand: mvn -B clean package
+    startCommand: java -jar target/furniture-0.0.1-SNAPSHOT.jar
