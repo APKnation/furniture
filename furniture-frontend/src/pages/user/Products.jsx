@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
-import { getProducts, getCategories, addToCart } from '../../services/api';
+import { getProducts, getCategories } from '../../services/api';
 import ProductCard from '../../components/ProductCard';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 import { showError, showSuccess } from '../../utils/swal';
 
 export default function Products() {
   const { isAuthenticated, isAdmin } = useAuth();
+  const { addToCart } = useCart();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -32,9 +34,8 @@ export default function Products() {
   }, [search, categoryId]);
 
   const handleAddToCart = async (product) => {
-    if (!isAuthenticated) { navigate('/login'); return; }
     try {
-      await addToCart({ productId: product.id, quantity: 1 });
+      await addToCart(product, 1);
       showSuccess('Added to Cart', `${product.name} has been added.`);
     } catch (err) {
       showError('Failed to add', err.response?.data?.message || 'Could not add to cart');
