@@ -268,35 +268,6 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="bg-dark-800/50 border-t border-dark-600 py-20">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="font-display text-3xl font-bold text-white mb-3">Frequently Asked Questions</h2>
-            <p className="text-gray-400">Quick answers to common questions.</p>
-          </div>
-          <div className="space-y-3">
-            {faqs.map((faq, i) => (
-              <div key={i} className="bg-dark-800 border border-dark-600 rounded-2xl overflow-hidden transition-all duration-300">
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-4 text-left text-white font-medium hover:text-primary-400 transition-colors">
-                  <span>{faq.q}</span>
-                  {openFaq === i
-                    ? <ChevronUp size={18} className="text-primary-400 flex-shrink-0" />
-                    : <ChevronDown size={18} className="text-gray-500 flex-shrink-0" />}
-                </button>
-                {openFaq === i && (
-                  <div className="px-6 pb-5 text-gray-400 text-sm leading-relaxed border-t border-dark-600 pt-4 animate-fade-in">
-                    {faq.a}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
     </div>
   );
 }

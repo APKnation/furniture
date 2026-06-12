@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Shield, Truck, Star } from 'lucide-react';
+import { ArrowRight, Shield, Truck, Star, ChevronDown, ChevronUp } from 'lucide-react';
 import { getCategories, getProducts } from '../../services/api';
 import ProductCard from '../../components/ProductCard';
 import { useAuth } from '../../context/AuthContext';
@@ -12,14 +12,34 @@ const features = [
   { icon: Star, label: 'Premium Brands', desc: 'Only top furniture brands' },
 ];
 
+const faqs = [
+  {
+    q: 'How long does delivery take?',
+    a: 'Standard delivery takes 3–7 business days within Tanzania. Express delivery (1–2 days) is available in Dodoma and Dar es Salaam.',
+  },
+  {
+    q: 'Do you offer furniture assembly?',
+    a: 'Yes! We offer professional assembly services for all furniture purchased from our store. Contact us to schedule an assembly appointment.',
+  },
+  {
+    q: 'What is your return policy?',
+    a: 'We offer a 14-day return policy on all items in original condition. Damaged or defective items are replaced at no extra cost within 30 days.',
+  },
+  {
+    q: 'Can I track my order?',
+    a: 'Yes. Once your order is shipped you will receive a tracking number via email and SMS to follow your delivery in real-time.',
+  },
+];
+
 export default function Home() {
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [toast, setToast] = useState('');
+  const [openFaq, setOpenFaq] = useState(null);
 
   useEffect(() => {
     getCategories().then(r => setCategories(r.data)).catch(() => {});
@@ -70,7 +90,7 @@ export default function Home() {
               <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-8">
                 Discover handcrafted furniture that blends modern comfort with timeless design. Explore sofas, dining sets, and storage solutions that fit every home and lifestyle.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-10">
                 <div className="flex">
                   <img src="/image2.png" alt="Featured 1" className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-full border-4 border-dark-800 object-cover shadow-md" />
@@ -91,11 +111,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Products */}
+      {/* Products */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
-        {/* Subtle background glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary-900/10 blur-[120px] rounded-full pointer-events-none" />
-        
+
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 relative z-10 gap-4">
           <div>
             <h2 className="font-display text-4xl font-bold text-white mb-2">Our Products</h2>
@@ -104,9 +123,9 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex items-center gap-3">
               <label className="text-gray-400 font-medium whitespace-nowrap">Select Category:</label>
-              <select 
+              <select
                 className="input w-full sm:w-48 bg-dark-800 border-dark-600 text-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-                value={selectedCategory} 
+                value={selectedCategory}
                 onChange={e => setSelectedCategory(e.target.value)}
               >
                 <option value="">All Categories</option>
@@ -115,9 +134,12 @@ export default function Home() {
                 ))}
               </select>
             </div>
+            <Link to="/products" className="group flex items-center gap-2 text-primary-400 font-semibold hover:text-primary-300 transition-colors whitespace-nowrap">
+              View All <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
-        
+
         {featured.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
             {featured.map(p => (
@@ -148,6 +170,33 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="text-center mb-12">
+          <h2 className="font-display text-4xl font-bold text-white mb-3">Frequently Asked Questions</h2>
+          <p className="text-gray-400 text-lg">Quick answers to the most common questions.</p>
+        </div>
+        <div className="space-y-3">
+          {faqs.map((faq, i) => (
+            <div key={i} className="bg-dark-800 border border-dark-600 rounded-2xl overflow-hidden">
+              <button
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                className="w-full flex items-center justify-between px-6 py-4 text-left text-white font-medium hover:text-primary-400 transition-colors">
+                <span>{faq.q}</span>
+                {openFaq === i
+                  ? <ChevronUp size={18} className="text-primary-400 flex-shrink-0" />
+                  : <ChevronDown size={18} className="text-gray-500 flex-shrink-0" />}
+              </button>
+              {openFaq === i && (
+                <div className="px-6 pb-5 text-gray-400 text-sm leading-relaxed border-t border-dark-600 pt-4 animate-fade-in">
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </section>
 
