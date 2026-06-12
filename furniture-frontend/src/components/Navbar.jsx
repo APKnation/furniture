@@ -47,19 +47,20 @@ export default function Navbar() {
 
           {/* Right side */}
           <div className="hidden md:flex items-center gap-3">
+            {!isAdmin && (
+              <Link to="/cart" className="relative p-2 rounded-xl text-gray-300 hover:text-white hover:bg-dark-700 transition-all mr-2">
+                <ShoppingCart size={20} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{cartCount}</span>
+                )}
+              </Link>
+            )}
+            
             {isAuthenticated ? (
               <>
                 {isAdmin && (
                   <Link to="/admin" className="btn-secondary btn-sm">
                     <LayoutDashboard size={15} /> Admin Panel
-                  </Link>
-                )}
-                {!isAdmin && (
-                  <Link to="/cart" className="relative p-2 rounded-xl text-gray-300 hover:text-white hover:bg-dark-700 transition-all">
-                    <ShoppingCart size={20} />
-                    {cartCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{cartCount}</span>
-                    )}
                   </Link>
                 )}
                 <div className="relative">
@@ -103,9 +104,14 @@ export default function Navbar() {
               className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive(to) ? 'bg-primary-600/20 text-primary-400' : 'text-gray-300'}`}>{label}</Link>
           ))}
           <div className="border-t border-dark-600 pt-2 mt-2">
+            {!isAdmin && (
+              <Link to="/cart" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-sm text-gray-300">
+                <ShoppingCart size={16}/> Cart {cartCount > 0 && `(${cartCount})`}
+              </Link>
+            )}
+            
             {isAuthenticated ? (
               <>
-                {!isAdmin && <Link to="/cart" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-sm text-gray-300"><ShoppingCart size={16}/> Cart {cartCount > 0 && `(${cartCount})`}</Link>}
                 <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-sm text-gray-300"><User size={16}/> Profile</Link>
                 {isAdmin && <Link to="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-sm text-gray-300"><LayoutDashboard size={16}/> Admin Panel</Link>}
                 <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2.5 text-sm text-red-400 w-full"><LogOut size={16}/> Logout</button>
