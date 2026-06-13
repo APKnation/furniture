@@ -27,7 +27,7 @@ export default function AdminSidebar({ onMobileClose, isMobile }) {
   };
 
   return (
-    <aside className={`w-64 min-h-screen bg-dark-800 flex flex-col ${isMobile ? '' : 'border-r border-dark-600'}`}>
+    <aside className={`w-64 bg-dark-800 flex flex-col ${isMobile ? 'h-full' : 'min-h-screen border-r border-dark-600'}`}>
       {/* Logo */}
       <div className="p-6 border-b border-dark-600 flex justify-between items-center">
         <div className="flex items-center gap-2.5">
