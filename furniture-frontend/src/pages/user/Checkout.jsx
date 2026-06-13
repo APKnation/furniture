@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { MapPin, CreditCard, ArrowLeft, ShoppingBag, Truck, Building, ShieldCheck } from 'lucide-react';
+import { MapPin, CreditCard, ArrowLeft, ShoppingBag, Truck, Building, ShieldCheck, Phone } from 'lucide-react';
 import { checkout } from '../../services/api';
 import { useCart } from '../../context/CartContext';
 import { showError, showSuccess } from '../../utils/swal';
@@ -8,7 +8,7 @@ import { showError, showSuccess } from '../../utils/swal';
 export default function Checkout() {
   const navigate = useNavigate();
   const { cartItems, totalAmount, fetchCart, loading: cartLoading } = useCart();
-  const [form, setForm] = useState({ shippingAddress: '', paymentMethod: 'cash_on_delivery' });
+  const [form, setForm] = useState({ shippingAddress: '', paymentMethod: 'cash_on_delivery', bankName: '', mobileProvider: '', phoneNumber: '', creditCardNumber: '' });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -71,6 +71,7 @@ export default function Checkout() {
               {[
                 { value: 'cash_on_delivery', label: 'Cash on Delivery', desc: 'Pay when order arrives', icon: Truck },
                 { value: 'bank_transfer', label: 'Bank Transfer', desc: 'Direct bank transfer', icon: Building },
+                { value: 'mobile_money', label: 'Mobile Money', desc: 'Pay via mobile money', icon: Phone },
                 { value: 'credit_card', label: 'Credit Card', desc: 'Secure online payment', icon: ShieldCheck }
               ].map(opt => (
                 <label key={opt.value}
