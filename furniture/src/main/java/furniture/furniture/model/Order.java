@@ -42,7 +42,9 @@ public class Order {
     private String paymentStatus; // e.g. PENDING, PAID
 
     @Column(nullable = false)
-@Column(nullable = true)
+    private String paymentMethod; // e.g. CARD, CASH_ON_DELIVERY
+
+    @Column(nullable = true)
     private String bankName;
 
     @Column(nullable = true)
