@@ -42,7 +42,17 @@ public class Order {
     private String paymentStatus; // e.g. PENDING, PAID
 
     @Column(nullable = false)
-    private String paymentMethod; // e.g. CARD, CASH_ON_DELIVERY
+@Column(nullable = true)
+    private String bankName;
+
+    @Column(nullable = true)
+    private String mobileProvider;
+
+    @Column(nullable = true)
+    private String phoneNumber;
+
+    @Column(nullable = true)
+    private String creditCardNumber;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
