@@ -77,7 +77,15 @@ export default function AdminOrders() {
               <div className="border-t border-dark-600 p-4 space-y-4 animate-slide-up">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div><p className="text-gray-500 text-xs">Customer</p><p className="text-white font-medium">{order.userName}</p><p className="text-gray-400 text-xs">{order.userEmail}</p></div>
-                  <div><p className="text-gray-500 text-xs">Payment</p><p className="text-white font-medium">{order.paymentMethod}</p><p className="text-gray-400 text-xs">{order.paymentStatus}</p></div>
+                  <div>
+                    <p className="text-gray-500 text-xs">Payment</p>
+                    <p className="text-white font-medium">{order.paymentMethod?.replace(/_/g, ' ')}</p>
+                    {order.bankName && <p className="text-gray-400 text-xs mt-1">Bank: {order.bankName}</p>}
+                    {order.mobileProvider && <p className="text-gray-400 text-xs mt-1">Provider: {order.mobileProvider}</p>}
+                    {order.phoneNumber && <p className="text-gray-400 text-xs">Phone: {order.phoneNumber}</p>}
+                    {order.creditCardNumber && <p className="text-gray-400 text-xs mt-1">Card: ****{order.creditCardNumber.slice(-4)}</p>}
+                    <p className="text-primary-400 text-xs mt-1 font-semibold">{order.paymentStatus}</p>
+                  </div>
                   <div><p className="text-gray-500 text-xs">Shipping</p><p className="text-white font-medium text-xs leading-relaxed">{order.shippingAddress}</p></div>
                   <div>
                     <p className="text-gray-500 text-xs mb-1.5">Update Status</p>
