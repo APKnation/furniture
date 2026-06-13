@@ -38,9 +38,9 @@ export default function AdminDashboard() {
               <div className={`w-12 h-12 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
                 <Icon size={22} className="text-white"/>
               </div>
-              <div>
-                <p className="text-gray-400 text-sm">{label}</p>
-                <p className={`text-3xl font-bold ${textColor}`}>{value}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-gray-400 text-xs sm:text-sm truncate">{label}</p>
+                <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${textColor} truncate`}>{value}</p>
               </div>
             </div>
           ))}
