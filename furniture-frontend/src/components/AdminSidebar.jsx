@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FolderTree, Package, ShoppingBag, Users, BarChart2, LogOut, Sofa, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, FolderTree, Package, ShoppingBag, Users, BarChart2, LogOut, Sofa, ChevronRight, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { confirmAction, showSuccess } from '../utils/swal';
 
@@ -12,7 +12,7 @@ const links = [
   { to: '/admin/reports', label: 'Reports', icon: BarChart2 },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ onMobileClose, isMobile }) {
   const { logout } = useAuth();
   const navigate = useNavigate();
   
@@ -27,9 +27,9 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="w-64 min-h-screen bg-dark-800 border-r border-dark-600 flex flex-col">
+    <aside className={`w-64 min-h-screen bg-dark-800 flex flex-col ${isMobile ? '' : 'border-r border-dark-600'}`}>
       {/* Logo */}
-      <div className="p-6 border-b border-dark-600">
+      <div className="p-6 border-b border-dark-600 flex justify-between items-center">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-lg">
             <Sofa size={18} className="text-white" />
@@ -39,12 +39,17 @@ export default function AdminSidebar() {
             <p className="text-xs text-primary-400 font-medium">Admin Panel</p>
           </div>
         </div>
+        {isMobile && (
+          <button onClick={onMobileClose} className="text-gray-400 hover:text-white">
+            <X size={20} />
+          </button>
+        )}
       </div>
 
       {/* Nav Links */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {links.map(({ to, label, icon: Icon, end }) => (
-          <NavLink key={to} to={to} end={end}
+          <NavLink key={to} to={to} end={end} onClick={() => isMobile && onMobileClose && onMobileClose()}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
                 isActive
