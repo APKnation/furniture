@@ -50,6 +50,10 @@ public class OrderService {
                 .shippingAddress(request.shippingAddress())
                 .paymentMethod(request.paymentMethod())
                 .paymentStatus(request.paymentMethod().equalsIgnoreCase("cash_on_delivery") ? "PENDING" : "PAID")
+                .bankName(request.bankName())
+                .mobileProvider(request.mobileProvider())
+                .phoneNumber(request.phoneNumber())
+                .creditCardNumber(request.creditCardNumber())
                 .totalAmount(BigDecimal.ZERO) // Temporary
                 .build();
 
