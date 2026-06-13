@@ -90,7 +90,38 @@ export default function Checkout() {
               ))}
             </div>
           </div>
-
+{form.paymentMethod === 'bank_transfer' && (
+  <div className="mt-4 space-y-2">
+    <label className="block text-sm font-medium text-white">Select Bank</label>
+    <select required value={form.bankName} onChange={set('bankName')} className="input w-full">
+      <option value="">Select a bank</option>
+      <option value="NMB">NMB</option>
+      <option value="CRDB">CRDB</option>
+      <option value="Azania">Azania</option>
+      <option value="NBC">NBC</option>
+    </select>
+  </div>
+)}
+{form.paymentMethod === 'mobile_money' && (
+  <div className="mt-4 space-y-2">
+    <label className="block text-sm font-medium text-white">Mobile Provider</label>
+    <select required value={form.mobileProvider} onChange={set('mobileProvider')} className="input w-full">
+      <option value="">Select provider</option>
+      <option value="Yas">Yas</option>
+      <option value="Mpesa">Mpesa</option>
+      <option value="Halotel">Halotel</option>
+      <option value="Airtelpesa">Airtelpesa</option>
+    </select>
+    <label className="block text-sm font-medium text-white mt-2">Phone Number</label>
+    <input required type="text" placeholder="e.g., 0712345678" value={form.phoneNumber} onChange={set('phoneNumber')} className="input w-full" />
+  </div>
+)}
+{form.paymentMethod === 'credit_card' && (
+  <div className="mt-4 space-y-2">
+    <label className="block text-sm font-medium text-white">Credit Card Number</label>
+    <input required type="text" placeholder="1234 5678 9012 3456" value={form.creditCardNumber} onChange={set('creditCardNumber')} className="input w-full" />
+  </div>
+)}
           <div className="pt-2 hidden lg:block">
             <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-4 text-base shadow-xl shadow-primary-900/30">
               {loading ? <span className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" /> : <><ShoppingBag size={18} /> Place Order - TZS {totalAmount?.toLocaleString('en-US')}</>}
