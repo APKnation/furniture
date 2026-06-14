@@ -84,7 +84,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 border-b border-dark-600">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-900/30 via-transparent to-transparent" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
           <div className="flex flex-col md:flex-row items-stretch gap-8">
             <div className="md:w-1/2">
               <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
@@ -122,10 +122,10 @@ export default function Home() {
       </section>
 
       {/* Products */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary-900/10 blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 relative z-10 gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6 relative z-10 gap-4">
           <div>
             <h2 className="font-display text-4xl font-bold text-white mb-2">Our Products</h2>
             <p className="text-gray-400 text-lg">Handpicked pieces for your home</p>
@@ -166,7 +166,7 @@ export default function Home() {
       {/* Features */}
       <section className="bg-emerald-900/20 border-y border-emerald-800/30 backdrop-blur-md relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#10b98112_1px,transparent_1px),linear-gradient(to_bottom,#10b98112_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map(({ icon: Icon, label, desc }) => (
               <div key={label} className="group flex items-start gap-5 p-6 rounded-2xl hover:bg-dark-700/50 transition-all duration-300 border border-transparent hover:border-dark-600">
@@ -184,12 +184,12 @@ export default function Home() {
       </section>
 
       {/* Values */}
-      <section className="bg-dark-800/50 border-y border-dark-600 py-24 relative overflow-hidden">
+      <section className="bg-dark-800/50 border-y border-dark-600 py-12 relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-14">
-            <h2 className="font-display text-4xl font-bold text-white mb-4">What We Stand For</h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">Our values guide every decision we make — from how we source materials to how we serve our customers.</p>
+          <div className="text-center mb-8">
+            <h2 className="font-display text-3xl font-bold text-white mb-3">What We Stand For</h2>
+            <p className="text-gray-400 text-base max-w-2xl mx-auto">Our values guide every decision we make — from how we source materials to how we serve our customers.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map(({ icon: Icon, title, desc, color }) => (
