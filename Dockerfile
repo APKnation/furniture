@@ -1,8 +1,7 @@
-# ----- Dockerfile -----
-# Multi-stage Docker build for APKnation Furniture project
-# Stage 1: Build React frontend
-FROM node:20 AS frontend-builder
+FROM node:20-bullseye AS frontend-builder
 WORKDIR /app
+# Install build essentials for native modules
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 # Copy package files and install dependencies
 COPY furniture-frontend/package.json furniture-frontend/package-lock.json ./
 RUN npm ci --silent
