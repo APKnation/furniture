@@ -1,7 +1,7 @@
 # ----- Dockerfile -----
 # Multi-stage Docker build for APKnation Furniture project
 # Stage 1: Build React frontend
-FROM node:20-alpine AS frontend-builder
+FROM node:20 AS frontend-builder
 WORKDIR /app
 # Copy package files and install dependencies
 COPY furniture-frontend/package.json furniture-frontend/package-lock.json ./
