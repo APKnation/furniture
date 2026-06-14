@@ -4,7 +4,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 # Copy package files and install dependencies
 COPY furniture-frontend/package.json furniture-frontend/package-lock.json ./
-RUN npm ci --silent
+RUN npm install
 # Copy source and build the frontend
 COPY furniture-frontend/ ./
 RUN npm run build
