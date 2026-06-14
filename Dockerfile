@@ -14,8 +14,8 @@ RUN npm run build
 FROM maven:3.9-eclipse-temurin-17 AS backend-builder
 WORKDIR /backend
 # Copy Maven project files
-COPY pom.xml .
-COPY src ./src
+COPY furniture/pom.xml .
+COPY furniture/src ./src
 # Build the backend jar (skip tests for faster build)
 RUN mvn -B package -DskipTests
 
