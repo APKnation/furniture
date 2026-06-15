@@ -27,12 +27,31 @@ WORKDIR /app
 COPY --from=backend-builder /backend/target/*.jar app.jar
 # Create an uploads folder so image uploads work correctly in prod
 RUN mkdir uploads
-# Expose the default Spring Boot port
-# Install netcat for the wait-for-db script
-RUN apk add --no-cache bash netcat-openbsd
+# Install bash and mysql-client (for mysqladmin ping) and netcat
+RUN apk add --no-cache bash mysql-client
 
-# Create the wait-for-MySQL script
-RUN printf '#!/bin/bash\nset -e\nHOST="${DB_HOST:-localhost}"\nPORT="${DB_PORT:-3306}"\necho "Waiting for MySQL at $HOST:$PORT..."\nuntil nc -z "$HOST" "$PORT"; do\n  echo "MySQL not ready yet - sleeping 3s"\n  sleep 3\ndone\necho "MySQL is up - starting application"\nexec java -jar /app/app.jar\n' > /app/wait-for-db.sh && chmod +x /app/wait-for-db.sh
+# Create wait-for-MySQL script that uses mysqladmin ping
+RUN printf '#!/bin/bash\n\
+set -e\n\
+HOST="${DB_HOST:-localhost}"\n\
+PORT="${DB_PORT:-3306}"\n\
+USER="${DB_USERNAME:-root}"\n\
+PASS="${DB_PASSWORD:-}"\n\
+echo "Waiting for MySQL at $HOST:$PORT..."\n\
+MAX_TRIES=100\n\
+TRIES=0\n\
+until mysqladmin ping -h"$HOST" -P"$PORT" -u"$USER" -p"$PASS" --silent 2>/dev/null; do\n\
+  TRIES=$((TRIES+1))\n\
+  if [ $TRIES -ge $MAX_TRIES ]; then\n\
+    echo "Timed out waiting for MySQL after $MAX_TRIES attempts"\n\
+    exit 1\n\
+  fi\n\
+  echo "MySQL not ready yet (attempt $TRIES/$MAX_TRIES) - sleeping 5s"\n\
+  sleep 5\n\
+done\n\
+echo "MySQL is up - starting application"\n\
+exec java -jar /app/app.jar\n\
+' > /app/wait-for-db.sh && chmod +x /app/wait-for-db.sh
 
 EXPOSE 8080
 ENTRYPOINT ["/app/wait-for-db.sh"]
