@@ -70,6 +70,14 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/reports")
+    public ResponseEntity<ReportDto> getSalesReport(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        return ResponseEntity.ok(adminService.getSalesReport(startDate, endDate));
+    }
+
     @GetMapping("/sales-trend")
     public ResponseEntity<List<SalesTrendDto>> getSalesTrend(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {

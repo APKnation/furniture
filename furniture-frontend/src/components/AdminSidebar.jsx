@@ -9,7 +9,7 @@ const links = [
   { to: '/admin/products', label: 'Products', icon: Package },
   { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { to: '/admin/users', label: 'Users', icon: Users },
-  { to: '/admin/reports', label: 'Reports', icon: BarChart2 },
+  { to: '/admin/reports', label: 'Sales & Charts', icon: BarChart2 },
 ];
 
 export default function AdminSidebar({ onMobileClose, isMobile }) {

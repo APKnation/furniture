@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, DollarSign, ShoppingBag, TrendingUp, Download, Eye, FileText } from 'lucide-react';
-import { getSalesReport } from '../../services/api';
+import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
+import { getSalesReport, getSalesTrend } from '../../services/api';
 
 export default function AdminReports() {
   const today = new Date().toISOString().split('T')[0];
@@ -9,16 +10,25 @@ export default function AdminReports() {
   const [dateRange, setDateRange] = useState({ start: thirtyDaysAgo, end: today });
   const [data, setData] = useState({ orders: [], totalOrders: 0, totalSales: 0, averageOrderValue: 0 });
   const [loading, setLoading] = useState(false);
+  const [chartData, setChartData] = useState([]);
+  const [chartLoading, setChartLoading] = useState(false);
 
   const fetchReport = async () => {
     setLoading(true);
+    setChartLoading(true);
     try {
-      const res = await getSalesReport(dateRange.start, dateRange.end);
-      setData(res.data);
+      const [reportRes, trendRes] = await Promise.all([
+        getSalesReport(dateRange.start, dateRange.end),
+        getSalesTrend(dateRange.start, dateRange.end)
+      ]);
+      setData(reportRes.data);
+      setChartData(trendRes.data);
     } catch {
       setData({ orders: [], totalOrders: 0, totalSales: 0, averageOrderValue: 0 });
+      setChartData([]);
     } finally {
       setLoading(false);
+      setChartLoading(false);
     }
   };
 
@@ -48,7 +58,21 @@ export default function AdminReports() {
     document.body.removeChild(link);
   };
 
+  const getStatusData = () => {
+    if (!data.orders || !data.orders.length) return [];
+    const statusCounts = data.orders.reduce((acc, order) => {
+      acc[order.status] = (acc[order.status] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.keys(statusCounts).map(key => ({ name: key, value: statusCounts[key] }));
+  };
 
+  const statusColors = {
+    NEW: '#3B82F6',       // Blue
+    CONFIRMED: '#F59E0B', // Amber
+    DELIVERED: '#10B981', // Green
+    CANCELED: '#EF4444',  // Red
+  };
 
   return (
     <div className="animate-fade-in">
@@ -118,49 +142,83 @@ export default function AdminReports() {
         </div>
       </div>
 
-      {/* Orders Table */}
-      <div className="card overflow-hidden">
-        <div className="p-5 border-b border-dark-600 flex justify-between items-center">
-          <h3 className="font-semibold text-white flex items-center gap-2"><FileText size={17} className="text-primary-400"/> Order Details</h3>
+  const getStatusData = () => {
+    if (!data.orders || !data.orders.length) return [];
+    const statusCounts = data.orders.reduce((acc, order) => {
+      acc[order.status] = (acc[order.status] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.keys(statusCounts).map(key => ({ name: key, value: statusCounts[key] }));
+  };
+
+  const statusColors = {
+    NEW: '#3B82F6',       // Blue
+    CONFIRMED: '#F59E0B', // Amber
+    DELIVERED: '#10B981', // Green
+    CANCELED: '#EF4444',  // Red
+  };
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 mb-8">
+        {/* Sales Trend Chart */}
+        <div className="card p-5 xl:col-span-2">
+          <h2 className="text-lg font-semibold text-white mb-4">Sales Trend</h2>
+          {chartLoading ? (
+            <div className="h-64 flex items-center justify-center text-gray-400">Loading chart...</div>
+          ) : chartData.length ? (
+            <div className="w-full h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="date" stroke="#9CA3AF" />
+                  <YAxis stroke="#9CA3AF" />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#1F2937', border: 'none', borderRadius: '8px', color: '#F3F4F6' }}
+                    itemStyle={{ color: '#60A5FA' }}
+                  />
+                  <Legend />
+                  <Line type="monotone" dataKey="total" stroke="#3B82F6" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} name="Total Sales" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-64 flex items-center justify-center text-gray-500">No data for selected period.</div>
+          )}
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm min-w-[700px]">
-            <thead>
-              <tr className="border-b border-dark-600 bg-dark-700/50">
-                <th className="text-left px-5 py-3.5 text-gray-400 font-medium">Order Number</th>
-                <th className="text-left px-5 py-3.5 text-gray-400 font-medium">Date</th>
-                <th className="text-left px-5 py-3.5 text-gray-400 font-medium">Customer</th>
-                <th className="text-center px-5 py-3.5 text-gray-400 font-medium">Status</th>
-                <th className="text-left px-5 py-3.5 text-gray-400 font-medium">Payment</th>
-                <th className="text-right px-5 py-3.5 text-gray-400 font-medium">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                [...Array(3)].map((_, i) => <tr key={i}><td colSpan={6} className="px-5 py-4"><div className="h-5 bg-dark-700 rounded animate-pulse"/></td></tr>)
-              ) : data.orders?.map(o => (
-                <tr key={o.id} className="border-b border-dark-600/50 table-row-hover">
-                  <td className="px-5 py-4 font-semibold text-white">{o.orderNumber}</td>
-                  <td className="px-5 py-4 text-gray-400">{new Date(o.orderDate).toLocaleDateString()}</td>
-                  <td className="px-5 py-4 font-medium text-white">{o.userName}</td>
-                  <td className="px-5 py-4 text-center">
-                    <span className={`badge ${
-                      o.status === 'DELIVERED' ? 'bg-green-950 text-green-400 border-green-800' :
-                      o.status === 'CANCELED' ? 'bg-red-950 text-red-400 border-red-800' :
-                      o.status === 'CONFIRMED' ? 'bg-amber-950 text-amber-400 border-amber-800' :
-                      'bg-blue-950 text-blue-400 border-blue-800'
-                    } border text-xs`}>{o.status}</span>
-                  </td>
-                  <td className="px-5 py-4 text-gray-400 text-xs">{o.paymentMethod}</td>
-                  <td className="px-5 py-4 text-right text-primary-400 font-bold">{`TZS ${o.totalAmount?.toLocaleString('en-US')}`}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+        {/* Orders by Status Chart */}
+        <div className="card p-5">
+          <h2 className="text-lg font-semibold text-white mb-4">Orders by Status</h2>
+          {loading ? (
+            <div className="h-64 flex items-center justify-center text-gray-400">Loading chart...</div>
+          ) : data.orders?.length ? (
+            <div className="w-full h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={getStatusData()}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {getStatusData().map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={statusColors[entry.name] || '#8884d8'} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#1F2937', border: 'none', borderRadius: '8px', color: '#F3F4F6' }}
+                  />
+                  <Legend verticalAlign="bottom" height={36}/>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-64 flex items-center justify-center text-gray-500">No data for selected period.</div>
+          )}
         </div>
-        {!loading && !data.orders?.length && (
-          <div className="text-center py-16 text-gray-500">No transactions recorded in this period.</div>
-        )}
       </div>
     </div>
   );
