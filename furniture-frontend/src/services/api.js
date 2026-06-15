@@ -51,6 +51,7 @@ export const addAdminUser = (data) => api.post('/api/admin/users', data);
 export const updateAdminUser = (id, data) => api.put(`/api/admin/users/${id}`, data);
 export const deleteAdminUser = (id) => api.delete(`/api/admin/users/${id}`);
 export const getSalesReport = (startDate, endDate) => api.get('/api/admin/reports', { params: { startDate, endDate } });
+export const getSalesTrend = (startDate, endDate) => api.get('/api/admin/sales-trend', { params: { startDate, endDate } });
 
 export const getAdminOrders = () => api.get('/api/admin/orders');
 export const searchOrderByNumber = (orderNumber) => api.get('/api/admin/orders/search', { params: { orderNumber } });

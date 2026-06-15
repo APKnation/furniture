@@ -1,8 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.js";
 
 @layer base {
   * { @apply box-border; }
@@ -52,6 +51,6 @@
     @apply hover:bg-dark-700 transition-colors duration-150;
   }
   .stat-card {
-    @apply card p-3 sm:p-6 flex items-center gap-2 sm:gap-4 hover:border-primary-700 transition-colors duration-200;
+    @apply bg-dark-800 rounded-2xl border border-dark-600 shadow-xl p-3 sm:p-6 flex items-center gap-2 sm:gap-4 hover:border-primary-700 transition-colors duration-200;
   }
 }

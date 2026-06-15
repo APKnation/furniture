@@ -5,6 +5,7 @@ import furniture.furniture.dto.DashboardStatsDto;
 import furniture.furniture.dto.OrderDto;
 import furniture.furniture.dto.OrderItemDto;
 import furniture.furniture.dto.ReportDto;
+import furniture.furniture.dto.SalesTrendDto;
 import furniture.furniture.model.*;
 import furniture.furniture.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -94,8 +95,6 @@ public class AdminService {
         }
     }
 
-
-
     public List<SalesTrendDto> getSalesTrend(LocalDate startDate, LocalDate endDate) {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
@@ -110,40 +109,23 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
-    public List<SalesTrendDto> getSalesTrend(LocalDate startDate, LocalDate endDate) {
+    public ReportDto getSalesReport(LocalDate startDate, LocalDate endDate) {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
-        List<Order> orders = orderRepository.findOrdersByDateRange(startDateTime, endDateTime);
-        Map<LocalDate, BigDecimal> dailyTotals = orders.stream()
-                .collect(Collectors.groupingBy(o -> o.getOrderDate().toLocalDate(),
-                        Collectors.mapping(Order::getTotalAmount,
-                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)));
-        return dailyTotals.entrySet().stream()
-                .map(e -> new SalesTrendDto(e.getKey(), e.getValue()))
-                .sorted(java.util.Comparator.comparing(SalesTrendDto::date))
-                .collect(Collectors.toList());
-    }
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
-
         List<Order> orders = orderRepository.findOrdersByDateRange(startDateTime, endDateTime);
         BigDecimal totalSales = orderRepository.sumSalesByDateRange(startDateTime, endDateTime);
         if (totalSales == null) {
             totalSales = BigDecimal.ZERO;
         }
-
         List<OrderDto> orderDtos = orders.stream()
                 .map(this::toOrderDto)
                 .collect(Collectors.toList());
-
         BigDecimal averageOrderValue = BigDecimal.ZERO;
-        if (orderDtos.size() > 0) {
+        if (!orderDtos.isEmpty()) {
             averageOrderValue = totalSales.divide(BigDecimal.valueOf(orderDtos.size()), 2, java.math.RoundingMode.HALF_UP);
         }
-
         return new ReportDto(orderDtos, orderDtos.size(), totalSales, averageOrderValue);
     }
-
     private OrderDto toOrderDto(Order o) {
         List<OrderItemDto> items = o.getOrderItems().stream().map(item -> {
             BigDecimal price = item.getPrice();
@@ -158,7 +140,6 @@ public class AdminService {
                     subTotal
             );
         }).collect(Collectors.toList());
-
         return new OrderDto(
                 o.getId(),
                 o.getOrderNumber(),
@@ -179,3 +160,8 @@ public class AdminService {
         );
     }
 }
+
+
+
+
+
