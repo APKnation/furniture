@@ -1,11 +1,11 @@
 package furniture.furniture.controller;
 
-
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class SpaErrorController implements ErrorController {
+public class SpaErrorController {
 
     @RequestMapping("/error")
     public String handleError() {
