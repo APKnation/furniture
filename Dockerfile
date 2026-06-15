@@ -28,6 +28,22 @@ COPY --from=backend-builder /backend/target/*.jar app.jar
 # Create an uploads folder so image uploads work correctly in prod
 RUN mkdir uploads
 # Expose the default Spring Boot port
-EXPOSE 8080
-# Run the application
-ENTRYPOINT ["java","-jar","app.jar"]
+# Install netcat for the wait script
+RUN apk add --no-cache bash netcat-openbsd
+
+# Wait-for-MySQL script
+COPY --chmod=755 <<'EOF' /app/wait-for-db.sh
+#!/bin/bash
+set -e
+HOST="${DB_HOST:-localhost}"
+PORT="${DB_PORT:-3306}"
+echo "Waiting for MySQL at $HOST:$PORT..."
+until nc -z "$HOST" "$PORT"; do
+  echo "MySQL not ready yet – sleeping 3s"
+  sleep 3
+done
+echo "MySQL is up – starting application"
+exec java -jar app.jar
+EOF
+
+ENTRYPOINT ["/app/wait-for-db.sh"]
