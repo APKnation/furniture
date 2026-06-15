@@ -22,9 +22,11 @@ const tailwindBtnCancel = 'bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 ro
 const baseSwal = Swal.mixin({
   background: '#1f2937', // dark-800
   color: '#f9fafb',
+  width: '22em',
+  padding: '1em',
   customClass: {
     popup: 'rounded-2xl border border-gray-700 shadow-2xl',
-    title: 'font-display',
+    title: 'font-display text-lg',
     confirmButton: tailwindBtnPrimary,
     cancelButton: tailwindBtnCancel,
   },

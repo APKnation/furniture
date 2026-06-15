@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FolderTree, Package, ShoppingBag, Users, BarChart2, LogOut, Sofa, ChevronRight, X } from 'lucide-react';
+import { LayoutDashboard, FolderTree, Package, ShoppingBag, Users, BarChart2, TrendingUp, LogOut, Sofa, ChevronRight, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { confirmAction, showSuccess } from '../utils/swal';
 
@@ -10,6 +10,7 @@ const links = [
   { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { to: '/admin/users', label: 'Users', icon: Users },
   { to: '/admin/reports', label: 'Sales & Charts', icon: BarChart2 },
+  { to: '/admin/trends', label: 'Trends', icon: TrendingUp },
 ];
 
 export default function AdminSidebar({ onMobileClose, isMobile }) {

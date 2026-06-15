@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, DollarSign, ShoppingBag, TrendingUp, Download, Eye, FileText } from 'lucide-react';
-import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
-import { getSalesReport, getSalesTrend } from '../../services/api';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { getSalesReport } from '../../services/api';
 
 export default function AdminReports() {
   const today = new Date().toISOString().split('T')[0];
@@ -10,25 +10,16 @@ export default function AdminReports() {
   const [dateRange, setDateRange] = useState({ start: thirtyDaysAgo, end: today });
   const [data, setData] = useState({ orders: [], totalOrders: 0, totalSales: 0, averageOrderValue: 0 });
   const [loading, setLoading] = useState(false);
-  const [chartData, setChartData] = useState([]);
-  const [chartLoading, setChartLoading] = useState(false);
 
   const fetchReport = async () => {
     setLoading(true);
-    setChartLoading(true);
     try {
-      const [reportRes, trendRes] = await Promise.all([
-        getSalesReport(dateRange.start, dateRange.end),
-        getSalesTrend(dateRange.start, dateRange.end)
-      ]);
-      setData(reportRes.data);
-      setChartData(trendRes.data);
+      const res = await getSalesReport(dateRange.start, dateRange.end);
+      setData(res.data);
     } catch {
       setData({ orders: [], totalOrders: 0, totalSales: 0, averageOrderValue: 0 });
-      setChartData([]);
     } finally {
       setLoading(false);
-      setChartLoading(false);
     }
   };
 
@@ -142,83 +133,40 @@ export default function AdminReports() {
         </div>
       </div>
 
-  const getStatusData = () => {
-    if (!data.orders || !data.orders.length) return [];
-    const statusCounts = data.orders.reduce((acc, order) => {
-      acc[order.status] = (acc[order.status] || 0) + 1;
-      return acc;
-    }, {});
-    return Object.keys(statusCounts).map(key => ({ name: key, value: statusCounts[key] }));
-  };
 
-  const statusColors = {
-    NEW: '#3B82F6',       // Blue
-    CONFIRMED: '#F59E0B', // Amber
-    DELIVERED: '#10B981', // Green
-    CANCELED: '#EF4444',  // Red
-  };
-
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 mb-8">
-        {/* Sales Trend Chart */}
-        <div className="card p-5 xl:col-span-2">
-          <h2 className="text-lg font-semibold text-white mb-4">Sales Trend</h2>
-          {chartLoading ? (
-            <div className="h-64 flex items-center justify-center text-gray-400">Loading chart...</div>
-          ) : chartData.length ? (
-            <div className="w-full h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="date" stroke="#9CA3AF" />
-                  <YAxis stroke="#9CA3AF" />
+      {/* Orders by Status Chart */}
+      <div className="card p-5 mb-8">
+        <h2 className="text-lg font-semibold text-white mb-4">Orders by Status</h2>
+        {loading ? (
+          <div className="h-64 flex items-center justify-center text-gray-400">Loading chart...</div>
+        ) : data.orders?.length ? (
+          <div className="w-full h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={getStatusData()}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={80}
+                  outerRadius={120}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {getStatusData().map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={statusColors[entry.name] || '#8884d8'} />
+                  ))}
+                </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#1F2937', border: 'none', borderRadius: '8px', color: '#F3F4F6' }}
-                    itemStyle={{ color: '#60A5FA' }}
+                    contentStyle={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px', color: '#111827' }}
+                    itemStyle={{ color: '#111827' }}
                   />
-                  <Legend />
-                  <Line type="monotone" dataKey="total" stroke="#3B82F6" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} name="Total Sales" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <div className="h-64 flex items-center justify-center text-gray-500">No data for selected period.</div>
-          )}
-        </div>
-
-        {/* Orders by Status Chart */}
-        <div className="card p-5">
-          <h2 className="text-lg font-semibold text-white mb-4">Orders by Status</h2>
-          {loading ? (
-            <div className="h-64 flex items-center justify-center text-gray-400">Loading chart...</div>
-          ) : data.orders?.length ? (
-            <div className="w-full h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={getStatusData()}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {getStatusData().map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={statusColors[entry.name] || '#8884d8'} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#1F2937', border: 'none', borderRadius: '8px', color: '#F3F4F6' }}
-                  />
-                  <Legend verticalAlign="bottom" height={36}/>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <div className="h-64 flex items-center justify-center text-gray-500">No data for selected period.</div>
-          )}
-        </div>
+                <Legend verticalAlign="bottom" height={36}/>
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="h-64 flex items-center justify-center text-gray-500">No data for selected period.</div>
+        )}
       </div>
     </div>
   );
