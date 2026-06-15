@@ -4,6 +4,8 @@ import furniture.furniture.dto.AdminUserRequest;
 import furniture.furniture.dto.DashboardStatsDto;
 import furniture.furniture.dto.ReportDto;
 import furniture.furniture.service.AdminService;
+import furniture.furniture.dto.SalesTrendDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;

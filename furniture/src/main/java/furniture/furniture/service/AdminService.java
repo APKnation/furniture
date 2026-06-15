@@ -94,7 +94,35 @@ public class AdminService {
         }
     }
 
-    public ReportDto getSalesReport(LocalDate startDate, LocalDate endDate) {
+
+
+    public List<SalesTrendDto> getSalesTrend(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+        List<Order> orders = orderRepository.findOrdersByDateRange(startDateTime, endDateTime);
+        Map<LocalDate, BigDecimal> dailyTotals = orders.stream()
+                .collect(Collectors.groupingBy(o -> o.getOrderDate().toLocalDate(),
+                        Collectors.mapping(Order::getTotalAmount,
+                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+        return dailyTotals.entrySet().stream()
+                .map(e -> new SalesTrendDto(e.getKey(), e.getValue()))
+                .sorted(java.util.Comparator.comparing(SalesTrendDto::date))
+                .collect(Collectors.toList());
+    }
+
+    public List<SalesTrendDto> getSalesTrend(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+        List<Order> orders = orderRepository.findOrdersByDateRange(startDateTime, endDateTime);
+        Map<LocalDate, BigDecimal> dailyTotals = orders.stream()
+                .collect(Collectors.groupingBy(o -> o.getOrderDate().toLocalDate(),
+                        Collectors.mapping(Order::getTotalAmount,
+                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)));
+        return dailyTotals.entrySet().stream()
+                .map(e -> new SalesTrendDto(e.getKey(), e.getValue()))
+                .sorted(java.util.Comparator.comparing(SalesTrendDto::date))
+                .collect(Collectors.toList());
+    }
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
 
