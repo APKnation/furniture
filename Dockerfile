@@ -15,6 +15,8 @@ WORKDIR /backend
 # Copy Maven project files
 COPY furniture/pom.xml .
 COPY furniture/src ./src
+# Copy the built frontend into Spring Boot's static folder BEFORE packaging
+COPY --from=frontend-builder /app/dist ./src/main/resources/static
 # Build the backend jar (skip tests for faster build)
 RUN mvn -B package -DskipTests
 
@@ -23,8 +25,8 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 # Copy backend jar
 COPY --from=backend-builder /backend/target/*.jar app.jar
-# Copy built frontend static files
-COPY --from=frontend-builder /app/dist ./static
+# Create an uploads folder so image uploads work correctly in prod
+RUN mkdir uploads
 # Expose the default Spring Boot port
 EXPOSE 8080
 # Run the application
