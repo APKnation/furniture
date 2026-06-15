@@ -52,8 +52,14 @@ export default function Home() {
 
 
   useEffect(() => {
-    getCategories().then(r => setCategories(r.data)).catch(() => {});
-    getProducts().then(r => setAllProducts(r.data)).catch(() => {});
+    getCategories().then(r => {
+      const data = r.data;
+      setCategories(Array.isArray(data) ? data : data?.content || []);
+    }).catch(() => {});
+    getProducts().then(r => {
+      const data = r.data;
+      setAllProducts(Array.isArray(data) ? data : data?.content || []);
+    }).catch(() => {});
   }, []);
 
   const handleAddToCart = async (product) => {
