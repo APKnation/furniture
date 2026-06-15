@@ -62,7 +62,7 @@ export const confirmAction = async (title, text, confirmButtonText = 'Yes', isDa
     cancelButtonText: 'Cancel',
     customClass: {
       popup: 'rounded-2xl border border-gray-700 shadow-2xl',
-      title: 'font-display',
+      title: 'font-display text-lg',
       confirmButton: isDanger ? tailwindBtnDanger : tailwindBtnPrimary,
       cancelButton: tailwindBtnCancel,
     }
