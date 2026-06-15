@@ -21,8 +21,16 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile
     envVars:
-      - key: DB_URL
-        value: jdbc:mysql://furniture-mysql:3306/furniture_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: furniture-mysql
+          property: host
+      - key: DB_PORT
+        fromService:
+          type: pserv
+          name: furniture-mysql
+          property: port
       - key: DB_USERNAME
         value: root
       - key: DB_PASSWORD
