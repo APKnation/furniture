@@ -3,11 +3,11 @@ import { ShoppingCart, Eye } from 'lucide-react';
 
 export default function ProductCard({ product, onAddToCart }) {
   return (
-    <div className="bg-canvas-elevated border border-hairline group overflow-hidden hover:border-muted-soft transition-colors duration-200">
+    <div className="card group flex flex-col overflow-hidden transition-all duration-200 cursor-pointer relative">
       {/* Image */}
-      <div className="relative overflow-hidden bg-canvas h-52">
+      <div className="relative bg-surface-elevated aspect-[4/3] w-full overflow-hidden">
         {product.imagePath ? (
-          <img src={product.imagePath} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          <img src={product.imagePath} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2">
             <div className="w-14 h-14 bg-hairline flex items-center justify-center">
@@ -20,36 +20,33 @@ export default function ProductCard({ product, onAddToCart }) {
         )}
         {/* Stock badge */}
         {product.quantity <= 5 && (
-          <div className="absolute top-0 left-0">
-            <span className={`badge ${product.quantity === 0 ? 'bg-semantic-warning text-white' : 'bg-canvas-elevated text-body'}`}>
+          <div className="absolute top-3 left-3">
+            <span className={`px-2 py-1 text-xs font-bold uppercase tracking-wide rounded-sm ${product.quantity === 0 ? 'bg-sale text-on-primary' : 'bg-surface-card text-body shadow-spotify-medium'}`}>
               {product.quantity === 0 ? 'Out of Stock' : `Only ${product.quantity} left`}
             </span>
           </div>
         )}
         {/* Quick view overlay */}
-        <div className="absolute inset-0 bg-canvas/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+        <div className="absolute inset-0 bg-canvas/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
           <Link to={`/products/${product.id}`}
-            className="flex items-center gap-1.5 px-4 py-2 bg-canvas-elevated border border-hairline text-ink text-xs font-semibold uppercase tracking-[0.08em] hover:bg-hairline transition-colors">
-            <Eye size={12} /> View
+            className="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary text-sm font-bold uppercase tracking-button rounded-full hover:scale-105 hover:bg-primary-pressed transition-all duration-200 shadow-spotify-heavy">
+            <Eye size={16} /> View
           </Link>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4 border-t border-hairline">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted">{product.categoryName}</p>
-          {product.brandName && <p className="text-[10px] text-muted">{product.brandName}</p>}
-        </div>
+      <div className="flex flex-col gap-1 p-4 bg-surface">
         <Link to={`/products/${product.id}`}>
-          <h3 className="font-medium text-sm text-ink hover:text-body transition-colors line-clamp-1 mb-3">{product.name}</h3>
+          <h3 className="font-bold text-base text-ink hover:text-primary transition-colors line-clamp-1">{product.name}</h3>
         </Link>
-        <div className="flex items-center justify-between">
-          <p className="text-base font-medium text-ink">{`TZS ${product.price?.toLocaleString('en-US')}`}</p>
+        <p className="text-sm text-body">{product.categoryName} {product.brandName && `· ${product.brandName}`}</p>
+        <div className="flex items-center justify-between mt-3">
+          <p className="text-base font-bold text-ink">{`TZS ${product.price?.toLocaleString('en-US')}`}</p>
           {product.quantity > 0 && onAddToCart && (
-            <button onClick={() => onAddToCart(product)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-primary hover:bg-primary-active text-on-primary text-[10px] font-bold uppercase tracking-[0.1em] rounded-md transition-colors active:scale-[0.97]">
-              <ShoppingCart size={11} /> Add
+            <button onClick={(e) => { e.preventDefault(); onAddToCart(product); }}
+              className="w-10 h-10 bg-primary text-on-primary rounded-full flex items-center justify-center hover:scale-105 hover:bg-primary-pressed transition-all shadow-spotify-medium">
+              <ShoppingCart size={16} />
             </button>
           )}
         </div>

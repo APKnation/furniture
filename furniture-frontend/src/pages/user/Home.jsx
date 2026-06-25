@@ -65,31 +65,42 @@ export default function Home() {
       )}
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-canvas border-b border-hairline">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="md:w-1/2">
-              {/* Section label */}
-              <p className="section-label mb-6">Premium Furniture · Tanzania</p>
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-medium text-ink leading-[1.05] tracking-[-0.04em] mb-6">
-                Elevate Your<br />Living Space
-              </h1>
-              <p className="text-body text-base leading-relaxed mb-10 max-w-md">
-                Discover handcrafted furniture that blends modern comfort with timeless design. Sofas, dining sets, and storage solutions for every home.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/products" className="btn-primary">
-                  Shop Collection <ArrowRight size={16} />
-                </Link>
-                <Link to="/about" className="btn-outline">
-                  Our Story
-                </Link>
-              </div>
+      <section className="relative w-full min-h-[600px] bg-canvas overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-canvas via-transparent to-surface opacity-30 pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 relative z-10">
+          <div className="flex flex-col md:flex-row items-center gap-16">
+            <div className="w-full md:w-5/12">
+              <h1 className="text-[48px] md:text-[64px] font-bold text-ink leading-[1.1] mb-6 tracking-tight">
+                Built for the perfect home
+            </h1>
+             <p className="text-gray-600 text-lg md:text-xl leading-relaxed mb-10 max-w-md font-medium">
+  Discover handcrafted furniture that blends modern comfort with timeless design.
+  <span className="block mt-2">
+    High-quality pieces made to elevate every room in your home.
+  </span>
+</p>
+<div className="flex items-center -space-x-2">
+  {[
+    "/images/image4.png",
+    "/images/imagee.png",
+    "/images/image2.png",
+    "/images/image3.png",
+  ].map((img, index) => (
+    <img
+      key={index}
+      src={img}
+      alt="Furniture"
+      className="w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 rounded-full border-4 border-[#1DB954] object-cover"
+    />
+  ))}
+</div>
+
+
             </div>
-            <div className="w-full md:w-1/2">
-              <div className="relative rounded-2xl overflow-hidden shadow-sm">
-                <img src="/hero.png" alt="Featured Furniture" className="w-full h-[400px] object-cover" />
-                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-canvas to-transparent" />
+            
+            <div className="w-full md:w-7/12">
+              <div className="relative rounded-2xl bg-surface p-3 shadow-spotify-heavy">
+                <img src="/hero.png" alt="Featured Furniture" className="w-full h-[400px] object-cover rounded-xl" />
               </div>
             </div>
           </div>
@@ -97,17 +108,17 @@ export default function Home() {
       </section>
 
       {/* Features strip */}
-      <section className="bg-canvas-elevated border-b border-hairline">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-hairline">
+      <section className="bg-surface">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map(({ icon: Icon, label, desc }) => (
-              <div key={label} className="flex items-start gap-4 px-6 py-8">
-                <div className="w-10 h-10 bg-primary flex items-center justify-center flex-shrink-0">
-                  <Icon size={18} className="text-on-primary" />
+              <div key={label} className="flex items-start gap-4 p-6 bg-surface-elevated rounded-md hover:bg-surface-card transition-colors">
+                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0 shadow-spotify-medium">
+                  <Icon size={20} className="text-on-primary" />
                 </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-ink mb-1">{label}</h3>
-                  <p className="text-xs text-body">{desc}</p>
+                <div className="pt-1">
+                  <h3 className="text-base font-bold text-ink mb-1">{label}</h3>
+                  <p className="text-sm text-body">{desc}</p>
                 </div>
               </div>
             ))}
@@ -120,8 +131,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">
             <div>
-              <p className="section-label mb-3">Our Collection</p>
-              <h2 className="text-4xl font-medium text-ink tracking-[-0.03em]">Our Products</h2>
+              <h2 className="text-[24px] md:text-[32px] font-bold text-ink tracking-tight">Latest Arrivals</h2>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="flex items-center gap-3">
@@ -137,8 +147,8 @@ export default function Home() {
                   ))}
                 </select>
               </div>
-              <Link to="/products" className="flex items-center gap-1.5 text-xs font-semibold text-body hover:text-ink uppercase tracking-[0.065em] transition-colors group whitespace-nowrap">
-                View All <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+              <Link to="/products" className="text-sm font-bold text-body hover:text-ink transition-colors group whitespace-nowrap uppercase tracking-button">
+                View All
               </Link>
             </div>
           </div>
@@ -158,20 +168,19 @@ export default function Home() {
       </section>
 
       {/* Values */}
-      <section className="bg-canvas-elevated border-t border-hairline py-16">
+      <section className="bg-canvas py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="section-label mb-3">Why Choose Us</p>
-            <h2 className="text-4xl font-medium text-ink tracking-[-0.03em]">What We Stand For</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-[32px] font-bold text-ink tracking-tight">Why choose us</h2>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-hairline border border-hairline">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-canvas-elevated p-8 hover:bg-canvas transition-colors duration-200">
-                <div className="w-10 h-10 bg-primary flex items-center justify-center mb-6">
-                  <Icon size={18} className="text-on-primary" />
+              <div key={title} className="bg-surface rounded-md p-6 hover:bg-surface-elevated transition-colors duration-200 shadow-spotify-medium hover:shadow-spotify-heavy">
+                <div className="w-12 h-12 bg-surface-elevated rounded-full flex items-center justify-center mb-6">
+                  <Icon size={20} className="text-primary" />
                 </div>
-                <h3 className="text-sm font-semibold text-ink mb-3">{title}</h3>
-                <p className="text-xs text-body leading-relaxed">{desc}</p>
+                <h3 className="text-lg font-bold text-ink mb-2">{title}</h3>
+                <p className="text-sm text-body leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>

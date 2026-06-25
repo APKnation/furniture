@@ -39,43 +39,42 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-canvas border-t border-hairline mt-0">
+    <footer className="bg-canvas mt-0 pb-16 pt-8">
       {/* Main footer grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
 
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
-            <Link to="/" className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-8 bg-primary flex items-center justify-center">
-                <Sofa size={16} className="text-on-primary" />
+            <Link to="/" className="flex items-center gap-3 mb-6 group">
+              <div className="w-10 h-10 bg-surface-elevated rounded-full flex items-center justify-center shadow-spotify-medium group-hover:scale-105 transition-transform">
+              🇹🇿
               </div>
               <div>
-                <p className="font-medium text-sm text-ink leading-tight">APKnation</p>
-                <p className="text-[10px] text-muted uppercase tracking-[0.08em]">Online Furniture Shop</p>
+                <p className="font-bold text-base text-ink leading-tight">APKnation</p>
+                <p className="text-[10px] text-body uppercase tracking-[0.08em]">Online Furniture Shop</p>
               </div>
             </Link>
-            <p className="text-body text-sm leading-relaxed mb-6 max-w-xs">
+            <p className="text-body text-sm leading-relaxed mb-8 max-w-xs">
               Proudly Tanzanian. Crafting beautiful, high-quality furniture for every home since 2019.
             </p>
             {/* Socials */}
             <div className="flex gap-2">
               {socials.map(({ icon: Icon, href, label }) => (
                 <a key={label} href={href} aria-label={label}
-                  className="w-8 h-8 bg-canvas-elevated border border-hairline text-muted flex items-center justify-center hover:text-ink hover:border-muted-soft transition-colors duration-150">
+                  className="w-10 h-10 bg-surface-elevated rounded-full text-ink flex items-center justify-center hover:bg-surface-card hover:text-primary transition-all duration-200 shadow-spotify-medium hover:scale-105">
                   <Icon />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h3 className="text-[10px] font-semibold text-muted uppercase tracking-[0.1em] mb-5">Quick Links</h3>
+            <h3 className="text-sm font-bold text-ink mb-5">Quick Links</h3>
             <ul className="space-y-3">
               {quickLinks.map(({ to, label }) => (
                 <li key={label}>
-                  <Link to={to} className="text-body text-sm hover:text-ink transition-colors duration-150">
+                  <Link to={to} className="text-body text-sm hover:text-primary font-bold transition-colors duration-150">
                     {label}
                   </Link>
                 </li>
@@ -83,13 +82,12 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Categories */}
           <div>
-            <h3 className="text-[10px] font-semibold text-muted uppercase tracking-[0.1em] mb-5">Categories</h3>
+            <h3 className="text-sm font-bold text-ink mb-5">Categories</h3>
             <ul className="space-y-3">
               {categories.map(({ label, to }) => (
                 <li key={label}>
-                  <Link to={to} className="text-body text-sm hover:text-ink transition-colors duration-150">
+                  <Link to={to} className="text-body text-sm hover:text-primary font-bold transition-colors duration-150">
                     {label}
                   </Link>
                 </li>
@@ -97,34 +95,39 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact Info */}
           <div>
-            <h3 className="text-[10px] font-semibold text-muted uppercase tracking-[0.1em] mb-5">Contact</h3>
+            <h3 className="text-sm font-bold text-ink mb-5">Contact</h3>
             <ul className="space-y-4">
               <li>
                 <a href="tel:+255757306134" className="flex items-start gap-3 group">
-                  <Phone size={13} className="text-primary mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-[10px] text-muted uppercase tracking-[0.08em]">Phone</p>
-                    <p className="text-body text-sm group-hover:text-ink transition-colors">+255 757 306 134</p>
+                  <div className="w-8 h-8 rounded-full bg-surface-elevated flex items-center justify-center flex-shrink-0 group-hover:bg-primary transition-colors">
+                    <Phone size={14} className="text-ink group-hover:text-on-primary transition-colors" />
+                  </div>
+                  <div className="pt-1">
+                    <p className="text-[10px] text-body uppercase tracking-[0.08em] font-bold">Phone</p>
+                    <p className="text-ink text-sm group-hover:text-primary transition-colors">+255 757 306 134</p>
                   </div>
                 </a>
               </li>
               <li>
                 <a href="mailto:apknation@gmail.com" className="flex items-start gap-3 group">
-                  <Mail size={13} className="text-primary mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-[10px] text-muted uppercase tracking-[0.08em]">Email</p>
-                    <p className="text-body text-sm group-hover:text-ink transition-colors">apknation@gmail.com</p>
+                  <div className="w-8 h-8 rounded-full bg-surface-elevated flex items-center justify-center flex-shrink-0 group-hover:bg-primary transition-colors">
+                    <Mail size={14} className="text-ink group-hover:text-on-primary transition-colors" />
+                  </div>
+                  <div className="pt-1">
+                    <p className="text-[10px] text-body uppercase tracking-[0.08em] font-bold">Email</p>
+                    <p className="text-ink text-sm group-hover:text-primary transition-colors">apknation@gmail.com</p>
                   </div>
                 </a>
               </li>
               <li>
-                <div className="flex items-start gap-3">
-                  <MapPin size={13} className="text-primary mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-[10px] text-muted uppercase tracking-[0.08em]">Address</p>
-                    <p className="text-body text-sm">Dodoma, Tanzania</p>
+                <div className="flex items-start gap-3 group cursor-default">
+                  <div className="w-8 h-8 rounded-full bg-surface-elevated flex items-center justify-center flex-shrink-0">
+                    <MapPin size={14} className="text-ink" />
+                  </div>
+                  <div className="pt-1">
+                    <p className="text-[10px] text-body uppercase tracking-[0.08em] font-bold">Address</p>
+                    <p className="text-ink text-sm">Dodoma, Tanzania</p>
                   </div>
                 </div>
               </li>
@@ -135,16 +138,14 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-hairline">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-muted text-xs">
-            © {year} <span className="text-body">APKnation Online Furniture Shop</span>. All rights reserved.
-          </p>
-          <div className="flex items-center gap-6 text-[10px] text-muted uppercase tracking-[0.08em]">
-            <span className="hover:text-body cursor-pointer transition-colors">Privacy Policy</span>
-            <span className="hover:text-body cursor-pointer transition-colors">Terms of Service</span>
-            <span>🇹🇿 Made in Tanzania</span>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-hairline-soft">
+        <p className="text-xs text-body">
+          © {year} <span className="font-bold text-ink">APKnation</span>. All rights reserved.
+        </p>
+        <div className="flex items-center gap-6 text-xs text-body font-bold">
+          <span className="hover:text-primary cursor-pointer transition-colors">Privacy Policy</span>
+          <span className="hover:text-primary cursor-pointer transition-colors">Terms of Service</span>
+          <span>🇹🇿 Made in Tanzania</span>
         </div>
       </div>
     </footer>

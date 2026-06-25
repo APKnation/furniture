@@ -33,23 +33,26 @@ export default function Navbar() {
   const isActive = (to) => location.pathname === to;
 
   return (
-    <nav className="sticky top-0 z-50 bg-canvas border-b border-hairline">
+    <nav className="sticky top-0 z-50 bg-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 bg-primary flex items-center justify-center">
-              <Sofa size={16} className="text-on-primary" />
-            </div>
-            <span className="font-medium text-base text-ink tracking-tight">APKnation Furniture</span>
-          </Link>
+         <Link to="/" className="flex items-center gap-3 group">
+  <div className="w-10 h-10 bg-[#1DB954] rounded-full flex items-center justify-center text-lg shadow-md group-hover:scale-110 transition-transform duration-300">
+    🇹🇿
+  </div>
+
+  <span className="font-bold text-lg md:text-xl text-ink tracking-tight">
+    APKnation Furniture
+  </span>
+</Link>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-6">
             {navLinks.map(({ to, label }) => (
               <Link key={to} to={to}
-                className={`text-xs font-semibold uppercase tracking-[0.065em] transition-colors duration-150 ${
-                  isActive(to) ? 'text-ink' : 'text-body hover:text-ink'
+                className={`text-sm transition-colors duration-150 ${
+                  isActive(to) ? 'text-ink font-bold' : 'text-body font-normal hover:text-ink'
                 }`}>{label}</Link>
             ))}
           </div>
@@ -60,7 +63,7 @@ export default function Navbar() {
               <Link to="/cart" className="relative p-2 text-body hover:text-ink transition-colors">
                 <ShoppingCart size={18} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-primary text-on-primary text-[10px] font-bold w-4 h-4 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-primary text-on-primary text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
@@ -77,30 +80,29 @@ export default function Navbar() {
                 <div className="relative">
                   <button onClick={() => setProfileOpen(!profileOpen)}
                     className="flex items-center gap-2 text-body hover:text-ink transition-colors">
-                    <div className="w-7 h-7 bg-canvas-elevated border border-hairline flex items-center justify-center">
-                      <User size={13} className="text-ink" />
+                    <div className="w-8 h-8 bg-surface-elevated rounded-full flex items-center justify-center">
+                      <User size={16} className="text-ink" />
                     </div>
-                    <span className="text-xs font-medium">{user?.name?.split(' ')[0]}</span>
+                    <span className="text-sm font-bold">{user?.name?.split(' ')[0]}</span>
                   </button>
                   {profileOpen && (
-                    <div className="absolute right-0 mt-2 w-44 bg-canvas-elevated border border-hairline animate-fade-in z-50">
-                      <Link to="/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-3 text-xs text-body hover:text-ink hover:bg-canvas transition-colors"><User size={13}/> My Profile</Link>
-                      {!isAdmin && <Link to="/orders" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-3 text-xs text-body hover:text-ink hover:bg-canvas transition-colors"><ShoppingCart size={13}/> My Orders</Link>}
-                      <div className="border-t border-hairline" />
-                      <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-3 text-xs text-semantic-warning hover:bg-canvas transition-colors w-full"><LogOut size={13}/> Logout</button>
+                    <div className="absolute right-0 mt-2 w-48 bg-surface shadow-spotify-heavy rounded-md animate-fade-in z-50 overflow-hidden">
+                      <Link to="/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-3 px-5 py-3 text-sm font-normal text-ink hover:bg-surface-elevated transition-colors"><User size={16}/> My Profile</Link>
+                      {!isAdmin && <Link to="/orders" onClick={() => setProfileOpen(false)} className="flex items-center gap-3 px-5 py-3 text-sm font-normal text-ink hover:bg-surface-elevated transition-colors"><ShoppingCart size={16}/> My Orders</Link>}
+                      <div className="border-t border-hairline-soft" />
+                      <button onClick={handleLogout} className="flex items-center gap-3 px-5 py-3 text-sm font-normal text-sale hover:bg-surface-elevated transition-colors w-full"><LogOut size={16}/> Logout</button>
                     </div>
                   )}
                 </div>
               </>
             ) : (
               <>
-                <Link to="/login" className="btn-outline btn-sm">Login</Link>
-                <Link to="/register" className="btn-primary btn-sm">Register</Link>
+                <Link to="/login" className="btn-secondary border-none">Login</Link>
+                <Link to="/register" className="btn-primary">Sign up</Link>
               </>
             )}
           </div>
 
-          {/* Mobile toggle */}
           <button className="md:hidden p-2 text-body hover:text-ink transition-colors" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -109,28 +111,28 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-hairline bg-canvas-elevated px-4 py-3 space-y-1 animate-slide-up">
+        <div className="md:hidden border-t border-hairline-soft bg-canvas px-4 py-3 space-y-1 animate-slide-up shadow-spotify-heavy">
           {navLinks.map(({ to, label }) => (
             <Link key={to} to={to} onClick={() => setMenuOpen(false)}
-              className={`block px-3 py-2.5 text-xs font-semibold uppercase tracking-[0.065em] transition-colors ${isActive(to) ? 'text-ink' : 'text-body'}`}>{label}</Link>
+              className={`block px-3 py-2.5 text-sm transition-colors ${isActive(to) ? 'text-ink font-bold' : 'text-body font-normal'}`}>{label}</Link>
           ))}
-          <div className="border-t border-hairline pt-2 mt-2">
+          <div className="border-t border-hairline-soft pt-2 mt-2">
             {!isAdmin && (
-              <Link to="/cart" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-xs text-body">
-                <ShoppingCart size={14}/> Cart {cartCount > 0 && `(${cartCount})`}
+              <Link to="/cart" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-body hover:text-ink">
+                <ShoppingCart size={16}/> Cart {cartCount > 0 && `(${cartCount})`}
               </Link>
             )}
             {isAuthenticated ? (
               <>
-                <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-xs text-body"><User size={14}/> Profile</Link>
-                {isAdmin && <Link to="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-xs text-body"><LayoutDashboard size={14}/> Admin Panel</Link>}
-                <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2.5 text-xs text-semantic-warning w-full"><LogOut size={14}/> Logout</button>
+                <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-body hover:text-ink"><User size={16}/> Profile</Link>
+                {isAdmin && <Link to="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-body hover:text-ink"><LayoutDashboard size={16}/> Admin Panel</Link>}
+                <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-sale w-full hover:bg-surface-elevated rounded-md"><LogOut size={16}/> Logout</button>
               </>
             ) : (
-              <>
-                <Link to="/login" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-xs text-body">Login</Link>
-                <Link to="/register" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-xs text-primary font-semibold uppercase tracking-[0.065em]">Register</Link>
-              </>
+              <div className="flex flex-col gap-2 mt-4 px-3">
+                <Link to="/login" onClick={() => setMenuOpen(false)} className="btn-secondary border-none w-full text-center">Log in</Link>
+                <Link to="/register" onClick={() => setMenuOpen(false)} className="btn-primary w-full text-center">Sign up</Link>
+              </div>
             )}
           </div>
         </div>

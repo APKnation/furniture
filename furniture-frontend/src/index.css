@@ -15,70 +15,54 @@
 }
 
 @layer components {
-  /* Ferrari: 0 radius, uppercase, tracked */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2
-    bg-primary hover:bg-primary-active active:bg-primary-hover
-    text-on-primary text-sm font-bold
-    px-8 py-3.5 rounded-md
-    uppercase tracking-[0.1em]
-    transition-colors duration-150 cursor-pointer
-    active:scale-[0.97]
+    bg-primary hover:bg-primary-pressed
+    text-on-primary text-sm font-bold uppercase tracking-button
+    px-8 py-3 rounded-full
+    transition-transform duration-150 cursor-pointer
+    active:scale-[0.98]
     disabled:opacity-40 disabled:cursor-not-allowed;
   }
-  /* Outline variant — ghost on dark */
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2
-    bg-transparent border border-ink hover:bg-canvas-elevated
-    text-ink text-sm font-bold
-    px-8 py-3.5 rounded-md
-    uppercase tracking-[0.1em]
-    transition-colors duration-150 cursor-pointer
-    active:scale-[0.97];
-  }
-  /* Outline on light canvas */
-  .btn-outline-light {
-    @apply inline-flex items-center justify-center gap-2
-    bg-transparent border border-body-on-light hover:bg-surface-soft-light
-    text-body-on-light text-sm font-bold
-    px-8 py-3.5 rounded-md
-    uppercase tracking-[0.1em]
-    transition-colors duration-150 cursor-pointer
-    active:scale-[0.97];
-  }
-  /* Legacy alias — inline styles to avoid @apply of custom class */
+  /* Secondary CTA */
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2
-    bg-transparent border border-ink hover:bg-canvas-elevated
-    text-ink text-sm font-bold
-    px-8 py-3.5 rounded-md
-    uppercase tracking-[0.1em]
+    bg-transparent border border-hairline-strong hover:border-ink
+    text-on-dark text-sm font-bold uppercase tracking-button
+    px-8 py-3 rounded-full
     transition-colors duration-150 cursor-pointer
-    active:scale-[0.97];
+    active:scale-[0.98];
+  }
+  /* Tertiary CTA */
+  .btn-tertiary {
+    @apply inline-flex items-center justify-center gap-2
+    bg-surface-elevated hover:bg-surface-card
+    text-on-dark text-sm font-bold uppercase tracking-button
+    px-4 py-2 rounded-full
+    transition-colors duration-150 cursor-pointer
+    active:scale-[0.98];
   }
   .btn-danger {
     @apply inline-flex items-center justify-center gap-2
-    bg-semantic-warning hover:opacity-90
-    text-white text-sm font-bold
-    px-8 py-3.5 rounded-md
-    uppercase tracking-[0.1em]
-    transition-opacity duration-150 cursor-pointer
-    active:scale-[0.97];
+    bg-sale text-on-dark text-sm font-medium
+    px-4 py-2 rounded-md
+    transition-colors duration-150 cursor-pointer
+    active:scale-[0.98];
   }
   .btn-sm {
     @apply px-5 py-2.5 text-xs;
   }
-  /* Ferrari card — no radius, elevated surface */
+  /* Spotify card — borderless, surface color, hover shadow, rounded-md */
   .card {
-    @apply bg-canvas-elevated border border-hairline rounded-none;
+    @apply bg-surface rounded-md hover:bg-surface-elevated hover:shadow-spotify-medium transition-all duration-200;
   }
-  /* Input — sharp, on dark */
+  /* Input — inset border shadow */
   .input {
-    @apply w-full bg-canvas border border-hairline rounded-sm
-    px-4 py-3.5 text-sm text-ink
+    @apply w-full bg-surface-elevated shadow-spotify-inset rounded-full
+    px-6 py-3 text-sm text-on-dark
     placeholder-muted
-    focus:outline-none focus:border-muted-soft
-    transition-colors duration-150;
+    focus:outline-none focus:ring-1 focus:ring-ink
+    transition-all duration-150;
   }
   .label {
     @apply block text-xs font-semibold text-muted uppercase tracking-[0.08em] mb-1.5;

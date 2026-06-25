@@ -32,17 +32,19 @@ export default function AdminDashboard() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-hairline border border-hairline">
-          {[...Array(7)].map((_, i) => <div key={i} className="h-32 bg-canvas-elevated animate-pulse" />)}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {[...Array(7)].map((_, i) => <div key={i} className="h-32 bg-surface rounded-2xl animate-pulse" />)}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-hairline border border-hairline">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {cards.map(({ label, value, icon: Icon, accent }) => (
-            <div key={label} className="bg-canvas-elevated p-8 flex items-start gap-5 hover:bg-canvas transition-colors duration-150">
-              <Icon className={`${accent} w-6 h-6 flex-shrink-0 mt-1`} />
+            <div key={label} className="bg-surface rounded-2xl p-6 flex items-start gap-5 hover:bg-surface-elevated hover:shadow-spotify-heavy transition-all duration-200 shadow-spotify-medium">
+              <div className="w-11 h-11 bg-surface-elevated rounded-full flex items-center justify-center flex-shrink-0">
+                <Icon className={`${accent} w-5 h-5`} />
+              </div>
               <div>
-                <p className="text-[10px] font-semibold text-muted uppercase tracking-[0.1em] mb-2">{label}</p>
-                <p className={`text-5xl font-medium ${accent} tracking-[-0.04em]`}>{value}</p>
+                <p className="text-[10px] font-bold text-muted uppercase tracking-[0.1em] mb-2">{label}</p>
+                <p className={`text-4xl font-bold ${accent} tracking-tight`}>{value}</p>
               </div>
             </div>
           ))}
