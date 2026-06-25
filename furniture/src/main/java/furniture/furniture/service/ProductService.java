@@ -9,6 +9,7 @@ import furniture.furniture.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -112,7 +113,10 @@ public class ProductService {
         Path targetPath = uploadDir.resolve(uniqueFileName);
         Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
-        return "http://localhost:8080/uploads/" + uniqueFileName;
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/uploads/")
+                .path(uniqueFileName)
+                .toUriString();
     }
 
     private ProductDto toDto(Product p) {
