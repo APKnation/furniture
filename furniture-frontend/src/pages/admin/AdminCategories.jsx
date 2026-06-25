@@ -3,7 +3,6 @@ import { Plus, Pencil, X, Trash2 } from 'lucide-react';
 import { getCategories, addCategory, updateCategory, deleteCategory } from '../../services/api';
 import { showError, showSuccess, confirmAction } from '../../utils/swal';
 
-
 export default function AdminCategories() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,30 +38,40 @@ export default function AdminCategories() {
 
   return (
     <div className="animate-fade-in">
-      <div className="flex items-center justify-between mb-6">
-        <div><h1 className="font-display text-2xl font-bold text-white">Categories</h1><p className="text-gray-400 text-sm mt-0.5">{items.length} categories</p></div>
-        <button onClick={() => { setForm({ name:'' }); setModal({ mode:'add' }); }} className="btn-primary btn-sm"><Plus size={16}/> Add Category</button>
+      <div className="flex items-center justify-between mb-10">
+        <div>
+          <p className="section-label mb-2">Manage</p>
+          <h1 className="text-4xl font-medium text-ink tracking-[-0.03em]">Categories</h1>
+          <p className="text-body text-sm mt-1">{items.length} categories</p>
+        </div>
+        <button onClick={() => { setForm({ name:'' }); setModal({ mode:'add' }); }} className="btn-primary btn-sm">
+          <Plus size={14}/> Add Category
+        </button>
       </div>
 
-      <div className="card overflow-hidden">
+      <div className="bg-canvas-elevated border border-hairline overflow-hidden">
         <table className="w-full text-sm">
-          <thead><tr className="border-b border-dark-600 bg-dark-700/50">
-            <th className="text-left px-5 py-3.5 text-gray-400 font-medium">#</th>
-            <th className="text-left px-5 py-3.5 text-gray-400 font-medium">Name</th>
-            <th className="text-right px-5 py-3.5 text-gray-400 font-medium">Actions</th>
-          </tr></thead>
+          <thead>
+            <tr className="border-b border-hairline">
+              <th className="text-left px-6 py-4 text-[10px] font-semibold text-muted uppercase tracking-[0.1em]">#</th>
+              <th className="text-left px-6 py-4 text-[10px] font-semibold text-muted uppercase tracking-[0.1em]">Name</th>
+              <th className="text-right px-6 py-4 text-[10px] font-semibold text-muted uppercase tracking-[0.1em]">Actions</th>
+            </tr>
+          </thead>
           <tbody>
-            {loading ? [...Array(3)].map((_, i) => <tr key={i}><td colSpan={3} className="px-5 py-4"><div className="h-4 bg-dark-700 rounded animate-pulse"/></td></tr>)
+            {loading ? [...Array(3)].map((_, i) => <tr key={i}><td colSpan={3} className="px-6 py-4"><div className="h-4 bg-hairline animate-pulse"/></td></tr>)
             : items.map((item, i) => (
-              <tr key={item.id} className="border-b border-dark-600/50 table-row-hover">
-                <td className="px-5 py-4 text-gray-500">{i+1}</td>
-                <td className="px-5 py-4 font-medium text-white">{item.name}</td>
-                <td className="px-5 py-4 text-right">
-                  <button onClick={() => { setForm({ name: item.name }); setModal({ mode:'edit', id: item.id }); }} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-900/40 text-primary-400 hover:bg-primary-900/70 text-xs font-medium transition-all mr-2">
-                    <Pencil size={12}/> Edit
+              <tr key={item.id} className="border-b border-hairline table-row-hover">
+                <td className="px-6 py-4 text-muted text-xs">{i+1}</td>
+                <td className="px-6 py-4 font-medium text-ink">{item.name}</td>
+                <td className="px-6 py-4 text-right space-x-2">
+                  <button onClick={() => { setForm({ name: item.name }); setModal({ mode:'edit', id: item.id }); }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-hairline text-body hover:text-ink hover:border-muted-soft text-xs font-semibold uppercase tracking-[0.065em] transition-colors mr-2">
+                    <Pencil size={11}/> Edit
                   </button>
-                  <button onClick={() => handleDelete(item.id)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-900/20 text-red-400 hover:bg-red-900/40 text-xs font-medium transition-all">
-                    <Trash2 size={12}/> Delete
+                  <button onClick={() => handleDelete(item.id)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-hairline text-semantic-warning hover:bg-semantic-warning hover:text-white hover:border-semantic-warning text-xs font-semibold uppercase tracking-[0.065em] transition-colors">
+                    <Trash2 size={11}/> Delete
                   </button>
                 </td>
               </tr>
@@ -72,15 +81,23 @@ export default function AdminCategories() {
       </div>
 
       {modal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="card w-full max-w-sm p-6 animate-slide-up">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="font-semibold text-white">{modal.mode==='add'?'Add Category':'Edit Category'}</h2>
-              <button onClick={() => setModal(null)} className="text-gray-500 hover:text-white"><X size={18}/></button>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-canvas-elevated border border-hairline w-full max-w-sm p-8 animate-slide-up">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-medium text-ink">{modal.mode==='add'?'Add Category':'Edit Category'}</h2>
+              <button onClick={() => setModal(null)} className="text-muted hover:text-ink transition-colors"><X size={16}/></button>
             </div>
-            <form onSubmit={handleSave} className="space-y-4">
-              <div><label className="label">Category Name *</label><input required value={form.name} onChange={e=>setForm({name:e.target.value})} className="input" placeholder="e.g. Living Room"/></div>
-              <div className="flex gap-3"><button type="button" onClick={() => setModal(null)} className="btn-secondary flex-1 justify-center">Cancel</button><button type="submit" disabled={saving} className="btn-primary flex-1 justify-center">{saving?<span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"/>:'Save'}</button></div>
+            <form onSubmit={handleSave} className="space-y-5">
+              <div>
+                <label className="label">Category Name *</label>
+                <input required value={form.name} onChange={e=>setForm({name:e.target.value})} className="input" placeholder="e.g. Living Room"/>
+              </div>
+              <div className="flex gap-3">
+                <button type="button" onClick={() => setModal(null)} className="btn-outline flex-1">Cancel</button>
+                <button type="submit" disabled={saving} className="btn-primary flex-1">
+                  {saving ? <span className="animate-spin rounded-full h-4 w-4 border-2 border-on-primary border-t-transparent"/> : 'Save'}
+                </button>
+              </div>
             </form>
           </div>
         </div>

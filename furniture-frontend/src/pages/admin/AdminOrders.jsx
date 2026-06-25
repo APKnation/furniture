@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Search, Eye, ChevronDown, ChevronUp, Check, AlertCircle } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp } from 'lucide-react';
 import { getAdminOrders, searchOrderByNumber, updateOrderStatus } from '../../services/api';
 import { showError, showSuccess } from '../../utils/swal';
 
-const statusColors = {
-  NEW: 'bg-blue-900/50 text-blue-300 border-blue-800/50',
-  CONFIRMED: 'bg-amber-900/50 text-amber-300 border-amber-800/50',
-  DELIVERED: 'bg-green-900/50 text-green-300 border-green-800/50',
-  CANCELED: 'bg-red-900/50 text-red-300 border-red-800/50',
+const statusStyle = {
+  NEW:       'text-semantic-info border-semantic-info',
+  CONFIRMED: 'text-accent-yellow border-accent-yellow',
+  DELIVERED: 'text-semantic-success border-semantic-success',
+  CANCELED:  'text-semantic-warning border-semantic-warning',
 };
 
 const statuses = ['NEW','CONFIRMED','DELIVERED','CANCELED'];
@@ -41,66 +41,77 @@ export default function AdminOrders() {
 
   return (
     <div className="animate-fade-in">
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-        <div><h1 className="font-display text-2xl font-bold text-white">Orders</h1><p className="text-gray-400 text-sm mt-0.5">{orders.length} orders</p></div>
+      <div className="flex items-center justify-between mb-10 flex-wrap gap-4">
+        <div>
+          <p className="section-label mb-2">Manage</p>
+          <h1 className="text-4xl font-medium text-ink tracking-[-0.03em]">Orders</h1>
+          <p className="text-body text-sm mt-1">{orders.length} orders</p>
+        </div>
       </div>
 
       {/* Search */}
-      <form onSubmit={handleSearch} className="flex gap-3 mb-6">
+      <form onSubmit={handleSearch} className="flex gap-3 mb-8">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
+          <Search size={14} className="absolute left-4 top-4 text-muted"/>
           <input value={search} onChange={e=>setSearch(e.target.value)} className="input pl-10" placeholder="Search by order number..."/>
         </div>
-        <button type="submit" className="btn-secondary">Search</button>
-        {search && <button type="button" onClick={()=>{setSearch('');fetchOrders();}} className="btn-secondary">Clear</button>}
+        <button type="submit" className="btn-outline btn-sm">Search</button>
+        {search && <button type="button" onClick={()=>{setSearch('');fetchOrders();}} className="btn-outline btn-sm">Clear</button>}
       </form>
 
-      <div className="space-y-3">
-        {loading ? [...Array(4)].map((_,i)=><div key={i} className="card h-16 animate-pulse bg-dark-700"/>)
+      <div className="space-y-px bg-hairline border border-hairline">
+        {loading ? [...Array(4)].map((_,i)=><div key={i} className="h-16 bg-canvas-elevated animate-pulse"/>)
         : orders.map(order=>(
-          <div key={order.id} className="card overflow-hidden">
-            <div className="p-4 flex items-center justify-between flex-wrap gap-3 cursor-pointer" onClick={()=>setExpanded(expanded===order.id?null:order.id)}>
-              <div className="flex items-center gap-4 flex-wrap">
+          <div key={order.id} className="bg-canvas-elevated">
+            <div className="px-6 py-5 flex items-center justify-between flex-wrap gap-3 cursor-pointer hover:bg-canvas transition-colors" onClick={()=>setExpanded(expanded===order.id?null:order.id)}>
+              <div className="flex items-center gap-6 flex-wrap">
                 <div>
-                  <p className="font-semibold text-white">{order.orderNumber}</p>
-                  <p className="text-xs text-gray-500">{order.userName} · {new Date(order.orderDate).toLocaleDateString()}</p>
+                  <p className="font-medium text-ink text-sm">{order.orderNumber}</p>
+                  <p className="text-xs text-muted mt-0.5">{order.userName} · {new Date(order.orderDate).toLocaleDateString()}</p>
                 </div>
-                <span className={`badge border ${statusColors[order.status]||'bg-dark-600 text-gray-300'}`}>{order.status}</span>
+                <span className={`badge border ${statusStyle[order.status]||'text-body border-hairline'}`}>{order.status}</span>
               </div>
-              <div className="flex items-center gap-4">
-                <p className="font-bold text-primary-400">{`TZS ${order.totalAmount?.toLocaleString('en-US')}`}</p>
-                {expanded===order.id?<ChevronUp size={16} className="text-gray-400"/>:<ChevronDown size={16} className="text-gray-400"/>}
+              <div className="flex items-center gap-6">
+                <p className="font-medium text-ink text-sm">{`TZS ${order.totalAmount?.toLocaleString('en-US')}`}</p>
+                {expanded===order.id?<ChevronUp size={14} className="text-muted"/>:<ChevronDown size={14} className="text-muted"/>}
               </div>
             </div>
 
             {expanded===order.id && (
-              <div className="border-t border-dark-600 p-4 space-y-4 animate-slide-up">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div><p className="text-gray-500 text-xs">Customer</p><p className="text-white font-medium">{order.userName}</p><p className="text-gray-400 text-xs">{order.userEmail}</p></div>
+              <div className="border-t border-hairline px-6 py-5 space-y-5 animate-slide-up">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
                   <div>
-                    <p className="text-gray-500 text-xs">Payment</p>
-                    <p className="text-white font-medium">{order.paymentMethod?.replace(/_/g, ' ')}</p>
-                    {order.bankName && <p className="text-gray-400 text-xs mt-1">Bank: {order.bankName}</p>}
-                    {order.mobileProvider && <p className="text-gray-400 text-xs mt-1">Provider: {order.mobileProvider}</p>}
-                    {order.phoneNumber && <p className="text-gray-400 text-xs">Phone: {order.phoneNumber}</p>}
-                    {order.creditCardNumber && <p className="text-gray-400 text-xs mt-1">Card: ****{order.creditCardNumber.slice(-4)}</p>}
-                    <p className="text-primary-400 text-xs mt-1 font-semibold">{order.paymentStatus}</p>
+                    <p className="text-[10px] text-muted uppercase tracking-[0.08em] mb-1">Customer</p>
+                    <p className="text-ink font-medium text-xs">{order.userName}</p>
+                    <p className="text-body text-xs mt-0.5">{order.userEmail}</p>
                   </div>
-                  <div><p className="text-gray-500 text-xs">Shipping</p><p className="text-white font-medium text-xs leading-relaxed">{order.shippingAddress}</p></div>
                   <div>
-                    <p className="text-gray-500 text-xs mb-1.5">Update Status</p>
-                    <select value={order.status} onChange={e=>handleStatusChange(order.id,e.target.value)} className="input text-xs py-1.5">
+                    <p className="text-[10px] text-muted uppercase tracking-[0.08em] mb-1">Payment</p>
+                    <p className="text-ink font-medium text-xs">{order.paymentMethod?.replace(/_/g, ' ')}</p>
+                    {order.bankName && <p className="text-body text-xs mt-0.5">Bank: {order.bankName}</p>}
+                    {order.mobileProvider && <p className="text-body text-xs">Provider: {order.mobileProvider}</p>}
+                    {order.phoneNumber && <p className="text-body text-xs">Phone: {order.phoneNumber}</p>}
+                    {order.creditCardNumber && <p className="text-body text-xs mt-0.5">Card: ****{order.creditCardNumber.slice(-4)}</p>}
+                    <p className="text-primary text-xs mt-1 font-semibold uppercase tracking-[0.065em]">{order.paymentStatus}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-muted uppercase tracking-[0.08em] mb-1">Shipping</p>
+                    <p className="text-ink font-medium text-xs leading-relaxed">{order.shippingAddress}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-muted uppercase tracking-[0.08em] mb-1">Update Status</p>
+                    <select value={order.status} onChange={e=>handleStatusChange(order.id,e.target.value)} className="input text-xs py-2">
                       {statuses.map(s=><option key={s} value={s}>{s}</option>)}
                     </select>
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400 mb-2">Items:</p>
-                  <div className="space-y-1.5">
+                  <p className="text-[10px] text-muted uppercase tracking-[0.08em] mb-3">Items</p>
+                  <div className="space-y-px bg-hairline border border-hairline">
                     {order.items?.map(item=>(
-                      <div key={item.id} className="flex justify-between items-center bg-dark-700 rounded-lg px-3 py-2 text-sm">
-                        <span className="text-gray-300">{item.productName} <span className="text-gray-500">×{item.quantity}</span></span>
-                        <span className="text-primary-400 font-medium">{`TZS ${item.subTotal?.toLocaleString('en-US')}`}</span>
+                      <div key={item.id} className="flex justify-between items-center bg-canvas px-4 py-3 text-xs">
+                        <span className="text-ink">{item.productName} <span className="text-muted">×{item.quantity}</span></span>
+                        <span className="text-ink font-medium">{`TZS ${item.subTotal?.toLocaleString('en-US')}`}</span>
                       </div>
                     ))}
                   </div>
@@ -110,7 +121,9 @@ export default function AdminOrders() {
           </div>
         ))}
         {!loading && !orders.length && (
-          <div className="text-center py-16 text-gray-500">No orders found</div>
+          <div className="text-center py-16 bg-canvas-elevated">
+            <p className="text-body text-xs uppercase tracking-[0.065em]">No orders found</p>
+          </div>
         )}
       </div>
     </div>

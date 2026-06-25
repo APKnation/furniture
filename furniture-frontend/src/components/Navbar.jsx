@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingCart, User, LogOut, Menu, X, Sofa, Search, LayoutDashboard } from 'lucide-react';
+import { ShoppingCart, User, LogOut, Menu, X, Sofa, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { confirmAction, showSuccess } from '../utils/swal';
@@ -33,102 +33,103 @@ export default function Navbar() {
   const isActive = (to) => location.pathname === to;
 
   return (
-    <nav className="sticky top-0 z-50 bg-dark-800/95 backdrop-blur-md border-b border-dark-600">
+    <nav className="sticky top-0 z-50 bg-canvas border-b border-hairline">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-primary-600/40 transition-all">
-              <Sofa size={18} className="text-white" />
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-8 h-8 bg-primary flex items-center justify-center">
+              <Sofa size={16} className="text-on-primary" />
             </div>
-            <span className="font-display font-bold text-xl text-white">APKNation Online Furniture Shop</span>
+            <span className="font-medium text-base text-ink tracking-tight">APKnation Furniture</span>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-6">
             {navLinks.map(({ to, label }) => (
               <Link key={to} to={to}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  isActive(to) ? 'bg-primary-600/20 text-primary-400' : 'text-gray-300 hover:text-white hover:bg-dark-700'
+                className={`text-xs font-semibold uppercase tracking-[0.065em] transition-colors duration-150 ${
+                  isActive(to) ? 'text-ink' : 'text-body hover:text-ink'
                 }`}>{label}</Link>
             ))}
           </div>
 
           {/* Right side */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-4">
             {!isAdmin && (
-              <Link to="/cart" className="relative p-2 rounded-xl text-gray-300 hover:text-white hover:bg-dark-700 transition-all mr-2">
-                <ShoppingCart size={20} />
+              <Link to="/cart" className="relative p-2 text-body hover:text-ink transition-colors">
+                <ShoppingCart size={18} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{cartCount}</span>
+                  <span className="absolute -top-1 -right-1 bg-primary text-on-primary text-[10px] font-bold w-4 h-4 flex items-center justify-center">
+                    {cartCount}
+                  </span>
                 )}
               </Link>
             )}
-            
+
             {isAuthenticated ? (
               <>
                 {isAdmin && (
-                  <Link to="/admin" className="btn-secondary btn-sm">
-                    <LayoutDashboard size={15} /> Admin Panel
+                  <Link to="/admin" className="btn-outline btn-sm">
+                    <LayoutDashboard size={14} /> Admin
                   </Link>
                 )}
                 <div className="relative">
                   <button onClick={() => setProfileOpen(!profileOpen)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-dark-700 hover:bg-dark-600 transition-all">
-                    <div className="w-7 h-7 bg-primary-600 rounded-full flex items-center justify-center">
-                      <User size={14} className="text-white" />
+                    className="flex items-center gap-2 text-body hover:text-ink transition-colors">
+                    <div className="w-7 h-7 bg-canvas-elevated border border-hairline flex items-center justify-center">
+                      <User size={13} className="text-ink" />
                     </div>
-                    <span className="text-sm font-medium text-gray-200">{user?.name?.split(' ')[0]}</span>
+                    <span className="text-xs font-medium">{user?.name?.split(' ')[0]}</span>
                   </button>
                   {profileOpen && (
-                    <div className="absolute right-0 mt-2 w-48 card py-1 animate-fade-in z-50">
-                      <Link to="/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-dark-700"><User size={15}/> My Profile</Link>
-                      {!isAdmin && <Link to="/orders" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-dark-700"><ShoppingCart size={15}/> My Orders</Link>}
-                      <div className="border-t border-dark-600 my-1" />
-                      <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-dark-700 w-full"><LogOut size={15}/> Logout</button>
+                    <div className="absolute right-0 mt-2 w-44 bg-canvas-elevated border border-hairline animate-fade-in z-50">
+                      <Link to="/profile" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-3 text-xs text-body hover:text-ink hover:bg-canvas transition-colors"><User size={13}/> My Profile</Link>
+                      {!isAdmin && <Link to="/orders" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 px-4 py-3 text-xs text-body hover:text-ink hover:bg-canvas transition-colors"><ShoppingCart size={13}/> My Orders</Link>}
+                      <div className="border-t border-hairline" />
+                      <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-3 text-xs text-semantic-warning hover:bg-canvas transition-colors w-full"><LogOut size={13}/> Logout</button>
                     </div>
                   )}
                 </div>
               </>
             ) : (
               <>
-                <Link to="/login" className="btn-secondary btn-sm">Login</Link>
+                <Link to="/login" className="btn-outline btn-sm">Login</Link>
                 <Link to="/register" className="btn-primary btn-sm">Register</Link>
               </>
             )}
           </div>
 
           {/* Mobile toggle */}
-          <button className="md:hidden p-2 rounded-lg text-gray-400 hover:text-white" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          <button className="md:hidden p-2 text-body hover:text-ink transition-colors" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-dark-600 bg-dark-800 px-4 py-3 space-y-1 animate-slide-up">
+        <div className="md:hidden border-t border-hairline bg-canvas-elevated px-4 py-3 space-y-1 animate-slide-up">
           {navLinks.map(({ to, label }) => (
             <Link key={to} to={to} onClick={() => setMenuOpen(false)}
-              className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive(to) ? 'bg-primary-600/20 text-primary-400' : 'text-gray-300'}`}>{label}</Link>
+              className={`block px-3 py-2.5 text-xs font-semibold uppercase tracking-[0.065em] transition-colors ${isActive(to) ? 'text-ink' : 'text-body'}`}>{label}</Link>
           ))}
-          <div className="border-t border-dark-600 pt-2 mt-2">
+          <div className="border-t border-hairline pt-2 mt-2">
             {!isAdmin && (
-              <Link to="/cart" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-sm text-gray-300">
-                <ShoppingCart size={16}/> Cart {cartCount > 0 && `(${cartCount})`}
+              <Link to="/cart" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-xs text-body">
+                <ShoppingCart size={14}/> Cart {cartCount > 0 && `(${cartCount})`}
               </Link>
             )}
-            
             {isAuthenticated ? (
               <>
-                <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-sm text-gray-300"><User size={16}/> Profile</Link>
-                {isAdmin && <Link to="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-sm text-gray-300"><LayoutDashboard size={16}/> Admin Panel</Link>}
-                <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2.5 text-sm text-red-400 w-full"><LogOut size={16}/> Logout</button>
+                <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-xs text-body"><User size={14}/> Profile</Link>
+                {isAdmin && <Link to="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-3 py-2.5 text-xs text-body"><LayoutDashboard size={14}/> Admin Panel</Link>}
+                <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2.5 text-xs text-semantic-warning w-full"><LogOut size={14}/> Logout</button>
               </>
             ) : (
               <>
-                <Link to="/login" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm text-gray-300">Login</Link>
-                <Link to="/register" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-sm text-primary-400 font-medium">Register</Link>
+                <Link to="/login" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-xs text-body">Login</Link>
+                <Link to="/register" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 text-xs text-primary font-semibold uppercase tracking-[0.065em]">Register</Link>
               </>
             )}
           </div>

@@ -16,23 +16,18 @@ export default function AdminTrends() {
     try {
       const [reportRes, productsRes] = await Promise.all([
         getSalesReport(dateRange.start, dateRange.end),
-        getProducts() 
+        getProducts()
       ]);
-      
+
       const orders = reportRes.data.orders || [];
-      // getProducts returns either array directly or a paginated object depending on backend
-      // Assuming array or .content for Spring Data Page
       const allProducts = productsRes.data.content || productsRes.data || [];
 
       const productStats = {};
-      
       allProducts.forEach(p => {
         productStats[p.id] = {
-          id: p.id,
-          name: p.name,
+          id: p.id, name: p.name,
           category: p.category?.name || p.categoryName || 'Uncategorized',
-          quantitySold: 0,
-          revenue: 0
+          quantitySold: 0, revenue: 0
         };
       });
 
@@ -43,13 +38,10 @@ export default function AdminTrends() {
               productStats[item.productId].quantitySold += item.quantity;
               productStats[item.productId].revenue += item.subTotal;
             } else {
-               productStats[item.productId] = {
-                 id: item.productId,
-                 name: item.productName,
-                 category: 'Unknown',
-                 quantitySold: item.quantity,
-                 revenue: item.subTotal
-               };
+              productStats[item.productId] = {
+                id: item.productId, name: item.productName,
+                category: 'Unknown', quantitySold: item.quantity, revenue: item.subTotal
+              };
             }
           });
         }
@@ -58,124 +50,114 @@ export default function AdminTrends() {
       const statsArray = Object.values(productStats);
       statsArray.sort((a, b) => b.quantitySold - a.quantitySold);
 
-      const top = statsArray.filter(p => p.quantitySold > 0).slice(0, 10);
-      const bottom = [...statsArray].sort((a, b) => a.quantitySold - b.quantitySold).slice(0, 10);
-
-      setTopProducts(top);
-      setBottomProducts(bottom);
-      
+      setTopProducts(statsArray.filter(p => p.quantitySold > 0).slice(0, 10));
+      setBottomProducts([...statsArray].sort((a, b) => a.quantitySold - b.quantitySold).slice(0, 10));
     } catch (err) {
       console.error(err);
-      setTopProducts([]);
-      setBottomProducts([]);
+      setTopProducts([]); setBottomProducts([]);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchTrends();
-  }, []);
+  useEffect(() => { fetchTrends(); }, []);
 
   return (
     <div className="animate-fade-in">
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-white">Product Trends</h1>
-          <p className="text-gray-400 text-sm mt-0.5">Discover which furniture is in high vs low demand</p>
-        </div>
+      <div className="mb-10">
+        <p className="section-label mb-2">Analytics</p>
+        <h1 className="text-4xl font-medium text-ink tracking-[-0.03em]">Product Trends</h1>
+        <p className="text-body text-sm mt-2">Discover which furniture is in high vs low demand</p>
       </div>
 
-      {/* Date Filter Bar */}
-      <div className="card p-5 mb-6 flex flex-wrap items-end gap-4">
+      {/* Date Filter */}
+      <div className="bg-canvas-elevated border border-hairline p-6 mb-8 flex flex-wrap items-end gap-4">
         <div className="flex-1 min-w-[200px]">
           <label className="label">Start Date</label>
           <div className="relative">
-            <Calendar size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
+            <Calendar size={13} className="absolute left-4 top-4 text-muted"/>
             <input type="date" value={dateRange.start} onChange={e => setDateRange({...dateRange, start: e.target.value})} className="input pl-10"/>
           </div>
         </div>
         <div className="flex-1 min-w-[200px]">
           <label className="label">End Date</label>
           <div className="relative">
-            <Calendar size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
+            <Calendar size={13} className="absolute left-4 top-4 text-muted"/>
             <input type="date" value={dateRange.end} onChange={e => setDateRange({...dateRange, end: e.target.value})} className="input pl-10"/>
           </div>
         </div>
-        <button onClick={fetchTrends} disabled={loading} className="btn-primary px-8 justify-center min-w-[120px]">
-          {loading ? <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"/> : 'Apply'}
+        <button onClick={fetchTrends} disabled={loading} className="btn-primary btn-sm min-w-[100px]">
+          {loading ? <span className="animate-spin rounded-full h-4 w-4 border-2 border-on-primary border-t-transparent"/> : 'Apply'}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
-        {/* Top Trending Table */}
-        <div className="card overflow-hidden">
-          <div className="p-5 border-b border-dark-600 flex justify-between items-center bg-dark-700/30">
-            <h3 className="font-semibold text-white flex items-center gap-2">
-              <TrendingUp size={18} className="text-green-400"/> Top Trending Furniture
-            </h3>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-px bg-hairline border border-hairline">
+        {/* Top Trending */}
+        <div className="bg-canvas-elevated">
+          <div className="px-6 py-5 border-b border-hairline flex items-center gap-3">
+            <TrendingUp size={16} className="text-semantic-success"/>
+            <h3 className="font-medium text-ink text-sm uppercase tracking-[0.065em]">Top Trending</h3>
           </div>
-          <div className="p-5">
+          <div className="p-6">
             {loading ? (
-              <div className="flex justify-center py-10"><span className="animate-spin rounded-full h-8 w-8 border-2 border-green-500 border-t-transparent"/></div>
+              <div className="flex justify-center py-10">
+                <span className="animate-spin rounded-full h-6 w-6 border-2 border-semantic-success border-t-transparent"/>
+              </div>
             ) : topProducts.length ? (
-              <div className="space-y-4">
+              <div className="space-y-px bg-hairline border border-hairline">
                 {topProducts.map((product, i) => (
-                  <div key={product.id} className="flex items-center justify-between p-4 rounded-xl bg-dark-700/50 border border-dark-600">
+                  <div key={product.id} className="flex items-center justify-between bg-canvas px-4 py-4 hover:bg-canvas-elevated transition-colors">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-lg bg-green-900/30 flex items-center justify-center text-green-400 font-bold text-sm">
-                        #{i + 1}
-                      </div>
+                      <span className="text-xs font-bold text-muted w-6 text-right">#{i + 1}</span>
                       <div>
-                        <p className="font-semibold text-white">{product.name}</p>
-                        <p className="text-xs text-gray-400 flex items-center gap-1"><Package size={12}/> {product.category}</p>
+                        <p className="font-medium text-ink text-sm">{product.name}</p>
+                        <p className="text-xs text-muted flex items-center gap-1 mt-0.5"><Package size={10}/> {product.category}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-green-400 font-bold text-lg">{product.quantitySold} <span className="text-xs font-normal text-gray-500">sold</span></p>
-                      <p className="text-xs text-gray-400">TZS {product.revenue.toLocaleString('en-US')}</p>
+                      <p className="text-semantic-success font-medium text-sm">{product.quantitySold} <span className="text-xs font-normal text-muted">sold</span></p>
+                      <p className="text-xs text-muted mt-0.5">TZS {product.revenue.toLocaleString('en-US')}</p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-10 text-gray-500">No sales recorded in this period.</div>
+              <div className="text-center py-12 text-muted text-xs uppercase tracking-[0.065em]">No sales recorded in this period.</div>
             )}
           </div>
         </div>
 
-        {/* Low Demand Table */}
-        <div className="card overflow-hidden">
-          <div className="p-5 border-b border-dark-600 flex justify-between items-center bg-dark-700/30">
-            <h3 className="font-semibold text-white flex items-center gap-2">
-              <TrendingDown size={18} className="text-red-400"/> Low Demand Furniture
-            </h3>
+        {/* Low Demand */}
+        <div className="bg-canvas-elevated">
+          <div className="px-6 py-5 border-b border-hairline flex items-center gap-3">
+            <TrendingDown size={16} className="text-semantic-warning"/>
+            <h3 className="font-medium text-ink text-sm uppercase tracking-[0.065em]">Low Demand</h3>
           </div>
-          <div className="p-5">
+          <div className="p-6">
             {loading ? (
-              <div className="flex justify-center py-10"><span className="animate-spin rounded-full h-8 w-8 border-2 border-red-500 border-t-transparent"/></div>
+              <div className="flex justify-center py-10">
+                <span className="animate-spin rounded-full h-6 w-6 border-2 border-semantic-warning border-t-transparent"/>
+              </div>
             ) : bottomProducts.length ? (
-              <div className="space-y-4">
+              <div className="space-y-px bg-hairline border border-hairline">
                 {bottomProducts.map((product) => (
-                  <div key={product.id} className="flex items-center justify-between p-4 rounded-xl bg-dark-700/50 border border-dark-600">
+                  <div key={product.id} className="flex items-center justify-between bg-canvas px-4 py-4 hover:bg-canvas-elevated transition-colors">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-lg bg-red-900/30 flex items-center justify-center text-red-400 font-bold text-sm">
-                        !
-                      </div>
+                      <span className="text-xs font-bold text-semantic-warning">!</span>
                       <div>
-                        <p className="font-semibold text-white">{product.name}</p>
-                        <p className="text-xs text-gray-400 flex items-center gap-1"><Package size={12}/> {product.category}</p>
+                        <p className="font-medium text-ink text-sm">{product.name}</p>
+                        <p className="text-xs text-muted flex items-center gap-1 mt-0.5"><Package size={10}/> {product.category}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-red-400 font-bold text-lg">{product.quantitySold} <span className="text-xs font-normal text-gray-500">sold</span></p>
-                      {product.revenue > 0 && <p className="text-xs text-gray-400">TZS {product.revenue.toLocaleString('en-US')}</p>}
+                      <p className="text-semantic-warning font-medium text-sm">{product.quantitySold} <span className="text-xs font-normal text-muted">sold</span></p>
+                      {product.revenue > 0 && <p className="text-xs text-muted mt-0.5">TZS {product.revenue.toLocaleString('en-US')}</p>}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-10 text-gray-500">No products found.</div>
+              <div className="text-center py-12 text-muted text-xs uppercase tracking-[0.065em]">No products found.</div>
             )}
           </div>
         </div>

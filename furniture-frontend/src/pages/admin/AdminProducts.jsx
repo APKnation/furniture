@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Pencil, Trash2, X, Check, AlertCircle, Package, Upload } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Package, Upload } from 'lucide-react';
 import { getProducts, getCategories, addProduct, updateProduct, uploadProductImage, deleteProduct } from '../../services/api';
 import { showError, showSuccess, confirmDelete } from '../../utils/swal';
 
@@ -24,9 +24,7 @@ export default function AdminProducts() {
       showSuccess('Success', 'Image uploaded successfully!');
     } catch (err) {
       showError('Upload failed', err.response?.data?.message || 'Image upload failed');
-    } finally {
-      setUploading(false);
-    }
+    } finally { setUploading(false); }
   };
 
   const fetchAll = () => {
@@ -65,42 +63,59 @@ export default function AdminProducts() {
 
   return (
     <div className="animate-fade-in">
-      <div className="flex items-center justify-between mb-6">
-        <div><h1 className="font-display text-2xl font-bold text-white">Products</h1><p className="text-gray-400 text-sm mt-0.5">{products.length} products</p></div>
-        <button onClick={openAdd} className="btn-primary btn-sm"><Plus size={16}/> Add Product</button>
+      <div className="flex items-center justify-between mb-10">
+        <div>
+          <p className="section-label mb-2">Manage</p>
+          <h1 className="text-4xl font-medium text-ink tracking-[-0.03em]">Products</h1>
+          <p className="text-body text-sm mt-1">{products.length} products</p>
+        </div>
+        <button onClick={openAdd} className="btn-primary btn-sm"><Plus size={14}/> Add Product</button>
       </div>
 
-      <div className="card overflow-hidden">
+      <div className="bg-canvas-elevated border border-hairline overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm min-w-[700px]">
-            <thead><tr className="border-b border-dark-600 bg-dark-700/50">
-              <th className="text-left px-4 py-3.5 text-gray-400 font-medium">#</th>
-              <th className="text-left px-4 py-3.5 text-gray-400 font-medium">Product</th>
-              <th className="text-left px-4 py-3.5 text-gray-400 font-medium">Category</th>
-              <th className="text-right px-4 py-3.5 text-gray-400 font-medium">Price</th>
-              <th className="text-right px-4 py-3.5 text-gray-400 font-medium">Stock</th>
-              <th className="text-right px-4 py-3.5 text-gray-400 font-medium">Actions</th>
-            </tr></thead>
+            <thead>
+              <tr className="border-b border-hairline">
+                <th className="text-left px-6 py-4 text-[10px] font-semibold text-muted uppercase tracking-[0.1em]">#</th>
+                <th className="text-left px-6 py-4 text-[10px] font-semibold text-muted uppercase tracking-[0.1em]">Product</th>
+                <th className="text-left px-6 py-4 text-[10px] font-semibold text-muted uppercase tracking-[0.1em]">Category</th>
+                <th className="text-right px-6 py-4 text-[10px] font-semibold text-muted uppercase tracking-[0.1em]">Price</th>
+                <th className="text-right px-6 py-4 text-[10px] font-semibold text-muted uppercase tracking-[0.1em]">Stock</th>
+                <th className="text-right px-6 py-4 text-[10px] font-semibold text-muted uppercase tracking-[0.1em]">Actions</th>
+              </tr>
+            </thead>
             <tbody>
-              {loading ? [...Array(4)].map((_,i)=><tr key={i}><td colSpan={7} className="px-4 py-4"><div className="h-4 bg-dark-700 rounded animate-pulse"/></td></tr>)
+              {loading ? [...Array(4)].map((_,i)=><tr key={i}><td colSpan={6} className="px-6 py-4"><div className="h-4 bg-hairline animate-pulse"/></td></tr>)
               : products.map((p,i)=>(
-                <tr key={p.id} className="border-b border-dark-600/50 table-row-hover">
-                  <td className="px-4 py-3.5 text-gray-500">{i+1}</td>
-                  <td className="px-4 py-3.5">
-                    <div className="flex items-center gap-2">
-                      {p.imagePath ? <img src={p.imagePath} alt={p.name} className="w-9 h-9 rounded-lg object-cover flex-shrink-0"/> : <div className="w-9 h-9 bg-dark-700 rounded-lg flex items-center justify-center flex-shrink-0"><Package size={14} className="text-dark-400"/></div>}
-                      <span className="font-medium text-white line-clamp-1">{p.name}</span>
+                <tr key={p.id} className="border-b border-hairline table-row-hover">
+                  <td className="px-6 py-4 text-muted text-xs">{i+1}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      {p.imagePath
+                        ? <img src={p.imagePath} alt={p.name} className="w-10 h-10 object-cover flex-shrink-0"/>
+                        : <div className="w-10 h-10 bg-hairline flex items-center justify-center flex-shrink-0"><Package size={14} className="text-muted"/></div>
+                      }
+                      <span className="font-medium text-ink text-sm line-clamp-1">{p.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3.5"><span className="badge bg-dark-600 text-gray-300">{p.categoryName}</span></td>
-                            <td className="px-4 py-3.5 text-right text-primary-400 font-semibold">{`TZS ${p.price?.toLocaleString('en-US')}`}</td>
-                  <td className="px-4 py-3.5 text-right"><span className={`badge border ${p.quantity>5?'bg-green-900/40 text-green-300 border-green-800/40':p.quantity>0?'bg-amber-900/40 text-amber-300 border-amber-800/40':'bg-red-900/40 text-red-300 border-red-800/40'}`}>{p.quantity}</span></td>
-                  <td className="px-4 py-3.5 text-right space-x-2">
-                    <button onClick={()=>openEdit(p)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-900/40 text-primary-400 hover:bg-primary-900/70 text-xs font-medium transition-all">
-                      <Pencil size={12}/> Edit
+                  <td className="px-6 py-4">
+                    <span className="badge bg-hairline text-body">{p.categoryName}</span>
+                  </td>
+                  <td className="px-6 py-4 text-right text-ink font-medium text-sm">{`TZS ${p.price?.toLocaleString('en-US')}`}</td>
+                  <td className="px-6 py-4 text-right">
+                    <span className={`badge border ${p.quantity>5?'text-semantic-success border-semantic-success':p.quantity>0?'text-accent-yellow border-accent-yellow':'text-semantic-warning border-semantic-warning'}`}>
+                      {p.quantity}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right space-x-2">
+                    <button onClick={()=>openEdit(p)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-hairline text-body hover:text-ink hover:border-muted-soft text-xs font-semibold uppercase tracking-[0.065em] transition-colors">
+                      <Pencil size={11}/> Edit
                     </button>
-                    <button onClick={()=>handleDelete(p.id)} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-900/40 text-red-400 hover:bg-red-900/70 text-xs font-medium transition-all">
-                      <Trash2 size={12}/> Delete
+                    <button onClick={()=>handleDelete(p.id)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-hairline text-semantic-warning hover:bg-semantic-warning hover:text-white hover:border-semantic-warning text-xs font-semibold uppercase tracking-[0.065em] transition-colors">
+                      <Trash2 size={11}/> Delete
                     </button>
                   </td>
                 </tr>
@@ -111,13 +126,13 @@ export default function AdminProducts() {
       </div>
 
       {modal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="card w-full max-w-lg p-6 animate-slide-up my-4">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="font-semibold text-white text-lg">{modal.mode==='add'?'Add Product':'Edit Product'}</h2>
-              <button onClick={()=>setModal(null)} className="text-gray-500 hover:text-white"><X size={18}/></button>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-canvas-elevated border border-hairline w-full max-w-lg p-8 animate-slide-up my-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-medium text-ink">{modal.mode==='add'?'Add Product':'Edit Product'}</h2>
+              <button onClick={()=>setModal(null)} className="text-muted hover:text-ink transition-colors"><X size={16}/></button>
             </div>
-            <form onSubmit={handleSave} className="space-y-4">
+            <form onSubmit={handleSave} className="space-y-5">
               <div><label className="label">Name *</label><input required value={form.name} onChange={set('name')} className="input" placeholder="Product name"/></div>
               <div><label className="label">Description</label><textarea value={form.description} onChange={set('description')} className="input resize-none h-20" placeholder="Optional description"/></div>
               <div className="grid grid-cols-2 gap-4">
@@ -127,30 +142,30 @@ export default function AdminProducts() {
               <div>
                 <label className="label">Product Image *</label>
                 {form.imagePath ? (
-                  <div className="relative rounded-xl overflow-hidden border border-dark-600 bg-dark-800 p-2 flex items-center gap-4">
-                    <img src={form.imagePath} alt="Preview" className="w-16 h-16 rounded-lg object-cover bg-dark-700"/>
+                  <div className="border border-hairline bg-canvas p-3 flex items-center gap-4">
+                    <img src={form.imagePath} alt="Preview" className="w-14 h-14 object-cover"/>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate">{form.imagePath.split('/').pop()}</p>
-                      <p className="text-xs text-gray-500">Uploaded successfully</p>
+                      <p className="text-sm font-medium text-ink truncate">{form.imagePath.split('/').pop()}</p>
+                      <p className="text-xs text-muted">Uploaded</p>
                     </div>
-                    <button type="button" onClick={() => setForm(prev => ({ ...prev, imagePath: '' }))} className="p-2 rounded-lg bg-red-950/40 text-red-400 hover:bg-red-950/70 transition-colors">
-                      <X size={16}/>
+                    <button type="button" onClick={() => setForm(prev => ({ ...prev, imagePath: '' }))} className="text-semantic-warning hover:text-white transition-colors">
+                      <X size={14}/>
                     </button>
                   </div>
                 ) : (
                   <div className="relative">
                     <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="product-file-upload" required={modal.mode === 'add'}/>
-                    <label htmlFor="product-file-upload" className="flex flex-col items-center justify-center border-2 border-dashed border-dark-600 hover:border-primary-500 bg-dark-800/40 hover:bg-dark-800/80 rounded-xl p-6 cursor-pointer transition-all">
+                    <label htmlFor="product-file-upload" className="flex flex-col items-center justify-center border border-dashed border-hairline hover:border-muted-soft bg-canvas hover:bg-canvas-elevated p-8 cursor-pointer transition-all">
                       {uploading ? (
                         <div className="flex flex-col items-center gap-2">
-                          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent"/>
-                          <span className="text-xs text-gray-400">Uploading image...</span>
+                          <span className="animate-spin rounded-full h-6 w-6 border-2 border-muted border-t-transparent"/>
+                          <span className="text-xs text-muted uppercase tracking-[0.065em]">Uploading...</span>
                         </div>
                       ) : (
                         <>
-                          <Upload className="text-gray-500 mb-2 hover:text-primary-400" size={24}/>
-                          <span className="text-sm text-gray-300 font-medium">Click to upload image</span>
-                          <span className="text-xs text-gray-500 mt-1">PNG, JPG, JPEG up to 5MB</span>
+                          <Upload className="text-muted mb-2" size={20}/>
+                          <span className="text-sm text-body">Click to upload image</span>
+                          <span className="text-xs text-muted mt-1 uppercase tracking-[0.065em]">PNG, JPG, JPEG up to 5MB</span>
                         </>
                       )}
                     </label>
@@ -160,13 +175,15 @@ export default function AdminProducts() {
               <div>
                 <label className="label">Category *</label>
                 <select required value={form.categoryId} onChange={set('categoryId')} className="input">
-                  <option value="">-- Select Category --</option>
+                  <option value="">— Select Category —</option>
                   {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
               <div className="flex gap-3 pt-1">
-                <button type="button" onClick={()=>setModal(null)} className="btn-secondary flex-1 justify-center">Cancel</button>
-                <button type="submit" disabled={saving} className="btn-primary flex-1 justify-center">{saving?<span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"/>:'Save'}</button>
+                <button type="button" onClick={()=>setModal(null)} className="btn-outline flex-1">Cancel</button>
+                <button type="submit" disabled={saving} className="btn-primary flex-1">
+                  {saving ? <span className="animate-spin rounded-full h-4 w-4 border-2 border-on-primary border-t-transparent"/> : 'Save'}
+                </button>
               </div>
             </form>
           </div>

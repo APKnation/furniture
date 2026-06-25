@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, DollarSign, ShoppingBag, TrendingUp, Download, Eye, FileText } from 'lucide-react';
+import { Calendar, DollarSign, ShoppingBag, TrendingUp, Download } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { getSalesReport } from '../../services/api';
 
@@ -18,31 +18,18 @@ export default function AdminReports() {
       setData(res.data);
     } catch {
       setData({ orders: [], totalOrders: 0, totalSales: 0, averageOrderValue: 0 });
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
-  useEffect(() => {
-    fetchReport();
-  }, []);
+  useEffect(() => { fetchReport(); }, []);
 
   const handleExportCSV = () => {
     if (!data.orders.length) return;
     const headers = ['Order Number', 'Date', 'Customer', 'Status', 'Payment Method', 'Total'];
-    const rows = data.orders.map(o => [
-      o.orderNumber,
-      new Date(o.orderDate).toLocaleDateString(),
-      o.userName,
-      o.status,
-      o.paymentMethod,
-      o.totalAmount
-    ]);
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    const rows = data.orders.map(o => [o.orderNumber, new Date(o.orderDate).toLocaleDateString(), o.userName, o.status, o.paymentMethod, o.totalAmount]);
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", encodeURI(csvContent));
     link.setAttribute("download", `sales_report_${dateRange.start}_to_${dateRange.end}.csv`);
     document.body.appendChild(link);
     link.click();
@@ -50,122 +37,95 @@ export default function AdminReports() {
   };
 
   const getStatusData = () => {
-    if (!data.orders || !data.orders.length) return [];
-    const statusCounts = data.orders.reduce((acc, order) => {
-      acc[order.status] = (acc[order.status] || 0) + 1;
-      return acc;
-    }, {});
-    return Object.keys(statusCounts).map(key => ({ name: key, value: statusCounts[key] }));
+    if (!data.orders?.length) return [];
+    const counts = data.orders.reduce((acc, o) => { acc[o.status] = (acc[o.status] || 0) + 1; return acc; }, {});
+    return Object.keys(counts).map(k => ({ name: k, value: counts[k] }));
   };
 
+  // Ferrari-aligned chart colors
   const statusColors = {
-    NEW: '#3B82F6',       // Blue
-    CONFIRMED: '#F59E0B', // Amber
-    DELIVERED: '#10B981', // Green
-    CANCELED: '#EF4444',  // Red
+    NEW: '#4c98b9',
+    CONFIRMED: '#f6e500',
+    DELIVERED: '#03904a',
+    CANCELED: '#da291c',
   };
+
+  const summaryCards = [
+    { label: 'Total Revenue',    value: `TZS ${data.totalSales?.toLocaleString('en-US')}`,        icon: DollarSign,  accent: 'text-semantic-success' },
+    { label: 'Total Orders',     value: data.totalOrders,                                          icon: ShoppingBag, accent: 'text-semantic-info'    },
+    { label: 'Avg. Order Value', value: `TZS ${data.averageOrderValue?.toLocaleString('en-US')}`,  icon: TrendingUp,  accent: 'text-ink'              },
+  ];
 
   return (
     <div className="animate-fade-in">
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+      <div className="flex items-center justify-between mb-10 flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-2xl font-bold text-white">Sales & Analytical Reports</h1>
-          <p className="text-gray-400 text-sm mt-0.5">Track revenue and order logs</p>
+          <p className="section-label mb-2">Analytics</p>
+          <h1 className="text-4xl font-medium text-ink tracking-[-0.03em]">Sales & Reports</h1>
+          <p className="text-body text-sm mt-2">Track revenue and order activity</p>
         </div>
         {!!data.orders.length && (
-          <button onClick={handleExportCSV} className="btn-secondary btn-sm gap-2">
+          <button onClick={handleExportCSV} className="btn-outline btn-sm">
             <Download size={14}/> Export CSV
           </button>
         )}
       </div>
 
-      {/* Date Filter Bar */}
-      <div className="card p-5 mb-6 flex flex-wrap items-end gap-4">
+      {/* Date Filter */}
+      <div className="bg-canvas-elevated border border-hairline p-6 mb-8 flex flex-wrap items-end gap-4">
         <div className="flex-1 min-w-[200px]">
           <label className="label">Start Date</label>
           <div className="relative">
-            <Calendar size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
+            <Calendar size={13} className="absolute left-4 top-4 text-muted"/>
             <input type="date" value={dateRange.start} onChange={e => setDateRange({...dateRange, start: e.target.value})} className="input pl-10"/>
           </div>
         </div>
         <div className="flex-1 min-w-[200px]">
           <label className="label">End Date</label>
           <div className="relative">
-            <Calendar size={16} className="absolute left-3.5 top-3.5 text-gray-500"/>
+            <Calendar size={13} className="absolute left-4 top-4 text-muted"/>
             <input type="date" value={dateRange.end} onChange={e => setDateRange({...dateRange, end: e.target.value})} className="input pl-10"/>
           </div>
         </div>
-        <button onClick={fetchReport} disabled={loading} className="btn-primary px-8 justify-center min-w-[120px]">
-          {loading ? <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"/> : 'Apply'}
+        <button onClick={fetchReport} disabled={loading} className="btn-primary btn-sm min-w-[100px]">
+          {loading ? <span className="animate-spin rounded-full h-4 w-4 border-2 border-on-primary border-t-transparent"/> : 'Apply'}
         </button>
       </div>
 
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-        <div className="stat-card">
-          <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-xl flex items-center justify-center text-white shadow-lg">
-            <DollarSign size={20}/>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-hairline border border-hairline mb-8">
+        {summaryCards.map(({ label, value, icon: Icon, accent }) => (
+          <div key={label} className="bg-canvas-elevated p-8 flex items-start gap-5 hover:bg-canvas transition-colors">
+            <Icon className={`${accent} w-5 h-5 flex-shrink-0 mt-1`} />
+            <div>
+              <p className="text-[10px] font-semibold text-muted uppercase tracking-[0.1em] mb-2">{label}</p>
+              <p className={`text-2xl font-medium ${accent} tracking-tight`}>{value}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-gray-400 text-sm">Total Revenue</p>
-            <p className="text-2xl font-bold text-green-400">{`TZS ${data.totalSales?.toLocaleString('en-US')}`}</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center text-white shadow-lg">
-            <ShoppingBag size={20}/>
-          </div>
-          <div>
-            <p className="text-gray-400 text-sm">Total Orders</p>
-            <p className="text-2xl font-bold text-blue-400">{data.totalOrders}</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl flex items-center justify-center text-white shadow-lg">
-            <TrendingUp size={20}/>
-          </div>
-          <div>
-            <p className="text-gray-400 text-sm">Avg. Order Value</p>
-            <p className="text-2xl font-bold text-purple-400">{`TZS ${data.averageOrderValue?.toLocaleString('en-US')}`}</p>
-          </div>
-        </div>
+        ))}
       </div>
 
-
       {/* Orders by Status Chart */}
-      <div className="card p-5 mb-8">
-        <h2 className="text-lg font-semibold text-white mb-4">Orders by Status</h2>
+      <div className="bg-canvas-elevated border border-hairline p-6">
+        <h2 className="text-sm font-medium text-ink uppercase tracking-[0.065em] mb-6">Orders by Status</h2>
         {loading ? (
-          <div className="h-64 flex items-center justify-center text-gray-400">Loading chart...</div>
+          <div className="h-64 flex items-center justify-center text-muted text-xs uppercase tracking-[0.065em]">Loading...</div>
         ) : data.orders?.length ? (
           <div className="w-full h-80">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie
-                  data={getStatusData()}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={80}
-                  outerRadius={120}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
+                <Pie data={getStatusData()} cx="50%" cy="50%" innerRadius={80} outerRadius={120} paddingAngle={3} dataKey="value">
                   {getStatusData().map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={statusColors[entry.name] || '#8884d8'} />
+                    <Cell key={`cell-${index}`} fill={statusColors[entry.name] || '#303030'} />
                   ))}
                 </Pie>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '8px', color: '#111827' }}
-                    itemStyle={{ color: '#111827' }}
-                  />
-                <Legend verticalAlign="bottom" height={36}/>
+                <Tooltip contentStyle={{ backgroundColor: '#303030', border: '1px solid #303030', borderRadius: 0, color: '#fff', fontSize: 12 }} itemStyle={{ color: '#969696' }}/>
+                <Legend verticalAlign="bottom" height={36} formatter={(value) => <span style={{ color: '#969696', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{value}</span>}/>
               </PieChart>
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="h-64 flex items-center justify-center text-gray-500">No data for selected period.</div>
+          <div className="h-64 flex items-center justify-center text-muted text-xs uppercase tracking-[0.065em]">No data for selected period.</div>
         )}
       </div>
     </div>

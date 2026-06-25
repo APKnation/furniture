@@ -7,39 +7,17 @@ import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 
 const features = [
-  { icon: Truck, label: 'Free Shipping', desc: 'On orders over Tsh 5000' },
+  { icon: Truck, label: 'Free Shipping', desc: 'On orders over Tsh 5,000' },
   { icon: Shield, label: 'Quality Guarantee', desc: '2 year warranty included' },
   { icon: Star, label: 'Premium Brands', desc: 'Only top furniture brands' },
 ];
 
 const values = [
-  {
-    icon: Award,
-    title: 'Quality Craftsmanship',
-    desc: 'Every piece is meticulously handcrafted by skilled local artisans using time-honored techniques passed down through generations.',
-    color: 'from-amber-500/20 to-amber-600/10 border-amber-500/30 text-amber-400',
-  },
-  {
-    icon: Leaf,
-    title: 'Sustainable Materials',
-    desc: 'We responsibly source eco-friendly woods and finishes, reducing our environmental footprint while delivering premium quality.',
-    color: 'from-emerald-500/20 to-emerald-600/10 border-emerald-500/30 text-emerald-400',
-  },
-  {
-    icon: Users,
-    title: 'Community Impact',
-    desc: 'We invest in local economies, create jobs across Tanzania, and support artisan communities to thrive and grow.',
-    color: 'from-blue-500/20 to-blue-600/10 border-blue-500/30 text-blue-400',
-  },
-  {
-    icon: Heart,
-    title: 'Customer First',
-    desc: 'From browsing to delivery, we are committed to making your furniture shopping experience smooth, personal, and enjoyable.',
-    color: 'from-rose-500/20 to-rose-600/10 border-rose-500/30 text-rose-400',
-  },
+  { icon: Award, title: 'Quality Craftsmanship', desc: 'Every piece meticulously handcrafted by skilled local artisans using time-honored techniques.' },
+  { icon: Leaf, title: 'Sustainable Materials', desc: 'Responsibly sourced eco-friendly woods and finishes, reducing our environmental footprint.' },
+  { icon: Users, title: 'Community Impact', desc: 'We invest in local economies, create jobs across Tanzania, and support artisan communities.' },
+  { icon: Heart, title: 'Customer First', desc: 'From browsing to delivery, we are committed to a smooth, personal, enjoyable experience.' },
 ];
-
-
 
 export default function Home() {
   const { isAdmin } = useAuth();
@@ -49,7 +27,6 @@ export default function Home() {
   const [allProducts, setAllProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [toast, setToast] = useState('');
-
 
   useEffect(() => {
     getCategories().then(r => {
@@ -82,137 +59,124 @@ export default function Home() {
     <div className="animate-fade-in">
       {/* Toast */}
       {toast && (
-        <div className="fixed top-20 right-4 z-50 bg-dark-700 border border-primary-700/50 text-white px-5 py-3 rounded-xl shadow-2xl animate-slide-up text-sm font-medium">
+        <div className="fixed top-20 right-4 z-50 bg-canvas-elevated border border-hairline text-ink px-5 py-3 shadow-2xl animate-slide-up text-sm">
           {toast}
         </div>
       )}
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 border-b border-dark-600">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-900/30 via-transparent to-transparent" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-          <div className="flex flex-col md:flex-row items-stretch gap-8">
+      <section className="relative overflow-hidden bg-canvas border-b border-hairline">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+          <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="md:w-1/2">
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-                Elevate Your{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
-                  Living Space
-                </span>{" "}
-                with{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">
-                  Online Furniture Shop
-                </span>
+              {/* Section label */}
+              <p className="section-label mb-6">Premium Furniture · Tanzania</p>
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-medium text-ink leading-[1.05] tracking-[-0.04em] mb-6">
+                Elevate Your<br />Living Space
               </h1>
-              <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-8">
-                Discover handcrafted furniture that blends modern comfort with timeless design. Explore sofas, dining sets, and storage solutions that fit every home and lifestyle.
+              <p className="text-body text-base leading-relaxed mb-10 max-w-md">
+                Discover handcrafted furniture that blends modern comfort with timeless design. Sofas, dining sets, and storage solutions for every home.
               </p>
-
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-10">
-                <div className="flex">
-                  <img src="/image2.png" alt="Featured 1" className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-full border-4 border-dark-800 object-cover shadow-md" />
-                  <img src="/image3.png" alt="Featured 2" className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-full border-4 border-dark-800 object-cover shadow-md" />
-                </div>
-                <div className="text-lg sm:text-xl">
-                  <p className="text-white font-bold text-xl sm:text-2xl">Featured Collections</p>
-                  <Link to="/products" className="text-primary-400 hover:text-primary-300 font-semibold text-base sm:text-lg mt-1 sm:mt-2 inline-flex items-center gap-1.5 transition-colors">
-                    Explore our latest arrivals <ArrowRight size={18} />
-                  </Link>
-                </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/products" className="btn-primary">
+                  Shop Collection <ArrowRight size={16} />
+                </Link>
+                <Link to="/about" className="btn-outline">
+                  Our Story
+                </Link>
               </div>
             </div>
-            <div className="w-full md:w-1/2 flex items-center min-h-[300px] md:min-h-0">
-              <img src="/hero.png" alt="Hero" className="w-full h-full object-cover rounded-xl shadow-lg" />
+            <div className="w-full md:w-1/2">
+              <div className="relative rounded-2xl overflow-hidden shadow-sm">
+                <img src="/hero.png" alt="Featured Furniture" className="w-full h-[400px] object-cover" />
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-canvas to-transparent" />
+              </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features strip */}
+      <section className="bg-canvas-elevated border-b border-hairline">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-hairline">
+            {features.map(({ icon: Icon, label, desc }) => (
+              <div key={label} className="flex items-start gap-4 px-6 py-8">
+                <div className="w-10 h-10 bg-primary flex items-center justify-center flex-shrink-0">
+                  <Icon size={18} className="text-on-primary" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-ink mb-1">{label}</h3>
+                  <p className="text-xs text-body">{desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Products */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary-900/10 blur-[120px] rounded-full pointer-events-none" />
-
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6 relative z-10 gap-4">
-          <div>
-            <h2 className="font-display text-4xl font-bold text-white mb-2">Our Products</h2>
-            <p className="text-gray-400 text-lg">Handpicked pieces for your home</p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="flex items-center gap-3">
-              <label className="text-gray-400 font-medium whitespace-nowrap">Select Category:</label>
-              <select
-                className="input w-full sm:w-48 bg-dark-800 border-dark-600 text-gray-300 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-                value={selectedCategory}
-                onChange={e => setSelectedCategory(e.target.value)}
-              >
-                <option value="">All Categories</option>
-                {categories.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
+      <section className="bg-canvas py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">
+            <div>
+              <p className="section-label mb-3">Our Collection</p>
+              <h2 className="text-4xl font-medium text-ink tracking-[-0.03em]">Our Products</h2>
             </div>
-            <Link to="/products" className="group flex items-center gap-2 text-primary-400 font-semibold hover:text-primary-300 transition-colors whitespace-nowrap">
-              View All <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </div>
-
-        {featured.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-            {featured.map(p => (
-              <ProductCard key={p.id} product={p} onAddToCart={!isAdmin ? handleAddToCart : null} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-10 relative z-10">
-            <p className="text-gray-400">No products found in this category.</p>
-          </div>
-        )}
-      </section>
-
-      {/* Features */}
-      <section className="bg-emerald-900/20 border-y border-emerald-800/30 backdrop-blur-md relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#10b98112_1px,transparent_1px),linear-gradient(to_bottom,#10b98112_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map(({ icon: Icon, label, desc }) => (
-              <div key={label} className="group flex items-start gap-5 p-6 rounded-2xl hover:bg-dark-700/50 transition-all duration-300 border border-transparent hover:border-dark-600">
-                <div className="w-14 h-14 bg-primary-900/30 group-hover:bg-primary-900/50 border border-primary-800/50 rounded-2xl flex items-center justify-center flex-shrink-0 transition-colors shadow-lg shadow-primary-900/20">
-                  <Icon size={24} className="text-primary-400 group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-lg mb-1">{label}</h3>
-                  <p className="text-gray-400 leading-relaxed">{desc}</p>
-                </div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex items-center gap-3">
+                <label className="text-xs text-muted uppercase tracking-[0.065em]">Category:</label>
+                <select
+                  className="input py-2 px-3 text-xs w-44"
+                  value={selectedCategory}
+                  onChange={e => setSelectedCategory(e.target.value)}
+                >
+                  <option value="">All</option>
+                  {categories.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
               </div>
-            ))}
+              <Link to="/products" className="flex items-center gap-1.5 text-xs font-semibold text-body hover:text-ink uppercase tracking-[0.065em] transition-colors group whitespace-nowrap">
+                View All <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
           </div>
+
+          {featured.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featured.map(p => (
+                <ProductCard key={p.id} product={p} onAddToCart={!isAdmin ? handleAddToCart : null} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16 border border-hairline">
+              <p className="text-body text-sm uppercase tracking-[0.065em]">No products found in this category.</p>
+            </div>
+          )}
         </div>
       </section>
 
       {/* Values */}
-      <section className="bg-dark-800/50 border-y border-dark-600 py-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-8">
-            <h2 className="font-display text-3xl font-bold text-white mb-3">What We Stand For</h2>
-            <p className="text-gray-400 text-base max-w-2xl mx-auto">Our values guide every decision we make — from how we source materials to how we serve our customers.</p>
+      <section className="bg-canvas-elevated border-t border-hairline py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <p className="section-label mb-3">Why Choose Us</p>
+            <h2 className="text-4xl font-medium text-ink tracking-[-0.03em]">What We Stand For</h2>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map(({ icon: Icon, title, desc, color }) => (
-              <div key={title}
-                className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${color} border p-7 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl`}>
-                <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
-                <div className="w-12 h-12 bg-dark-800/60 rounded-xl flex items-center justify-center mb-5 shadow-inner">
-                  <Icon size={22} className={color.split(' ').find(c => c.startsWith('text-'))} />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-hairline border border-hairline">
+            {values.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="bg-canvas-elevated p-8 hover:bg-canvas transition-colors duration-200">
+                <div className="w-10 h-10 bg-primary flex items-center justify-center mb-6">
+                  <Icon size={18} className="text-on-primary" />
                 </div>
-                <h3 className="font-bold text-white text-lg mb-2">{title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+                <h3 className="text-sm font-semibold text-ink mb-3">{title}</h3>
+                <p className="text-xs text-body leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
-
     </div>
   );
 }
