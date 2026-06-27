@@ -24,7 +24,7 @@ const contactInfo = [
   {
     icon: Mail,
     label: 'Email Us',
-    value: 'apknation@gmail.com',
+    value: 'atanasikafuka@gmail.com',
     sub: 'We reply within 24 hours',
     href: 'mailto:apknation@gmail.com',
     color: 'from-primary-500/20 to-primary-600/10 border-primary-500/30 text-primary-400',

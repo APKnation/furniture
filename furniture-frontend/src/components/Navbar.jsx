@@ -97,7 +97,7 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/login" className="btn-secondary border-none">Login</Link>
+                <Link to="/login" className="btn-secondary">Login</Link>
                 <Link to="/register" className="btn-primary">Sign up</Link>
               </>
             )}

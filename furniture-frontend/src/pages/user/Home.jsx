@@ -166,7 +166,21 @@ export default function Home() {
           )}
         </div>
       </section>
-
+      {/* Tagline Section */}
+      <section className="bg-surface py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary mb-4">Our Promise</p>
+          <h2 className="text-[32px] md:text-[52px] font-bold text-ink tracking-tight leading-[1.1]">
+            We make furniture shopping{' '}
+            <span className="text-primary">fast</span>,{' '}
+            <span className="text-primary">safe</span>, and{' '}
+            <span className="text-primary">easy</span>
+          </h2>
+          <p className="mt-6 text-body text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+            From handpicked collections to secure checkout and doorstep delivery — every step of your journey is designed around you.
+          </p>
+        </div>
+      </section>
       {/* Values */}
       <section className="bg-canvas py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
