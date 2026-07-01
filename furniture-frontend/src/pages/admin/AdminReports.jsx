@@ -65,8 +65,11 @@ export default function AdminReports() {
           <p className="text-body text-sm mt-2">Track revenue and order activity</p>
         </div>
         {!!data.orders.length && (
-          <button onClick={handleExportCSV} className="btn-outline btn-sm">
-            <Download size={14}/> Export CSV
+          <button 
+            onClick={handleExportCSV} 
+            className="inline-flex items-center gap-2 bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold text-sm px-6 py-2.5 rounded-full shadow-[0_8px_24px_rgba(29,185,84,0.3)] hover:shadow-[0_12px_32px_rgba(29,185,84,0.4)] transition-all duration-300 hover:scale-105 active:scale-95"
+          >
+            <Download size={16}/> Export CSV Report
           </button>
         )}
       </div>

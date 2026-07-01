@@ -46,12 +46,7 @@ function AdminRoute({ children }) {
 function AppRoutes() {
   return (
     <Routes>
-      {/* Auth */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/recover-password" element={<RecoverPassword />} />
-
-      {/* User */}
+      {/* User (includes auth pages so Navbar + Footer are always present) */}
       <Route element={<UserLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
@@ -62,6 +57,10 @@ function AppRoutes() {
         <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+        {/* Auth pages — inside layout so Navbar shows */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/recover-password" element={<RecoverPassword />} />
       </Route>
 
       {/* Admin */}

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, ArrowUp, ArrowRight, Sofa } from 'lucide-react';
 
 /* ── Inline SVG social icons ── */
 const FacebookIcon = () => (
@@ -52,12 +51,6 @@ const categories = [
   'Storage',
 ];
 
-const trustBadges = [
-  { emoji: '🔒', text: 'Secure Checkout' },
-  { emoji: '🚚', text: 'Fast Delivery'   },
-  { emoji: '↩️',  text: 'Easy Returns'   },
-  { emoji: '🏆', text: '5-Star Rated'    },
-];
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -85,8 +78,8 @@ export default function Footer() {
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-5 group w-fit">
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-spotify-medium group-hover:scale-110 transition-transform duration-200">
-                <Sofa size={18} className="text-on-primary" />
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-spotify-medium group-hover:scale-110 transition-transform duration-200 text-xl">
+                🛋️
               </div>
               <div>
                 <p className="font-bold text-base text-ink leading-tight">APKnation</p>
@@ -157,8 +150,8 @@ export default function Footer() {
             <ul className="space-y-5">
               <li>
                 <a href="tel:+255757306134" className="flex items-start gap-3 group">
-                  <div className="w-8 h-8 rounded-full bg-surface border border-hairline flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:border-primary transition-all duration-200">
-                    <Phone size={13} className="text-muted group-hover:text-on-primary transition-colors" />
+                  <div className="w-8 h-8 rounded-full bg-surface border border-hairline flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:border-primary transition-all duration-200 text-base">
+                    📞
                   </div>
                   <div>
                     <p className="text-[10px] text-muted uppercase tracking-[0.1em] font-semibold">Phone</p>
@@ -168,8 +161,8 @@ export default function Footer() {
               </li>
               <li>
                 <a href="mailto:apknation@gmail.com" className="flex items-start gap-3 group">
-                  <div className="w-8 h-8 rounded-full bg-surface border border-hairline flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:border-primary transition-all duration-200">
-                    <Mail size={13} className="text-muted group-hover:text-on-primary transition-colors" />
+                  <div className="w-8 h-8 rounded-full bg-surface border border-hairline flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:border-primary transition-all duration-200 text-base">
+                    ✉️
                   </div>
                   <div>
                     <p className="text-[10px] text-muted uppercase tracking-[0.1em] font-semibold">Email</p>
@@ -179,8 +172,8 @@ export default function Footer() {
               </li>
               <li>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-surface border border-hairline flex items-center justify-center flex-shrink-0">
-                    <MapPin size={13} className="text-muted" />
+                  <div className="w-8 h-8 rounded-full bg-surface border border-hairline flex items-center justify-center flex-shrink-0 text-base">
+                    📍
                   </div>
                   <div>
                     <p className="text-[10px] text-muted uppercase tracking-[0.1em] font-semibold">Address</p>
@@ -194,19 +187,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ── Trust badges strip ── */}
-      <div className="border-t border-hairline bg-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-            {trustBadges.map(({ emoji, text }) => (
-              <div key={text} className="flex items-center gap-2">
-                <span className="text-lg">{emoji}</span>
-                <span className="text-xs font-semibold text-body uppercase tracking-[0.1em]">{text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* ── Bottom bar ── */}
       <div className="border-t border-hairline">
@@ -228,9 +208,9 @@ export default function Footer() {
       <button
         onClick={scrollTop}
         aria-label="Back to top"
-        className="absolute bottom-16 right-6 w-10 h-10 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-spotify-heavy hover:scale-110 hover:shadow-spotify-heavy transition-all duration-200"
+        className="absolute bottom-16 right-6 w-10 h-10 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-spotify-heavy hover:scale-110 hover:shadow-spotify-heavy transition-all duration-200 text-lg font-bold"
       >
-        <ArrowUp size={16} />
+        ↑
       </button>
 
     </footer>

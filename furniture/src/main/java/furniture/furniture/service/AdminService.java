@@ -6,9 +6,11 @@ import furniture.furniture.dto.OrderDto;
 import furniture.furniture.dto.OrderItemDto;
 import furniture.furniture.dto.ReportDto;
 import furniture.furniture.dto.SalesTrendDto;
+import furniture.furniture.dto.TopProductDto;
 import furniture.furniture.model.*;
 import furniture.furniture.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,7 @@ public class AdminService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final OrderItemRepository orderItemRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DashboardStatsDto getDashboardStats() {
@@ -41,9 +44,27 @@ public class AdminService {
         long totalBrands = 0;
         long totalRegisteredUsers = userRepository.findByRole(Role.USER).size();
 
+        // Calculate Revenue and AOV
+        List<Order> validOrders = orderRepository.findAll().stream()
+                .filter(o -> o.getStatus() != OrderStatus.CANCELED)
+                .collect(Collectors.toList());
+        
+        BigDecimal totalRevenue = validOrders.stream()
+                .map(Order::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                
+        BigDecimal averageOrderValue = BigDecimal.ZERO;
+        if (!validOrders.isEmpty()) {
+            averageOrderValue = totalRevenue.divide(BigDecimal.valueOf(validOrders.size()), 2, java.math.RoundingMode.HALF_UP);
+        }
+
+        // Fetch Top Products
+        List<TopProductDto> topProducts = orderItemRepository.findTopSellingProducts(PageRequest.of(0, 5));
+
         return new DashboardStatsDto(
                 newOrders, confirmedOrders, deliveredOrders, canceledOrders,
-                totalOrders, totalProducts, totalBrands, totalRegisteredUsers
+                totalOrders, totalProducts, totalBrands, totalRegisteredUsers,
+                totalRevenue, averageOrderValue, topProducts
         );
     }
 
